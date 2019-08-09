@@ -1,2 +1,2 @@
 # Heimdall
-USB intent analysis embedded system
+USB credibility analysis embedded system
