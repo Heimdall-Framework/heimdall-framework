@@ -1,4 +1,5 @@
 # Don't track content of these folders
+__pycache__/
 .vscode/
 # Compiled source #
 ###################
