@@ -30,25 +30,26 @@ while True:
                 
                 #lists the newly connected devices
                 for device in new_devices:                                             
-                    
+                    #initiates USB context for given device
                     with usb.USBContext() as context:
+                        #creates a handler for a given USB context
                         handle = context.openByVendorIDAndProductID(device.getVendorID(), device.getProductID(), skip_on_error=True)
 
                         if handle is None:
-                            print("Device not present, or user is not allowed to use the device.")
+                            print(">>> Device not present, or user is not allowed to use the device.")
                         else:
-                            if handle.kernelDriverActive(0):
-                                handle.detachKernelDriver(0)
-
-                            handle.claimInterface(0)
+                            dops.handle_kernel_driver(handle)
                     
                         if device.getPortNumber() not in SERVICE_PORTS:
-                            print("Test device was connected. Initiating testing procedure...")
+                            print(">>> Test device was connected. Initiating testing procedure...")
 
-                            tests.test_device(handle, device.getPortNumber())
+                            if tests.test_device(handle, device.getPortNumber(), context) != True:
+                                print(">>>!!! DEVICE IS NOT SAFE !!!<<<")
+                            else:
+                                print(">>> Device is SAFE for use")
                         else:
-                            handle.attachKernelDriver(0)
-                            print("Service device was connected.")
+                            dops.handle_kernel_driver(handle)
+                            print(">>> Service device was connected.")
                                      
         else:
             cached_devices = device_list

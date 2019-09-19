@@ -21,4 +21,10 @@ def find_by_port_number(p_number):
         for device in device_list:
             if device.getPortNumber() == p_number:
                 return device
-        return None 
+        return None
+
+def handle_kernel_driver(device_handle):
+    if device_handle.kernelDriverActive(0):
+        device_handle.detachKernelDriver(0)
+    else:
+        device_handle.attachKernelDriver(0)
