@@ -3,6 +3,7 @@ import device_operations as dops
 import analyser
 import tests
 from gui_elements import show_msg_box
+from logger import log
 
 SERVICE_PORTS = [0,2]
 UNPLUGGING_TESTS_COUNT = 4
@@ -36,20 +37,20 @@ while True:
                         handle = context.openByVendorIDAndProductID(device.getVendorID(), device.getProductID(), skip_on_error=True)
 
                         if handle is None:
-                            print(">>> Device not present, or user is not allowed to use the device.")
+                            log(">>> Device not present, or user is not allowed to use the device.")
                         else:
                             dops.handle_kernel_driver(handle)
                     
                         if device.getPortNumber() not in SERVICE_PORTS:
-                            print(">>> Test device was connected. Initiating testing procedure...")
+                            log(">>> Test device was connected. Initiating testing procedure...")
 
                             if tests.test_device(handle, device.getPortNumber(), context) != True:
-                                print(">>>!!! DEVICE IS NOT SAFE !!!<<<")
+                                log(">>>!!! DEVICE IS NOT SAFE !!!<<<")
                             else:
-                                print(">>> Device is SAFE for use")
+                                log(">>> Device is SAFE for use")
                         else:
                             dops.handle_kernel_driver(handle)
-                            print(">>> Service device was connected.")
+                            log(">>> Service device was connected.")
                                      
         else:
             cached_devices = device_list
