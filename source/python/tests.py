@@ -51,9 +51,9 @@ def detect_device_type_test(device_handle):
     device = device_handle.getDevice()
     
     dev_configuration = next(device.iterConfigurations())
-    dev_descriptor_id = next(dev_configuration.__getitem__(0).__iter__()).getSubClass()
+    dev_interface_descriptor_id = next(dev_configuration.__getitem__(0).__iter__()).getClass()
 
-    if dev_descriptor_id != 6 or dev_configuration.getNumInterfaces() > 1:
+    if dev_interface_descriptor_id != 8 or dev_configuration.getNumInterfaces() > 1:
         return False
     return True
     
