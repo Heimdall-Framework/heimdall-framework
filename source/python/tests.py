@@ -52,17 +52,15 @@ def unplugging_test(_device, port_number):
 def detect_device_type_test(device_handle):
     device = device_handle.getDevice()
     
-<<<<<<< HEAD
     device_configuration = next(device.iterConfigurations())
     device_interface_class = next(device_configuration.__getitem__(0).__iter__()).getClass()
 
     if device_interface_class != 8 or device_configuration.getNumInterfaces() > 1:
-=======
+
     dev_configuration = next(device.iterConfigurations())
     dev_interface_descriptor_id = next(dev_configuration.__getitem__(0).__iter__()).getClass()
 
     if dev_interface_descriptor_id != 8 or dev_configuration.getNumInterfaces() > 1:
->>>>>>> 6eecd892f143c0d24107444134dfa233094ac180
         return False
     return True
     
@@ -74,8 +72,5 @@ def __io_lightweight_testing(self):
         dev_id = dev.get('ID_VENDOR_ID')
         print(dev_id)
 
-<<<<<<< HEAD
         return True 
-=======
     return True
->>>>>>> 6eecd892f143c0d24107444134dfa233094ac180
