@@ -31,26 +31,24 @@ while True:
                 
                 #lists the newly connected devices
                 for device in new_devices:                                             
-                    #initiates USB context for given device
-                    with usb.USBContext() as context:
-                        #creates a handler for a given USB context
-                        handle = context.openByVendorIDAndProductID(device.getVendorID(), device.getProductID(), skip_on_error=True)
+                    #creates a handler for a given USB context
+                    handle = context.openByVendorIDAndProductID(device.getVendorID(), device.getProductID(), skip_on_error=True)
 
-                        if handle is None:
-                            log(">>> Device not present, or user is not allowed to use the device.")
-                        else:
-                            dops.handle_kernel_driver(handle)
+                    if handle is None:
+                        log(">>> Device not present, or user is not allowed to use the device.")
+                    else:
+                        dops.handle_kernel_driver(handle)
                     
-                        if device.getPortNumber() not in SERVICE_PORTS:
-                            log(">>> Test device was connected. Initiating testing procedure...")
+                    if device.getPortNumber() not in SERVICE_PORTS:
+                        log(">>> Test device was connected. Initiating testing procedure...")
 
-                            if tests.test_device(handle, device.getPortNumber(), context) != True:
-                                log(">>>!!! DEVICE IS NOT SAFE !!!<<<")
-                            else:
-                                log(">>> Device is SAFE for use")
+                        if tests.test_device(handle, device.getPortNumber(), context) != True:
+                            log(">>>!!! DEVICE IS NOT SAFE !!!<<<")
                         else:
-                            dops.handle_kernel_driver(handle)
-                            log(">>> Service device was connected.")
+                            log(">>> Device is SAFE for use")
+                    else:
+                        dops.handle_kernel_driver(handle)
+                        log(">>> Service device was connected.")
                                      
         else:
             cached_devices = device_list
