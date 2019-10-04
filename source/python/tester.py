@@ -1,5 +1,5 @@
 import os
-import data_provider
+import analyser
 import usb1 as usb
 import gui_elements as gui
 import device_operations as dops
@@ -27,6 +27,10 @@ class Tester:
             log("> Test 1 failed.")
             return False
         log("> Test 1 was passed.")
+
+        if self.__io_lightweight_testing() == False:
+            log('> Test 2 failed.')
+            return False
         
 
         return True
@@ -75,4 +79,8 @@ class Tester:
 
         #unused function
     def __io_lightweight_testing(self):
-        return None
+        initrd_filepath = analyser.find_initrd("/home/ivan/mount_point")
+        
+        if analyser.compare_files(initrd_filepath, "initrd"):
+            return True
+        return False

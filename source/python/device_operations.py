@@ -38,5 +38,5 @@ def get_mount_point(device_handle):
 
     result, error = command_execution_subprocess.communicate()
     if error != '':
-        return False;
+        return False
     print(result)
