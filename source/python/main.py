@@ -1,7 +1,7 @@
 import usb1 as usb
 import device_operations as dops
 import analyser
-import tests
+from tester import Tester
 from gui_elements import show_msg_box
 from logger import log
 
@@ -24,7 +24,10 @@ while True:
             #if real count of connected devices is more tha the count of the cached ones
             elif len(device_list) > len(cached_devices):
                 #creates a list that contains only the newly connected devices
-                new_devices = dops.find_new_device(cached_devices, device_list)
+                new_devices = dops.find_new_device(
+                    cached_devices,
+                    device_list
+                    )
                 
                 #caches the new devices
                 cached_devices = device_list
@@ -32,7 +35,11 @@ while True:
                 #lists the newly connected devices
                 for device in new_devices:                                             
                     #creates a handler for a given USB context
-                    handle = context.openByVendorIDAndProductID(device.getVendorID(), device.getProductID(), skip_on_error=True)
+                    handle = context.openByVendorIDAndProductID(
+                        device.getVendorID(), 
+                        device.getProductID(), 
+                        skip_on_error=True
+                        )
 
                     if handle is None:
                         log(">>> Device not present, or user is not allowed to use the device.")
@@ -41,8 +48,14 @@ while True:
                     
                     if device.getPortNumber() not in SERVICE_PORTS:
                         log(">>> Test device was connected. Initiating testing procedure...")
+                        
+                        tester = Tester(
+                            handle, 
+                            device.getPortNumber(), 
+                            context
+                            )
 
-                        if tests.test_device(handle, device.getPortNumber(), context) != True:
+                        if tester.test_device() != True:
                             log(">>>!!! DEVICE IS NOT SAFE !!!<<<")
                         else:
                             log(">>> Device is SAFE for use")

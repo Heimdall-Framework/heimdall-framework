@@ -1,3 +1,4 @@
+import subprocess
 import usb1 as usb
 
 INTERFACE = 0
@@ -28,3 +29,14 @@ def handle_kernel_driver(device_handle):
         device_handle.detachKernelDriver(0)
     else:
         device_handle.attachKernelDriver(0)
+
+def get_mount_point(device_handle):
+    serial_number = device_handle.getSerialNumber()
+    command = ''
+
+    command_execution_subprocess = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+
+    result, error = command_execution_subprocess.communicate()
+    if error != '':
+        return False;
+    print(result)
