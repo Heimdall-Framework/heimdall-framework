@@ -1,6 +1,7 @@
 import usb1 as usb
 import device_operations as dops
 import analyser
+from device_operations import DeviceOperationsProvider
 from tester import Tester
 from gui_elements import show_msg_box
 from logger import log
@@ -24,7 +25,7 @@ while True:
             #if real count of connected devices is more tha the count of the cached ones
             elif len(device_list) > len(cached_devices):
                 #creates a list that contains only the newly connected devices
-                new_devices = dops.find_new_device(
+                new_devices = DeviceOperationsProvider().find_new_device(
                     cached_devices,
                     device_list
                     )
@@ -44,7 +45,7 @@ while True:
                     if handle is None:
                         log(">>> Device not present, or user is not allowed to use the device.")
                     else:
-                        dops.handle_kernel_driver(handle)
+                        DeviceOperationsProvider().handle_kernel_driver(handle)
                     
                     if device.getPortNumber() not in SERVICE_PORTS:
                         log(">>> Test device was connected. Initiating testing procedure...")
@@ -60,7 +61,7 @@ while True:
                         else:
                             log(">>> Device is SAFE for use")
                     else:
-                        dops.handle_kernel_driver(handle)
+                        DeviceOperationsProvider().handle_kernel_driver(handle)
                         log(">>> Service device was connected.")
                                      
         else:

@@ -2,7 +2,7 @@ import os
 import analyser
 import usb1 as usb
 import gui_elements as gui
-import device_operations as dops
+from device_operations import DeviceOperationsProvider
 from logger import log
 
 TESTS_RANGE = 4
@@ -27,12 +27,9 @@ class Tester:
             log("> Test 1 failed.")
             return False
         log("> Test 1 was passed.")
-
-        if self.__io_lightweight_testing() == False:
-            log('> Test 2 failed.')
-            return False
         
-
+        self.__io_lightweight_testing()
+        
         return True
 
     def __unplugging_test(self):
@@ -45,14 +42,14 @@ class Tester:
             gui.show_msg_box('Guidline', 'Unlpug the USB device, click Okay and then plug it in tha same port.')
             
             # the following two lines will be optimised when suitable hardware is present
-            while dops.find_by_port_number(self.__port_number) is None:
+            while DeviceOperationsProvider().find_by_port_number(self.__port_number) is None:
                 a = 0 #empty operation        
 
-            self.__device = dops.find_by_port_number(self.__port_number)
+            self.__device = DeviceOperationsProvider().find_by_port_number(self.__port_number)
 
             self.__device_handle = None
 
-            self.__context.openByVendorIDAndProductID(
+            self.__device_handle = self.__context.openByVendorIDAndProductID(
                 self.__device.getVendorID(),
                 self.__device.getProductID()
             )
@@ -64,6 +61,7 @@ class Tester:
             if test_vid != device_vendor_id or test_pid != device_product_id or test_bcdn != device_bcd_number:
                 return False
 
+        self._device_serial_num = self.__device_handle.getSerialNumber()
         return True
 
     def __detect_device_type_test(self):
@@ -79,8 +77,5 @@ class Tester:
 
         #unused function
     def __io_lightweight_testing(self):
-        initrd_filepath = analyser.find_initrd("/home/ivan/mount_point")
+        DeviceOperationsProvider().get_mount_point(self.__device_handle)
         
-        if analyser.compare_files(initrd_filepath, "initrd"):
-            return True
-        return False
