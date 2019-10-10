@@ -45,7 +45,7 @@ while True:
                     if handle is None:
                         log(">>> Device not present, or user is not allowed to use the device.")
                     else:
-                        DeviceOperationsProvider().handle_kernel_driver(handle)
+                        DeviceOperationsProvider().handle_kernel_driver(handle, False)
                     
                     if device.getPortNumber() not in SERVICE_PORTS:
                         log(">>> Test device was connected. Initiating testing procedure...")
@@ -61,7 +61,7 @@ while True:
                         else:
                             log(">>> Device is SAFE for use")
                     else:
-                        DeviceOperationsProvider().handle_kernel_driver(handle)
+                        DeviceOperationsProvider().handle_kernel_driver(handle, True)
                         log(">>> Service device was connected.")
                                      
         else:

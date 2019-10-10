@@ -1,6 +1,9 @@
 import clamd
 import subprocess
+import psutil   
+import pyudev as udev
 import usb1 as usb
+from logger import log
 
 INTERFACE = 0
 class DeviceOperationsProvider:
@@ -25,37 +28,44 @@ class DeviceOperationsProvider:
                     return device
             return None
 
-    def handle_kernel_driver(self, device_handle):
-        if device_handle.kernelDriverActive(0):
-            device_handle.detachKernelDriver(0)
+    def handle_kernel_driver(self, device_handle, driver_status):
+        if driver_status:
+           while not device_handle.kernelDriverActive(0):
+               device_handle.attachKernelDriver(0)
         else:
-            device_handle.attachKernelDriver(0)
+            while device_handle.kernelDriverActive(0):
+                device_handle.detachKernelDriver(0)
 
-    def get_mount_point(self, device_handle):
-        serial_number = device_handle.getSerialNumber()
-        command = 'sudo lsblk'
-        grep = 'grep a'
+    def get_mount_point(self, device):
+        vid = device.getVendorID()
+        pid = device.getProductID()
+
+        context = udev.Context()
+
+        devices = context.list_devices(subsystem='block')
         
-        finder_process = subprocess.Popen(
-            command.split(),
-            stdout=subprocess.PIPE
-            )
-        
-        
-        grepper_process = subprocess.Popen(
-            grep.split(),
-            stdin=finder_process.stdout,
-            stdout = subprocess.PIPE,
-            stderr=subprocess.PIPE
-            )
+        for device in devices:
+            vid_hex = str(device.get('ID_VENDOR_ID'))
+            pid_hex = str(device.get('ID_MODEL_ID'))
 
-        finder_process.stdout.close()
+            if vid_hex != 'None' and pid_hex != 'None':
+                if int(vid_hex, 16) == vid & int(pid_hex, 16) == pid:
+                    print (device.sys_name)
+                    return device.sys_name
 
-        result, error = grepper_process.communicate()
-
-        if error != '' or error != None:
-            return None 
+        return None 
     
+    def mount_device(self, mountpoint):
+        mounting_command = 'mount'
+
+        process = subprocess.Popen(mounting_command.split(), stdout=subprocess.PIPE)
+
+        output, error = process.communicate()
+
+        if error != None:
+            log(error)
+            return False
+
     def virus_scan_device(self, mountpoint_path):
         clam_daemon = clamd.ClamdUnixSocket()
         clam_daemon.reload()
@@ -63,5 +73,4 @@ class DeviceOperationsProvider:
         scan_result = clam_daemon.scan(mountpoint_path)
 
         print (scan_result)
-
 
