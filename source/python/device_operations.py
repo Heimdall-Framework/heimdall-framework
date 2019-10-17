@@ -4,6 +4,7 @@ import psutil
 import pyudev as udev
 import usb1 as usb
 from logger import log
+import pprint
 
 INTERFACE = 0
 class DeviceOperationsProvider:
@@ -40,22 +41,21 @@ class DeviceOperationsProvider:
     def get_device_sys_name(self, device):
         vid = device.getVendorID()
         pid = device.getProductID()
-        
+
         context = udev.Context()
 
-        devices = context.list_devices(subsystem='block')
-        
-        for dev in devices:
+        devices_monitor = udev.Monitor.from_netlink(context)
+        devices_monitor.filter_by('block')
+
+
+        for action, dev in devices_monitor:
             vid_hex = str(dev.get('ID_VENDOR_ID'))
             pid_hex = str(dev.get('ID_MODEL_ID'))
-            print(vid_hex)
-            print(pid_hex)
-            print(dev.get('DEVNAME'))
 
             if vid_hex != 'None' and pid_hex != 'None':
-                if int(vid_hex, 16) == vid & int(pid_hex, 16) == pid:
+                if int(vid_hex, 16) == vid and int(pid_hex, 16) == pid:
                     return dev.get('DEVNAME')
-
+                    
         return None 
     
     def mount_device(self, mountpoint):
@@ -75,7 +75,8 @@ class DeviceOperationsProvider:
         clam_daemon = clamd.ClamdUnixSocket()
         clam_daemon.reload()
 
+        log('> Initiating virus scan.')
+
         scan_result = clam_daemon.scan(mountpoint_path)
-
+        
         print (scan_result)
-
