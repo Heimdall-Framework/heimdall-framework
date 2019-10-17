@@ -26,6 +26,7 @@ class DeviceOperationsProvider:
             for device in device_list:
                 if device.getPortNumber() == p_number:
                     return device
+
             return None
 
     def handle_kernel_driver(self, device_handle, driver_status):
@@ -36,27 +37,29 @@ class DeviceOperationsProvider:
             while device_handle.kernelDriverActive(0):
                 device_handle.detachKernelDriver(0)
 
-    def get_mount_point(self, device):
+    def get_device_sys_name(self, device):
         vid = device.getVendorID()
         pid = device.getProductID()
-
+        
         context = udev.Context()
 
         devices = context.list_devices(subsystem='block')
         
-        for device in devices:
-            vid_hex = str(device.get('ID_VENDOR_ID'))
-            pid_hex = str(device.get('ID_MODEL_ID'))
+        for dev in devices:
+            vid_hex = str(dev.get('ID_VENDOR_ID'))
+            pid_hex = str(dev.get('ID_MODEL_ID'))
+            print(vid_hex)
+            print(pid_hex)
+            print(dev.get('DEVNAME'))
 
             if vid_hex != 'None' and pid_hex != 'None':
                 if int(vid_hex, 16) == vid & int(pid_hex, 16) == pid:
-                    print (device.sys_name)
-                    return device.sys_name
+                    return dev.get('DEVNAME')
 
         return None 
     
     def mount_device(self, mountpoint):
-        mounting_command = 'mount'
+        mounting_command = 'sudo mount {0} /home/ivan/mount_point -o noexec'.format(mountpoint)
 
         process = subprocess.Popen(mounting_command.split(), stdout=subprocess.PIPE)
 
@@ -65,6 +68,8 @@ class DeviceOperationsProvider:
         if error != None:
             log(error)
             return False
+
+        return True
 
     def virus_scan_device(self, mountpoint_path):
         clam_daemon = clamd.ClamdUnixSocket()

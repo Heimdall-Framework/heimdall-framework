@@ -1,3 +1,4 @@
+import tkinter as tk
 import usb1 as usb
 import device_operations as dops
 import analyser
@@ -8,6 +9,39 @@ from logger import log
 
 SERVICE_PORTS = [0,2]
 UNPLUGGING_TESTS_COUNT = 4
+
+FONT_LARGE = ('Verdona', 14)
+
+class HeimdallApp(tk.Tk):
+    def __init__(self, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
+        container = tk.Frame(self)
+        container.pack(side='top', fill='both', expand=True)
+        container.rowconfigure(0, weight=1)
+        container.columnconfigure(0, weight=1)
+
+        self.frames = {}
+        frame = StartPage(container, self)
+        
+        self.frames[StartPage] = frame
+        frame.grid(row=0, column=0, sticky='nsew')
+        
+        self.show_frame(StartPage)
+
+    def show_frame(self, controller):
+        frame = self.frames[controller]
+        frame.tkraise()
+
+
+class StartPage(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text='Heimdall', font=FONT_LARGE)
+        label.pack(pady=5, padx=5)
+
+        button = tk.Button(self, cnf="Start Threat Evaluator")
+        button.pack(pady=5, padx=5)
+
 
 is_initiating = True
 cached_devices = []
@@ -46,23 +80,29 @@ while True:
                         log(">>> Device not present, or user is not allowed to use the device.")
                     else:
                         DeviceOperationsProvider().handle_kernel_driver(handle, False)
-                    
-                    if device.getPortNumber() not in SERVICE_PORTS:
-                        log(">>> Test device was connected. Initiating testing procedure...")
                         
-                        tester = Tester(
-                            handle, 
-                            device.getPortNumber(), 
-                            context
-                            )
+                        if device.getPortNumber() not in SERVICE_PORTS:
+                            log(">>> Test device was connected. Initiating testing procedure...")
 
-                        if tester.test_device() != True:
-                            log(">>>!!! DEVICE IS NOT SAFE !!!<<<")
+                            tester = Tester(
+                                handle, 
+                                device.getPortNumber(), 
+                                context
+                                )
+                            
+                            if tester.test_device() != True:
+                                log(">>>!!! DEVICE IS NOT SAFE !!!<<<")
+                                
+                                handle.close()
+                                tester = None
+                            else:
+                                log(">>> Device is SAFE for use")
+                                
+                                handle.close()
+                                tester = None
                         else:
-                            log(">>> Device is SAFE for use")
-                    else:
-                        DeviceOperationsProvider().handle_kernel_driver(handle, True)
-                        log(">>> Service device was connected.")
+                            DeviceOperationsProvider().handle_kernel_driver(handle, True)
+                            log(">>> Service device was connected.")
                                      
         else:
             cached_devices = device_list

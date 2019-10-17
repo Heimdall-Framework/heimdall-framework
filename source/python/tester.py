@@ -73,15 +73,23 @@ class Tester:
 
             if device_interface_class != 8 or device_configuration.getNumInterfaces() > 1:
                 return False
-           
+            
             return True
 
         #unused function
     def __io_lightweight_testing(self):
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
-        DeviceOperationsProvider().get_mount_point(self.__device)
-    
-    def __set_device_handle(self):   
+
+        device_system_name = DeviceOperationsProvider().get_device_sys_name(self.__device)
+
+        print(DeviceOperationsProvider().mount_device(device_system_name))
+
+    def __virus_scan(self):
+        DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
+
+        DeviceOperationsProvider().virus_scan_device('/home/ivan/mount_point')
+        
+    def __set_device_handle(self):
         while self.__device_handle is None:
             self.__device_handle = self.__context.openByVendorIDAndProductID(
                 self.__device.getVendorID(),
