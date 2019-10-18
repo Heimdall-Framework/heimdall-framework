@@ -7,8 +7,8 @@ def is_being_plugged(device):
     else:
         return False
 
-def compare_files(firstFile, secondFile):
-    return filecmp.cmp(firstFile, secondFile)
+def compare_files(firstFilePath, secondFilePath):
+    return filecmp.cmp(firstFilePath, secondFilePath)
 
 def find_initrd(directory):
     for root, dirs, files in os.walk(directory):

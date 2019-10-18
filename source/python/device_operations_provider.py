@@ -7,6 +7,8 @@ from logger import log
 import pprint
 
 INTERFACE = 0
+DEVICE_MOUNTPOINT = '/home/ivan/mount_point'
+
 class DeviceOperationsProvider:
     def find_new_device(self, old_device_list, new_device_list):    
         new_devices = []
@@ -38,7 +40,7 @@ class DeviceOperationsProvider:
             while device_handle.kernelDriverActive(0):
                 device_handle.detachKernelDriver(0)
 
-    def get_device_sys_name(self, device):
+    def get_device_udev_property(self, device, udev_property):
         vid = device.getVendorID()
         pid = device.getProductID()
 
@@ -54,12 +56,12 @@ class DeviceOperationsProvider:
 
             if vid_hex != 'None' and pid_hex != 'None':
                 if int(vid_hex, 16) == vid and int(pid_hex, 16) == pid:
-                    return dev.get('DEVNAME')
+                    return dev.get(udev_property)
                     
-        return None 
-    
-    def mount_device(self, mountpoint):
-        mounting_command = 'sudo mount {0} /home/ivan/mount_point -o noexec'.format(mountpoint)
+        return None
+
+    def mount_device(self, device_system_name):
+        mounting_command = 'sudo mount {} {} -o noexec'.format(device_system_name, DEVICE_MOUNTPOINT)
 
         process = subprocess.Popen(mounting_command.split(), stdout=subprocess.PIPE)
 
@@ -70,13 +72,13 @@ class DeviceOperationsProvider:
             return False
 
         return True
-
+    
     def virus_scan_device(self, mountpoint_path):
         clam_daemon = clamd.ClamdUnixSocket()
         clam_daemon.reload()
 
         log('> Initiating virus scan.')
 
-        scan_result = clam_daemon.scan(mountpoint_path)
-        
+        scan_result = clam_daemon.multiscan(mountpoint_path)
+
         print (scan_result)

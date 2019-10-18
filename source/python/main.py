@@ -1,8 +1,7 @@
 import tkinter as tk
 import usb1 as usb
-import device_operations as dops
 import analyser
-from device_operations import DeviceOperationsProvider
+from device_operations_provider import DeviceOperationsProvider
 from tester import Tester
 from gui_elements import show_msg_box
 from logger import log

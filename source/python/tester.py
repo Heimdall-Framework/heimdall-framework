@@ -2,11 +2,12 @@ import os
 import analyser
 import usb1 as usb
 import gui_elements as gui
-from device_operations import DeviceOperationsProvider
+from device_operations_provider import DeviceOperationsProvider
 from logger import log
 
 TESTS_RANGE = 4
-
+DEVICE_MOUNTPOINT = '/home/ivan/mount_point/'
+DUMPFILE_PATH = ''
 class Tester:
 
     def __init__(self, device_handle, port_number, context):
@@ -18,16 +19,16 @@ class Tester:
     def test_device(self):
         log('>> Device testing initiated.')
 
-        if self.__unplugging_test() == False:
+        if not self.__unplugging_test():
             log("> Test 0 failed.")
             return False
         log("> Test 0 was passed.")
 
-        if self.__detect_device_type_test() == False:
+        if not self.__detect_device_type_test():
             log("> Test 1 failed.")
             return False
-
         log("> Test 1 was passed.")
+            
 
         self.__virus_scan()
         
@@ -76,23 +77,42 @@ class Tester:
 
             return True
 
-        #unused function
-    def __io_lightweight_testing(self):
+    #TODO
+    def __io_lightweight_test(self):
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
 
-        device_system_name = DeviceOperationsProvider().get_device_sys_name(self.__device)
+        device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
 
         DeviceOperationsProvider().mount_device(device_system_name)
+        
+
 
     def __virus_scan(self):
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
        
-        device_system_name = DeviceOperationsProvider().get_device_sys_name(self.__device)
+        device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
         
         DeviceOperationsProvider().mount_device(device_system_name)
 
-        DeviceOperationsProvider().virus_scan_device('/home/ivan/mount_point/')
+        DeviceOperationsProvider().virus_scan_device(DEVICE_MOUNTPOINT)
         
+        DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
+
+    #TODO
+    def __intird_backdoor_test(self):
+        initrd_file_path = analyser.find_initrd(DEVICE_MOUNTPOINT)
+        return True
+
+    def __is_device_liveboot(self):
+        DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
+
+        device_partition_type = DeviceOperationsProvider().get_device_udev_property(self.__device, 'ID_PART_TABLE_TYPE')
+
+        if device_partition_type == 'bootable':
+            return True
+        
+        return False
+    
     def __set_device_handle(self):
         while self.__device_handle is None:
             self.__device_handle = self.__context.openByVendorIDAndProductID(
