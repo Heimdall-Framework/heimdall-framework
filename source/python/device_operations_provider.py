@@ -23,14 +23,14 @@ class DeviceOperationsProvider:
 
         return new_devices
 
-    def find_by_port_number(self, p_number):
-        with usb.USBContext() as context:
-            device_list = context.getDeviceList()
-            for device in device_list:
-                if device.getPortNumber() == p_number:
-                    return device
+    def find_by_port_number(self, p_number, context):
+        device_list = context.getDeviceList()
+        for device in device_list:
+            if device.getPortNumber() == p_number:
+                print('device was found')
+                return device
 
-            return None
+        return None
 
     def handle_kernel_driver(self, device_handle, driver_status):
         if driver_status:
@@ -80,5 +80,5 @@ class DeviceOperationsProvider:
         log('> Initiating virus scan.')
 
         scan_result = clam_daemon.multiscan(mountpoint_path)
-
+        return True
         print (scan_result)
