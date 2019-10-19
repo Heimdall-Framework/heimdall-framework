@@ -50,12 +50,14 @@ class Tester:
         device_product_id = self.__device.getProductID()
         device_bcd_number = self.__device.getbcdDevice()
 
-        self.__device = None
-        self.__device_handle = None
+
 
         for i in range(TESTS_RANGE):
             #the following line will be removed as part of optimisation when suitable harware is present    
             gui.show_msg_box('Guidline', 'Unlpug the USB device, click Okay and then plug it in tha same port.')
+
+            self.__device = None
+            self.__device_handle = None
 
             self.__set_device()
             self.__set_device_handle()
