@@ -27,7 +27,6 @@ class DeviceOperationsProvider:
         device_list = context.getDeviceList()
         for device in device_list:
             if device.getPortNumber() == p_number:
-                print('device was found')
                 return device
 
         return None
@@ -49,14 +48,13 @@ class DeviceOperationsProvider:
         devices_monitor = udev.Monitor.from_netlink(context)
         devices_monitor.filter_by('block')
 
-
         for action, dev in devices_monitor:
             vid_hex = str(dev.get('ID_VENDOR_ID'))
             pid_hex = str(dev.get('ID_MODEL_ID'))
-
             if vid_hex != 'None' and pid_hex != 'None':
                 if int(vid_hex, 16) == vid and int(pid_hex, 16) == pid:
-                    return dev.get(udev_property)
+                    target_property = dev.get(udev_property)
+                    return target_property 
                     
         return None
 

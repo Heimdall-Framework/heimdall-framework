@@ -10,7 +10,7 @@ from logger import log
 TESTS_RANGE = 4
 DEVICE_MOUNTPOINT = '/home/ivan/mount_point/'
 DUMPFILE_PATH = ''
-class Tester:
+class Evaluator:
 
     def __init__(self, device_handle, port_number, context):
         self.__device = device_handle.getDevice()
@@ -31,7 +31,7 @@ class Tester:
             return False
         log("> Test 1 was passed.")
     
-        self.__virus_scan()
+        self.__virus_scan() 
 
         if not self.__test_io():
             log('> Test 2 failed.')
@@ -41,16 +41,14 @@ class Tester:
         if not self.__intird_backdoor_test():
             log('> Test 3 failed.')
             return False
-        log('> Test 3 was passed.')
-        
+        log('> Test 3 was passed.')       
+
         return True
 
     def __validate_vendor_information(self):
         device_vendor_id = self.__device.getVendorID()
         device_product_id = self.__device.getProductID()
         device_bcd_number = self.__device.getbcdDevice()
-
-
 
         for i in range(TESTS_RANGE):
             #the following line will be removed as part of optimisation when suitable harware is present    
@@ -96,7 +94,16 @@ class Tester:
         shutil.move(DEVICE_MOUNTPOINT  + 'dump.me', 'received_dump.me')
 
         if analyser.compare_files('dump.me', 'received_dump.me'):
+            os.remove('dump.me')
+            os.remove('received_dump.me')
+            DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
+            
             return True
+        
+        DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
+    
+        os.remove('dump.me')
+        os.remove('received_dump.me')
         
         return False
 
@@ -104,20 +111,31 @@ class Tester:
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
        
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
-        
         DeviceOperationsProvider().mount_device(device_system_name)
-        scan_result = DeviceOperationsProvider().virus_scan_device(DEVICE_MOUNTPOINT)
         
+        scan_result = DeviceOperationsProvider().virus_scan_device(DEVICE_MOUNTPOINT)
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
 
-        return scan_result
 
+        return scan_result
+    #todo
     def __intird_backdoor_test(self):
+        DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
+
+        device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
+        DeviceOperationsProvider().mount_device(device_system_name)
+
         initrd_file_path = analyser.find_initrd(DEVICE_MOUNTPOINT)
         
-        print(initrd_file_path)
-
-        return True
+        if initrd_file_path is None:
+            return True
+        else:
+            if analyser.compare_files('', initrd_file_path):
+                DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
+                return True
+            else:
+                DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
+                return False
 
     def __set_device(self):
         while self.__device is None:

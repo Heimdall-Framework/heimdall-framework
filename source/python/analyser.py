@@ -12,6 +12,6 @@ def compare_files(firstFilePath, secondFilePath):
 
 def find_initrd(directory):
     for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file == 'initrd':
-                return '{0}/{1}'.format(root, file)
+        for f in files:
+            if f == 'initrd':
+                return '{0}/{1}'.format(root, f)
