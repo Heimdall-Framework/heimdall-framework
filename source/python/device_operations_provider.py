@@ -51,6 +51,7 @@ class DeviceOperationsProvider:
         for action, dev in devices_monitor:
             vid_hex = str(dev.get('ID_VENDOR_ID'))
             pid_hex = str(dev.get('ID_MODEL_ID'))
+            
             if vid_hex != 'None' and pid_hex != 'None':
                 if int(vid_hex, 16) == vid and int(pid_hex, 16) == pid:
                     target_property = dev.get(udev_property)
@@ -62,7 +63,6 @@ class DeviceOperationsProvider:
         mounting_command = 'sudo mount {} {} -o noexec'.format(device_system_name, DEVICE_MOUNTPOINT)
 
         process = subprocess.Popen(mounting_command.split(), stdout=subprocess.PIPE)
-
         output, error = process.communicate()
 
         if error != None:
@@ -78,5 +78,5 @@ class DeviceOperationsProvider:
         log('> Initiating virus scan.')
 
         scan_result = clam_daemon.multiscan(mountpoint_path)
+
         return True
-        print (scan_result)

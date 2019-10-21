@@ -1,10 +1,9 @@
-import tkinter as tk
 import usb1 as usb
-import analyser
-from device_operations_provider import DeviceOperationsProvider
+import tkinter as tk
+from logger import log
 from evaluator import Evaluator
 from gui_elements import show_msg_box
-from logger import log
+from device_operations_provider import DeviceOperationsProvider
 
 SERVICE_PORTS = [0,2]
 UNPLUGGING_TESTS_COUNT = 4
@@ -35,7 +34,12 @@ class HeimdallApp(tk.Tk):
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text='Heimdall - Main', font=FONT_LARGE)
+        
+        label = tk.Label(
+            self, 
+            text='Heimdall - Main', 
+            font=FONT_LARGE
+            )
         label.pack(pady=5, padx=5)
         
         evaluator = Starter() 
@@ -45,19 +49,24 @@ class StartPage(tk.Frame):
             text='Start Evaluator',
             command=evaluator.start
             )
-        startEvaluator.pack()
+        startEvaluator.pack(pady=5, padx=5)
 
         stopEvaluator = tk.Button(
             self, 
             text='Stop Evaluator', 
             command = evaluator.stop
             )
-        stopEvaluator.pack()
+        stopEvaluator.pack(pady=5, padx=5)
 
-class MainPage(tk.Frame):
+class ConfigPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text='Heimdall - Config', font=FONT_LARGE)
+
+        label = tk.Label(
+            self, 
+            text='Heimdall - Config', 
+            font=FONT_LARGE
+            )
         label.pack(pady=5, padx=5)
 
 class Starter():

@@ -1,11 +1,11 @@
 import os
 import shutil
-import analyser
 import usb1 as usb
 import gui_elements as gui
-from data_provider import DataProvider
-from device_operations_provider import DeviceOperationsProvider
 from logger import log
+from data_provider import DataProvider
+from file_operations_provider import FileOperationsProvider
+from device_operations_provider import DeviceOperationsProvider
 
 TESTS_RANGE = 4
 DEVICE_MOUNTPOINT = '/home/ivan/mount_point/'
@@ -93,7 +93,7 @@ class Evaluator:
         shutil.copyfile('dump.me', DEVICE_MOUNTPOINT  + 'dump.me')
         shutil.move(DEVICE_MOUNTPOINT  + 'dump.me', 'received_dump.me')
 
-        if analyser.compare_files('dump.me', 'received_dump.me'):
+        if FileOperationsProvider().compare_files('dump.me', 'received_dump.me'):
             os.remove('dump.me')
             os.remove('received_dump.me')
             DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
@@ -125,12 +125,12 @@ class Evaluator:
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
         DeviceOperationsProvider().mount_device(device_system_name)
 
-        initrd_file_path = analyser.find_initrd(DEVICE_MOUNTPOINT)
+        initrd_file_path = FileOperationsProvider().find_initrd(DEVICE_MOUNTPOINT)
         
         if initrd_file_path is None:
             return True
         else:
-            if analyser.compare_files('', initrd_file_path):
+            if FileOperationsProvider().compare_files('', initrd_file_path):
                 DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
                 return True
             else:
