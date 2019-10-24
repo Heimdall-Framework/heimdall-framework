@@ -1,10 +1,10 @@
 import clamd
 import subprocess
-import psutil   
+import psutil
 import pyudev as udev
 import usb1 as usb
 from logger import log
-import pprint
+
 
 INTERFACE = 0
 DEVICE_MOUNTPOINT = '/home/ivan/mount_point'
@@ -23,6 +23,7 @@ class DeviceOperationsProvider:
 
         return new_devices
 
+    # finds a device for a given port number and context
     def find_by_port_number(self, p_number, context):
         device_list = context.getDeviceList()
         for device in device_list:
@@ -30,7 +31,7 @@ class DeviceOperationsProvider:
                 return device
 
         return None
-
+    # attaches or detaches the kernel driver for the device
     def handle_kernel_driver(self, device_handle, driver_status):
         if driver_status:
            while not device_handle.kernelDriverActive(0):
@@ -59,6 +60,7 @@ class DeviceOperationsProvider:
                     
         return None
 
+    # mounts the device on predetermined point with noexec and rw permission parameters
     def mount_device(self, device_system_name):
         mounting_command = 'sudo mount {} {} -o noexec'.format(device_system_name, DEVICE_MOUNTPOINT)
 
@@ -71,6 +73,7 @@ class DeviceOperationsProvider:
 
         return True
     
+    # scnas a device for viruses
     def virus_scan_device(self, mountpoint_path):
         clam_daemon = clamd.ClamdUnixSocket()
         clam_daemon.reload()

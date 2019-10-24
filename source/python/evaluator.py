@@ -9,7 +9,7 @@ from device_operations_provider import DeviceOperationsProvider
 
 TESTS_RANGE = 4
 DEVICE_MOUNTPOINT = '/home/ivan/mount_point/'
-DUMPFILE_PATH = ''
+
 class Evaluator:
 
     def __init__(self, device_handle, port_number, context):
@@ -94,10 +94,11 @@ class Evaluator:
         shutil.move(DEVICE_MOUNTPOINT  + 'dump.me', 'received_dump.me')
 
         if FileOperationsProvider().compare_files('dump.me', 'received_dump.me'):
+            os.remove(DEVICE_MOUNTPOINT  + 'dump.me')
             os.remove('dump.me')
             os.remove('received_dump.me')
+
             DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
-            
             return True
         
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
