@@ -1,2 +1,2 @@
 # Heimdall
-USB credibility analysis embedded system
+USB threat evaluation tool
