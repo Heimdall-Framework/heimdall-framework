@@ -1,5 +1,6 @@
 import clamd
 import subprocess
+from subprocess import check_output
 import psutil
 import pyudev as udev
 import usb1 as usb
@@ -31,6 +32,7 @@ class DeviceOperationsProvider:
                 return device
 
         return None
+    
     # attaches or detaches the kernel driver for the device
     def handle_kernel_driver(self, device_handle, driver_status):
         if driver_status:
@@ -40,6 +42,7 @@ class DeviceOperationsProvider:
             while device_handle.kernelDriverActive(0):
                 device_handle.detachKernelDriver(0)
 
+    # gets an udev property for a given device
     def get_device_udev_property(self, device, udev_property):
         vid = device.getVendorID()
         pid = device.getProductID()
@@ -61,11 +64,17 @@ class DeviceOperationsProvider:
         return None
 
     # mounts the device on predetermined point with noexec and rw permission parameters
-    def mount_device(self, device_system_name):
-        mounting_command = 'sudo mount {} {} -o noexec'.format(device_system_name, DEVICE_MOUNTPOINT)
+    def mount_device(self, device_system_name, current_part=0):
+        mounting_command = 'sudo mount {}{} {} -o noexec'.format(device_system_name, current_part, DEVICE_MOUNTPOINT)
 
-        process = subprocess.Popen(mounting_command.split(), stdout=subprocess.PIPE)
+        process = subprocess.Popen(mounting_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output, error = process.communicate()
+        
+        if 'bad' in str(output) or 'not exist' in str(output) and current_part == 0:
+            for i in range(1, 10):
+                if self.mount_device(device_system_name, current_part=i):
+                    return True
+                return False
 
         if error != None:
             log(error)
@@ -81,5 +90,8 @@ class DeviceOperationsProvider:
         log('> Initiating virus scan.')
 
         scan_result = clam_daemon.multiscan(mountpoint_path)
-
-        return True
+        
+        if 'OK' in str(scan_result):
+            return True
+        else:
+            return False

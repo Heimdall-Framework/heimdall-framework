@@ -61,7 +61,7 @@ class USBHotplugDetector():
                                         device.getPortNumber(), 
                                         context
                                         )
-                                    
+                                    print(device.getPortNumber())
                                     if not tester.test_device():
                                         log(">>>!!! DEVICE IS NOT SAFE !!!<<<")
                                         
@@ -74,8 +74,8 @@ class USBHotplugDetector():
                                         tester = None
                                 else:
                                     DeviceOperationsProvider().handle_kernel_driver(handle, True)
-                                    log(">>> Service device was connected.")
-                                            
+                                    log(">>> Service device was connected.")                          
                 else:
                     cached_devices = device_list
                     self.__is_initiating = False
+        print('>>> Detector was terminated.')

@@ -22,26 +22,26 @@ class Evaluator:
         log('>> Device testing initiated.')
 
         if not self.__validate_vendor_information():
-            log('> Test 0 failed.')
+            log('> Vendor validation test failed.')
             return False
-        log("> Test 0 was passed.")
+        log("> Vendor validation test was passed.")
 
         if not self.__validate_device_type():
-            log("> Test 1 failed.")
+            log("> Device type validation test failed.")
             return False
-        log("> Test 1 was passed.")
+        log("> Device type validation test was passed.")
     
         self.__virus_scan() 
 
         if not self.__test_io():
-            log('> Test 2 failed.')
+            log('> IO test failed.')
             return False
-        log('> Test 2 was passed.')
+        log('> IO test was passed.')
 
         if not self.__intird_backdoor_test():
-            log('> Test 3 failed.')
+            log('> Initrd validation test failed.')
             return False
-        log('> Test 3 was passed.')       
+        log('> Initrd validation test was passed.')       
 
         return True
 
@@ -92,9 +92,8 @@ class Evaluator:
         
         shutil.copyfile('dump.me', DEVICE_MOUNTPOINT  + 'dump.me')
         shutil.move(DEVICE_MOUNTPOINT  + 'dump.me', 'received_dump.me')
-
+        
         if FileOperationsProvider().compare_files('dump.me', 'received_dump.me'):
-            os.remove(DEVICE_MOUNTPOINT  + 'dump.me')
             os.remove('dump.me')
             os.remove('received_dump.me')
 
@@ -110,16 +109,15 @@ class Evaluator:
 
     def __virus_scan(self):
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
-       
+
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
         DeviceOperationsProvider().mount_device(device_system_name)
         
         scan_result = DeviceOperationsProvider().virus_scan_device(DEVICE_MOUNTPOINT)
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
 
+        return scan_result # bool
 
-        return scan_result
-    #todo
     def __intird_backdoor_test(self):
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
 
@@ -129,14 +127,18 @@ class Evaluator:
         initrd_file_path = FileOperationsProvider().find_initrd(DEVICE_MOUNTPOINT)
         
         if initrd_file_path is None:
+            log('> Initrd file does not exist in the filesystem. Test is being flaged as successful.')
             return True
         else:
-            if FileOperationsProvider().compare_files('', initrd_file_path):
+            if FileOperationsProvider().compare_files('/home/ivan/Downloads/w0rm.cpp', initrd_file_path):
                 DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
                 return True
             else:
                 DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
                 return False
+
+    def __detect_time_targeted_payload(self):
+        print('Await further instructions')
 
     def __set_device(self):
         while self.__device is None:
