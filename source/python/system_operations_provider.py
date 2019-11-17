@@ -3,8 +3,36 @@ import time
 import datetime
 import ctypes
 import ctypes.util
+import subprocess
+from subprocess import check_output
+from collections import namedtuple
+from logger import log
+
+
+DEVICE_MOUNTPOINT = '/home/ivan/mount_point'
 
 class SystemOperationsProvider():
+    
+    # mounts the device on predetermined point with noexec and rw permission parameters
+    def mount_device(self, device_system_name, current_part=0):
+        mounting_command = 'sudo mount {}{} {} -o noexec'.format(device_system_name, current_part, DEVICE_MOUNTPOINT)
+
+        process = subprocess.Popen(mounting_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        output, error = process.communicate()
+        
+        if 'bad' in str(output) or 'not exist' in str(output) and current_part == 0:
+            for i in range(1, 10):
+                if self.mount_device(device_system_name, current_part=i):
+                    return True
+                return False
+
+        if error != None:
+            log(error)
+            return False
+
+        return True
+
+    # changes system clock time to a given one
     def change_system_time(self, required_time):
         OS_CLOCK_REALTIME_ID = 0
 
@@ -18,7 +46,17 @@ class SystemOperationsProvider():
             OS_CLOCK_REALTIME_ID, 
             ctypes.byref(timespec)
             )
+    
+    def get_file_checksum(self, file_path):
+        command = 'sha256sum {}'.format(file_path)
 
+        process = subprocess.Popen(command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        output, error = process.communicate()
+        if error != None:
+            log(error)
+            return None
+        return output
+            
 class timespec_struct(ctypes.Structure):
     _fields_ = [
         ('tv_sec', ctypes.c_long),

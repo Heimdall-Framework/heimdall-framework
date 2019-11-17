@@ -6,6 +6,8 @@ from logger import log
 from data_provider import DataProvider
 from file_operations_provider import FileOperationsProvider
 from device_operations_provider import DeviceOperationsProvider
+from system_operations_provider import SystemOperationsProvider
+from network_operations_provider import NetworkOperationsProvider
 
 TESTS_RANGE = 4
 DEVICE_MOUNTPOINT = '/home/ivan/mount_point/'
@@ -18,20 +20,25 @@ class Evaluator:
         self.__port_number = port_number
         self.__context = context
 
+        log('>>> Evaluator was started.')
+
     def test_device(self):
         log('>> Device testing initiated.')
 
         if not self.__validate_vendor_information():
             log('> Vendor validation test failed.')
             return False
-        log("> Vendor validation test was passed.")
+        log('> Vendor validation test was passed.')
 
         if not self.__validate_device_type():
-            log("> Device type validation test failed.")
+            log('> Device type validation test failed.')
             return False
-        log("> Device type validation test was passed.")
+        log('> Device type validation test was passed.')
     
-        self.__virus_scan() 
+        if not self.__virus_scan():
+            log('> Virus scan failed.')
+            return False
+        log('> Virus scan was passed.')
 
         if not self.__test_io():
             log('> IO test failed.')
@@ -87,7 +94,7 @@ class Evaluator:
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
 
-        DeviceOperationsProvider().mount_device(device_system_name)
+        SystemOperationsProvider().mount_device(device_system_name)
         DataProvider().generate_random_data_file()
         
         shutil.copyfile('dump.me', DEVICE_MOUNTPOINT  + 'dump.me')
@@ -111,7 +118,7 @@ class Evaluator:
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
-        DeviceOperationsProvider().mount_device(device_system_name)
+        SystemOperationsProvider().mount_device(device_system_name)
         
         scan_result = DeviceOperationsProvider().virus_scan_device(DEVICE_MOUNTPOINT)
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
@@ -122,7 +129,7 @@ class Evaluator:
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
-        DeviceOperationsProvider().mount_device(device_system_name)
+        SystemOperationsProvider().mount_device(device_system_name)
 
         initrd_file_path = FileOperationsProvider().find_initrd(DEVICE_MOUNTPOINT)
         
@@ -130,11 +137,19 @@ class Evaluator:
             log('> Initrd file does not exist in the filesystem. Test is being flaged as successful.')
             return True
         else:
-            if FileOperationsProvider().compare_files('/home/ivan/Downloads/w0rm.cpp', initrd_file_path):
-                DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
+            log('Packing live boot files into image file.')
+            FileOperationsProvider().create_img_file()
+
+            log('> Generating initrd file checksum.')
+
+            local_image_checksum = SystemOperationsProvider().get_file_checksum('/tmp/temp_image.img')
+            real_checksum = NetworkOperationsProvider().get_tails_checksum()
+
+            if local_image_checksum == real_checksum:
+                os.remove('/tmp/temp_image.img')
                 return True
             else:
-                DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
+                os.remove('/tmp/temp_image.img')
                 return False
 
     def __detect_time_targeted_payload(self):

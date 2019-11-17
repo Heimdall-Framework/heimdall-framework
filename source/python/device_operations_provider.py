@@ -1,16 +1,15 @@
 import clamd
 import subprocess
-from subprocess import check_output
 import psutil
 import pyudev as udev
 import usb1 as usb
 from logger import log
 
-
 INTERFACE = 0
-DEVICE_MOUNTPOINT = '/home/ivan/mount_point'
 
 class DeviceOperationsProvider:
+    
+    # finds new device on the bus
     def find_new_device(self, old_device_list, new_device_list):    
         new_devices = []
         old_devices_ids_list = []
@@ -62,25 +61,6 @@ class DeviceOperationsProvider:
                     return target_property 
                     
         return None
-
-    # mounts the device on predetermined point with noexec and rw permission parameters
-    def mount_device(self, device_system_name, current_part=0):
-        mounting_command = 'sudo mount {}{} {} -o noexec'.format(device_system_name, current_part, DEVICE_MOUNTPOINT)
-
-        process = subprocess.Popen(mounting_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        output, error = process.communicate()
-        
-        if 'bad' in str(output) or 'not exist' in str(output) and current_part == 0:
-            for i in range(1, 10):
-                if self.mount_device(device_system_name, current_part=i):
-                    return True
-                return False
-
-        if error != None:
-            log(error)
-            return False
-
-        return True
     
     # scnas a device for viruses
     def virus_scan_device(self, mountpoint_path):
@@ -89,8 +69,8 @@ class DeviceOperationsProvider:
 
         log('> Initiating virus scan.')
 
-        scan_result = clam_daemon.multiscan(mountpoint_path)
-        
+        scan_result = clam_daemon.scan(mountpoint_path)
+
         if 'OK' in str(scan_result):
             return True
         else:
