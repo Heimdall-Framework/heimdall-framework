@@ -56,7 +56,14 @@ class SystemOperationsProvider():
             log(error)
             return None
         return output
-            
+
+    def offline_verify_checksum(self, checksum):
+        with open('blacklisted.blck') as blacklisted:
+            if not checksum in blacklisted:
+                return True
+            else:
+                return False
+
 class timespec_struct(ctypes.Structure):
     _fields_ = [
         ('tv_sec', ctypes.c_long),

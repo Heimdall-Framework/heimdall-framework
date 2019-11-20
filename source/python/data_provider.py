@@ -2,7 +2,7 @@ import string
 import random
 from logger import log
 
-class DataProvider:
+class DataProvider():
     def generate_random_data_file(self):
         try:
             file_content = self.__generate_pseudorandom_string(128)

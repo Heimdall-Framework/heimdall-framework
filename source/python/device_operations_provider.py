@@ -7,8 +7,8 @@ from logger import log
 
 INTERFACE = 0
 
-class DeviceOperationsProvider:
-    
+class DeviceOperationsProvider():
+
     # finds new device on the bus
     def find_new_device(self, old_device_list, new_device_list):    
         new_devices = []

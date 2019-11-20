@@ -6,7 +6,7 @@ from logger import log
 
 initrd_list = ['initrd', 'initrd.img', 'initrd.gz']
 
-class FileOperationsProvider:
+class FileOperationsProvider():
     
     # compares two files
     def compare_files(self, firstFilePath, secondFilePath):
@@ -24,7 +24,6 @@ class FileOperationsProvider:
         process = subprocess.Popen(creation_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         
         output, error = process.communicate()
-        print(output)
         if error != None:
             log(error)
             return False

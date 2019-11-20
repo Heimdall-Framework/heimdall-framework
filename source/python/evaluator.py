@@ -1,5 +1,6 @@
 import os
 import shutil
+import importlib
 import usb1 as usb
 import gui_elements as gui
 from logger import log
@@ -12,7 +13,7 @@ from network_operations_provider import NetworkOperationsProvider
 TESTS_RANGE = 4
 DEVICE_MOUNTPOINT = '/home/ivan/mount_point/'
 
-class Evaluator:
+class Evaluator():
 
     def __init__(self, device_handle, port_number, context):
         self.__device = device_handle.getDevice()
@@ -20,11 +21,11 @@ class Evaluator:
         self.__port_number = port_number
         self.__context = context
 
-        log('>>> Evaluator was started.')
+        log('>>> Evaluator was initialized.')
 
     def test_device(self):
         log('>> Device testing initiated.')
-
+        
         if not self.__validate_vendor_information():
             log('> Vendor validation test failed.')
             return False
@@ -49,6 +50,11 @@ class Evaluator:
             log('> Initrd validation test failed.')
             return False
         log('> Initrd validation test was passed.')       
+
+        if not self.__perform_external_tests():
+            log('> External Test failed.')
+            return False
+        log('> All tests were successful.')
 
         return True
 
@@ -96,10 +102,11 @@ class Evaluator:
 
         SystemOperationsProvider().mount_device(device_system_name)
         DataProvider().generate_random_data_file()
+
+        print(DEVICE_MOUNTPOINT  + 'dump.me')
         
         shutil.copyfile('dump.me', DEVICE_MOUNTPOINT  + 'dump.me')
         shutil.move(DEVICE_MOUNTPOINT  + 'dump.me', 'received_dump.me')
-        
         if FileOperationsProvider().compare_files('dump.me', 'received_dump.me'):
             os.remove('dump.me')
             os.remove('received_dump.me')
@@ -137,13 +144,19 @@ class Evaluator:
             log('> Initrd file does not exist in the filesystem. Test is being flaged as successful.')
             return True
         else:
-            log('Packing live boot files into image file.')
+            log('> Packing live boot files into image file.')
             FileOperationsProvider().create_img_file()
 
             log('> Generating initrd file checksum.')
 
             local_image_checksum = SystemOperationsProvider().get_file_checksum('/tmp/temp_image.img')
             real_checksum = NetworkOperationsProvider().get_tails_checksum()
+            
+            if real_checksum is None:
+                log('> Exception occured. The most common problem is lack of initernet connection or broken network driver.')
+                log('> Trying hash verification from offline blacklist.')
+
+                return SystemOperationsProvider().offline_verify_checksum(local_image_checksum)
 
             if local_image_checksum == real_checksum:
                 os.remove('/tmp/temp_image.img')
@@ -166,3 +179,6 @@ class Evaluator:
                 self.__device.getVendorID(),
                 self.__device.getProductID()
             )
+
+    def __perform_external_tests(self):
+        return True
