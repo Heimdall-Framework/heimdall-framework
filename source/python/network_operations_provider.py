@@ -1,4 +1,5 @@
 import json
+from logger import log
 import urllib
 from collections import namedtuple
 
@@ -8,8 +9,8 @@ class NetworkOperationsProvider():
             with urllib.request.urlopen("https://tails.boum.org/install/v2/Tails/amd64/stable/latest.json") as url:
                 received_data = json.loads(url.read().decode())
 
-                list(received_data['installations'][0].values())[0][0]
-                return True
-        except urllib.error.URLError:
+                return list(received_data['installations'][0].values())[0][0]
+        except:
+            log('> No internet connection.')
             return None
             

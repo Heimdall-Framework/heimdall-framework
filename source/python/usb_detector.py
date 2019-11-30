@@ -1,6 +1,8 @@
 import usb1 as usb
 from logger import log
+from logger import read_log
 from evaluator import Evaluator
+import gui_elements
 from device_operations_provider import DeviceOperationsProvider
 
 SERVICE_PORTS = [0,2]
@@ -61,7 +63,7 @@ class USBHotplugDetector():
                                         device.getPortNumber(), 
                                         context
                                         )
-                                    print(device.getPortNumber())
+
                                     if not tester.test_device():
                                         log(">>>!!! DEVICE IS NOT SAFE !!!<<<")
                                         
@@ -69,12 +71,13 @@ class USBHotplugDetector():
                                         tester = None
                                     else:
                                         log(">>> Device is SAFE for use")
-                                        
+
                                         handle.close()
                                         tester = None
                                 else:
                                     DeviceOperationsProvider().handle_kernel_driver(handle, True)
-                                    log(">>> Service device was connected.")                          
+                                    log(">>> Service device was connected.")
+                                    gui_elements.show_msg_box('Device detected','Service device was connected.')                  
                 else:
                     cached_devices = device_list
                     self.__is_initiating = False

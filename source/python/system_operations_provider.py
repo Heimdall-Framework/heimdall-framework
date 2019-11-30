@@ -58,7 +58,7 @@ class SystemOperationsProvider():
         return output
 
     def offline_verify_checksum(self, checksum):
-        with open('blacklisted.blck') as blacklisted:
+        with open('/home/ivan/Documents/Projects/cybersecurity/heimdall/source/python/blacklisted.blck') as blacklisted:
             if not checksum in blacklisted:
                 return True
             else:

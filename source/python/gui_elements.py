@@ -1,3 +1,4 @@
+import concurrent.futures
 import sys
 from pymsgbox import alert
 from threading import Thread
@@ -11,7 +12,7 @@ class Ui_HeimdallApp(object):
     def setupUi(self, HeimdallApp):
         HeimdallApp.setObjectName("HeimdallApp")
         HeimdallApp.resize(851, 595)
-
+        sys.stdout = WritingStream(outputed_text=self.normal_write_text)
         self.centralwidget = QtWidgets.QWidget(HeimdallApp)
         self.centralwidget.setObjectName("centralwidget")
 
@@ -62,17 +63,30 @@ class Ui_HeimdallApp(object):
         self.start_evaluator_btn.clicked.connect(self.__start_evaluator)
         self.stop_evaluator_btn.clicked.connect(self.__stop_evaluator)
     
+    def normal_write_text(self, text):
+        cursor = self.logs_text_box.textCursor()
+        cursor.movePosition(QtGui.QTextCursor.End)
+        cursor.insertText(text)
+        self.logs_text_box.setTextCursor(cursor)
+        self.logs_text_box.ensureCursorVisible()
+    
     def __start_evaluator(self):
         if not evaluator_thread.daemon:
             evaluator_thread.setDaemon(True)
 
         evaluator_thread.start()
         print('started')
-
     def __stop_evaluator(self):
         usb_detector.stop()
         if evaluator_thread.is_alive():
             evaluator_thread.join()
+    
+
+class WritingStream(QtCore.QObject):
+    outputed_text = QtCore.pyqtSignal(str)
+
+    def write(self, text):
+        self.outputed_text.emit(str(text))
 
 def show_gui():
     app = QtWidgets.QApplication(sys.argv)
