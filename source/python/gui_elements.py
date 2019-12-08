@@ -75,7 +75,7 @@ class Ui_HeimdallApp(object):
             evaluator_thread.setDaemon(True)
 
         evaluator_thread.start()
-        print('started')
+
     def __stop_evaluator(self):
         usb_detector.stop()
         if evaluator_thread.is_alive():

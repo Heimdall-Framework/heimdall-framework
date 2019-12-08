@@ -1,6 +1,7 @@
 import os
 import shutil
 import importlib
+import external_tests
 import usb1 as usb
 import gui_elements as gui
 from logger import log
@@ -181,4 +182,8 @@ class Evaluator():
             )
 
     def __perform_external_tests(self):
+        for test in dir(external_tests):
+            item = getattr(external_tests, test)
+            if callable(item):
+                item(self.__device, self.__device_handle)
         return True

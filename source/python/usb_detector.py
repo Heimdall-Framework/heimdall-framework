@@ -65,8 +65,9 @@ class USBHotplugDetector():
                                         )
 
                                     if not tester.test_device():
-                                        log(">>>!!! DEVICE IS NOT SAFE !!!<<<")
-                                        
+                                        log(">>>! DEVICE IS NOT SAFE !<<<")
+                                        gui_elements.show_msg_box('Dangerous device detected','Tested device is not safe for use.')                  
+
                                         handle.close()
                                         tester = None
                                     else:
@@ -77,7 +78,6 @@ class USBHotplugDetector():
                                 else:
                                     DeviceOperationsProvider().handle_kernel_driver(handle, True)
                                     log(">>> Service device was connected.")
-                                    gui_elements.show_msg_box('Device detected','Service device was connected.')                  
                 else:
                     cached_devices = device_list
                     self.__is_initiating = False
