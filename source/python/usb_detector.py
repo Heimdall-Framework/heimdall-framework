@@ -20,6 +20,8 @@ class USBHotplugDetector():
         self.__is_started = False
 
     def __begin_detecting(self):
+        log(">>> Hotplug detector was started.")
+        
         while self.__is_started:
             with usb.USBContext() as context:
                 device_list = context.getDeviceList()

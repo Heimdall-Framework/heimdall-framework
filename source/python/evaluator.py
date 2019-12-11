@@ -185,5 +185,6 @@ class Evaluator():
         for test in dir(external_tests):
             item = getattr(external_tests, test)
             if callable(item):
-                item(self.__device, self.__device_handle)
+                if not item(self.__device, self.__device_handle):
+                    return False
         return True
