@@ -27,15 +27,15 @@ class Evaluator():
     def test_device(self):
         log('>> Device testing initiated.')
         
-        if not self.__validate_vendor_information():
-            log('> Vendor validation test failed.')
-            return False
-        log('> Vendor validation test was passed.')
-
         if not self.__validate_device_type():
             log('> Device type validation test failed.')
             return False
         log('> Device type validation test was passed.')
+
+        if not self.__validate_vendor_information():
+            log('> Vendor validation test failed.')
+            return False
+        log('> Vendor validation test was passed.')
     
         if not self.__virus_scan():
             log('> Virus scan failed.')
