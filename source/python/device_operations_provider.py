@@ -10,18 +10,15 @@ INTERFACE = 0
 class DeviceOperationsProvider():
 
     # finds new device on the bus
-    def find_new_device(self, old_device_list, new_device_list):    
-        new_devices = []
-        old_devices_ids_list = []
+    def find_new_device(self, test_ports, context):    
+        new_device = None
 
-        for dev in old_device_list:
-            old_devices_ids_list.append(dev.getProductID())
-
-        for device in new_device_list:
-            if device.getProductID() not in old_devices_ids_list:
-                new_devices.append(device)
-
-        return new_devices
+        while new_device == None:
+            for test_port in test_ports:
+                new_device = self.find_by_port_number(test_port, context) 
+                
+                if new_device != None:
+                    return new_device
 
     # finds a device for a given port number and context
     def find_by_port_number(self, p_number, context):
