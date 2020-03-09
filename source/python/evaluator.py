@@ -186,5 +186,6 @@ class Evaluator():
             item = getattr(external_tests, test)
             if callable(item):
                 if not item(self.__device, self.__device_handle):
+                    log('> External test {} failed or is not valid.'.format(item))
                     return False
         return True
