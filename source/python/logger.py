@@ -1,15 +1,15 @@
 import os 
 from datetime import datetime
 
-dump_files_directory_path = '/heimdall_dumps'
+DUMP_FILES_DIRECTORY_PATH = '/heimdall_dumps'
 
 def log(string, silent=False):
     current_datetime = datetime.now()
     
-    if not os.path.exists(dump_files_directory_path):
-        os.mkdir(dump_files_directory_path)
+    if not os.path.exists(DUMP_FILES_DIRECTORY_PATH):
+        os.mkdir(DUMP_FILES_DIRECTORY_PATH)
     
-    logfile_name = '%s/LOG_%s_%s_%s'%(dump_files_directory_path, current_datetime.year, current_datetime.month, current_datetime.day)
+    logfile_name = '%s/LOG_%s_%s_%s'%(DUMP_FILES_DIRECTORY_PATH, current_datetime.year, current_datetime.month, current_datetime.day)
     
     file = open(logfile_name + '.log' , 'a+') 
 

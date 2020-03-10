@@ -12,7 +12,7 @@ from system_operations_provider import SystemOperationsProvider
 from network_operations_provider import NetworkOperationsProvider
 
 TESTS_RANGE = 4
-DEVICE_MOUNTPOINT = '/home/ivan/mount_point/'
+DEVICE_MOUNTPOINT = os.environ['DEVICES_MOUNTPOINT']
 
 class Evaluator():
 
@@ -52,7 +52,7 @@ class Evaluator():
             return False
         log('> Initrd validation test was passed.')       
 
-        if not self.__perform_external_tests():
+        if not self.__run_external_tests():
             log('> External Test failed.')
             return False
         log('> All tests were successful.')
@@ -181,7 +181,7 @@ class Evaluator():
                 self.__device.getProductID()
             )
 
-    def __perform_external_tests(self):
+    def __run_external_tests(self):
         for test in dir(external_tests):
             item = getattr(external_tests, test)
             if callable(item):

@@ -8,6 +8,7 @@ from device_operations_provider import DeviceOperationsProvider
 
 SERVICE_PORTS = [0,2]
 TEST_PORTS = [1,3]
+
 class USBHotplugDetector():
     def __init__(self):
         self.__cached_device = None
