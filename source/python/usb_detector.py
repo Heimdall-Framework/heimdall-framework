@@ -1,6 +1,5 @@
 import usb1 as usb
 from logger import log
-from logger import read_log
 from evaluator import Evaluator
 from queue import Queue
 import gui_elements
