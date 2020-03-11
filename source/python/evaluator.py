@@ -1,4 +1,6 @@
 import os
+import sys
+import json
 import shutil
 import importlib
 import external_tests
@@ -12,7 +14,7 @@ from system_operations_provider import SystemOperationsProvider
 from network_operations_provider import NetworkOperationsProvider
 
 TESTS_RANGE = 4
-DEVICE_MOUNTPOINT = os.environ['DEVICES_MOUNTPOINT']
+DEVICE_MOUNTPOINT = os.environ['DEVS_MOUNTPOINT']
 
 class Evaluator():
 
@@ -21,8 +23,12 @@ class Evaluator():
         self.__device_handle = device_handle
         self.__port_number = port_number
         self.__context = context
+        self.__load_external_tests_config()
 
         log('>>> Evaluator was initialized.')
+    def __load_external_tests_config(self):
+        with open(os.path.join(sys.path[0], 'config.json')) as config_file:
+            self.__external_tests_config = json.load(config_file)
 
     def test_device(self):
         log('>> Device testing initiated.')
@@ -184,8 +190,16 @@ class Evaluator():
     def __run_external_tests(self):
         for test in dir(external_tests):
             item = getattr(external_tests, test)
-            if callable(item):
-                if not item(self.__device, self.__device_handle):
-                    log('> External test {} failed or is not valid.'.format(item))
-                    return False
+            
+            if callable(item) and self.__validate_external_test(test):
+                    if not item(self.__device, self.__device_handle):
+                        log('> External test {} failed or is not valid.'.format(item))
+                        return False
         return True
+    
+    # validates if a given demo test exist in the config.json file and if it is allowed to be executed
+    def __validate_external_test(self, test_name):
+        for valid_test in self.__external_tests_config:
+            if valid_test['name'] == test_name and valid_test['enabled']:
+                return True
+        return False

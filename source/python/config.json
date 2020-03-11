@@ -1,0 +1,6 @@
+[
+        {"name" : "demo_test", "enabled" : false},
+        {"name" : "demo_test1", "enabled" : false},
+        {"name" : "demo_test2", "enabled" : false}
+
+]

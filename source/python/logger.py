@@ -1,7 +1,7 @@
 import os 
 from datetime import datetime
 
-DUMP_FILES_DIRECTORY_PATH = '/heimdall_dumps'
+DUMP_FILES_DIRECTORY_PATH = os.environ['DUMPS_DIRECTORY_PATH']
 
 def log(string, silent=False):
     current_datetime = datetime.now()

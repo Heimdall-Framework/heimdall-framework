@@ -11,12 +11,10 @@ class Main():
         if len(sys.argv) == 0:
             print('File requires one console argument.')
 
-        self.validate_env_variables()    
-   
-        if sys.argv[1] == 'GUI':
+        if sys.argv[1].lower() == 'gui':    
             gui_elements.show_gui()
 
-        elif sys.argv[1] == 'NOGUI':
+        elif sys.argv[1].lower() == 'nogui':
             usb_detector = USBHotplugDetector()
             usb_detector.start()
     
@@ -24,8 +22,9 @@ class Main():
         try:
             os.environ['DEVS_MOUNTPOINT']
             os.environ['DUMPS_DIRECTORY_PATH']
-        except:
+        except KeyError:
             print('Environmental variable has not been set.')
+            raise
         
 if __name__ == '__main__':
     Main().main()
