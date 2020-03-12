@@ -1,4 +1,3 @@
-import concurrent.futures
 import sys
 from pymsgbox import alert
 from threading import Thread

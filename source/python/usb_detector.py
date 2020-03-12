@@ -18,12 +18,12 @@ class USBHotplugDetector():
 
     def stop(self):
         self.__is_started = False
+        print('stoped')
 
     def __begin_detecting(self):
         log(">>> Hotplug detector was started.")
         with usb.USBContext() as context:
             while self.__is_started:
-
                 # finds a new device that can be tested
                 device = DeviceOperationsProvider().find_new_device(
                     TEST_PORTS,
@@ -31,7 +31,7 @@ class USBHotplugDetector():
                 )
 
                 # checks if the found device has already been tested
-                if self.__cached_device == device:
+                if self.__cached_device == device or device is None:
                     continue
 
                 # creates USBDeviceHandle object for given VID and PID
@@ -69,3 +69,4 @@ class USBHotplugDetector():
                         evaluator = None
 
                         self.__cached_device = device
+            print(">>> Hotplug detector was terminated.")

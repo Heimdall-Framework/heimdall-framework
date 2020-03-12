@@ -10,15 +10,12 @@ class DeviceOperationsProvider():
 
     # finds new device on the bus
     def find_new_device(self, test_ports, context):    
-        new_device = None
-
-        while new_device == None:
-            for test_port in test_ports:
-                new_device = self.find_by_port_number(test_port, context) 
-                
-                if new_device != None:
-                    return new_device
-
+        for test_port in test_ports:
+            new_device = self.find_by_port_number(test_port, context) 
+            
+            if new_device != None:
+                return new_device
+        return None
     # finds a device for a given port number and context
     def find_by_port_number(self, p_number, context):
         device_list = context.getDeviceList()

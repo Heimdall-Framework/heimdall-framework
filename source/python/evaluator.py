@@ -3,7 +3,7 @@ import sys
 import json
 import shutil
 import importlib
-import external_tests
+import plugins
 import usb1 as usb
 import gui_elements as gui
 from logger import log
@@ -28,7 +28,7 @@ class Evaluator():
         log('>>> Evaluator was initialized.')
     def __load_external_tests_config(self):
         with open(os.path.join(sys.path[0], 'config.json')) as config_file:
-            self.__external_tests_config = json.load(config_file)
+            self.__plugins_config = json.load(config_file)
 
     def test_device(self):
         log('>> Device testing initiated.')
@@ -188,18 +188,18 @@ class Evaluator():
             )
 
     def __run_external_tests(self):
-        for test in dir(external_tests):
-            item = getattr(external_tests, test)
+        for plugin in dir(plugins):
+            item = getattr(plugins, plugin)
             
-            if callable(item) and self.__validate_external_test(test):
+            if callable(item) and self.__validate_plugin(plugin):
                     if not item(self.__device, self.__device_handle):
                         log('> External test {} failed or is not valid.'.format(item))
                         return False
         return True
     
     # validates if a given demo test exist in the config.json file and if it is allowed to be executed
-    def __validate_external_test(self, test_name):
-        for valid_test in self.__external_tests_config:
-            if valid_test['name'] == test_name and valid_test['enabled']:
+    def __validate_plugin(self, plugin_name):
+        for plugin_configuration in self.__plugins_config:
+            if plugin_configuration['name'] == plugin_name and plugin_configuration['enabled']:
                 return True
         return False
