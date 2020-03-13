@@ -69,4 +69,4 @@ class USBHotplugDetector():
                         evaluator = None
 
                         self.__cached_device = device
-            print(">>> Hotplug detector was terminated.")
+            log(">>> Hotplug detector was terminated.")

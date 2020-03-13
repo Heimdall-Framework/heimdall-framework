@@ -109,8 +109,6 @@ class Evaluator():
 
         SystemOperationsProvider().mount_device(device_system_name)
         DataProvider().generate_random_data_file()
-
-        print(DEVICE_MOUNTPOINT  + 'dump.me')
         
         shutil.copyfile('dump.me', DEVICE_MOUNTPOINT  + 'dump.me')
         shutil.move(DEVICE_MOUNTPOINT  + 'dump.me', 'received_dump.me')
