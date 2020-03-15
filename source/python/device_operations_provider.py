@@ -2,8 +2,7 @@ import clamd
 import subprocess
 import pyudev as udev
 import usb1 as usb
-from logger import log
-
+from logger import Logger
 INTERFACE = 0
 
 class DeviceOperationsProvider():
@@ -60,10 +59,10 @@ class DeviceOperationsProvider():
         clam_daemon = clamd.ClamdUnixSocket()
         clam_daemon.reload()
 
-        log('> Initiating virus scan.')
+        Logger().log('> Initiating virus scan.')
 
         scan_result = clam_daemon.scan(mountpoint_path)
-        log('> {}'.format(scan_result), silent=True)
+        Logger().log('> {}'.format(scan_result), silent=True)
         if 'OK' in str(scan_result):
             return True
         else:

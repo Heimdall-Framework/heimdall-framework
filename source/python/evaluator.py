@@ -6,7 +6,7 @@ import importlib
 import plugins
 import usb1 as usb
 import gui_elements as gui
-from logger import log
+from logger import Logger
 from data_provider import DataProvider
 from file_operations_provider import FileOperationsProvider
 from device_operations_provider import DeviceOperationsProvider
@@ -14,54 +14,54 @@ from system_operations_provider import SystemOperationsProvider
 from network_operations_provider import NetworkOperationsProvider
 
 TESTS_RANGE = 4
-DEVICE_MOUNTPOINT = os.environ['DEVS_MOUNTPOINT']
 
 class Evaluator():
 
     def __init__(self, device_handle, port_number, context):
+        self.device_mountpoint = os.environ['DEVS_MOUNTPOINT']
         self.__device = device_handle.getDevice()
         self.__device_handle = device_handle
         self.__port_number = port_number
         self.__context = context
         self.__load_external_tests_config()
 
-        log('>>> Evaluator was initialized.')
+        Logger().log('>>> Evaluator was initialized.')
     def __load_external_tests_config(self):
         with open(os.path.join(sys.path[0], 'config.json')) as config_file:
             self.__plugins_config = json.load(config_file)
 
     def test_device(self):
-        log('>> Device testing initiated.')
+        Logger().log('>> Device testing initiated.')
         
         if not self.__validate_device_type():
-            log('> Device type validation test failed.')
+            Logger().log('> Device type validation test failed.')
             return False
-        log('> Device type validation test was passed.')
+        Logger().log('> Device type validation test was passed.')
 
         if not self.__validate_vendor_information():
-            log('> Vendor validation test failed.')
+            Logger().log('> Vendor validation test failed.')
             return False
-        log('> Vendor validation test was passed.')
+        Logger().log('> Vendor validation test was passed.')
     
         if not self.__virus_scan():
-            log('> Virus scan failed.')
+            Logger().log('> Virus scan failed.')
             return False
-        log('> Virus scan was passed.')
+        Logger().log('> Virus scan was passed.')
 
         if not self.__test_io():
-            log('> IO test failed.')
+            Logger().log('> IO test failed.')
             return False
-        log('> IO test was passed.')
+        Logger().log('> IO test was passed.')
 
         if not self.__intird_backdoor_test():
-            log('> Initrd validation test failed.')
+            Logger().log('> Initrd validation test failed.')
             return False
-        log('> Initrd validation test was passed.')       
+        Logger().log('> Initrd validation test was passed.')       
 
         if not self.__run_external_tests():
-            log('> External Test failed.')
+            Logger().log('> External Test failed.')
             return False
-        log('> All tests were successful.')
+        Logger().log('> All tests were successful.')
 
         return True
 
@@ -110,8 +110,8 @@ class Evaluator():
         SystemOperationsProvider().mount_device(device_system_name)
         DataProvider().generate_random_data_file()
         
-        shutil.copyfile('dump.me', DEVICE_MOUNTPOINT  + 'dump.me')
-        shutil.move(DEVICE_MOUNTPOINT  + 'dump.me', 'received_dump.me')
+        shutil.copyfile('dump.me', self.device_mountpoint  + 'dump.me')
+        shutil.move(self.device_mountpoint  + 'dump.me', 'received_dump.me')
         if FileOperationsProvider().compare_files('dump.me', 'received_dump.me'):
             os.remove('dump.me')
             os.remove('received_dump.me')
@@ -132,7 +132,7 @@ class Evaluator():
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
         SystemOperationsProvider().mount_device(device_system_name)
         
-        scan_result = DeviceOperationsProvider().virus_scan_device(DEVICE_MOUNTPOINT)
+        scan_result = DeviceOperationsProvider().virus_scan_device(self.device_mountpoint)
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
 
         return scan_result # bool
@@ -143,23 +143,23 @@ class Evaluator():
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
         SystemOperationsProvider().mount_device(device_system_name)
 
-        initrd_file_path = FileOperationsProvider().find_initrd(DEVICE_MOUNTPOINT)
+        initrd_file_path = FileOperationsProvider().find_initrd(self.device_mountpoint)
         
         if initrd_file_path is None:
-            log('> Initrd file does not exist in the filesystem. Test is being flaged as successful.')
+            Logger().log('> Initrd file does not exist in the filesystem. Test is being flaged as successful.')
             return True
         else:
-            log('> Packing live boot files into image file.')
+            Logger().log('> Packing live boot files into image file.')
             FileOperationsProvider().create_img_file()
 
-            log('> Generating initrd file checksum.')
+            Logger().log('> Generating initrd file checksum.')
 
             local_image_checksum = SystemOperationsProvider().get_file_checksum('/tmp/temp_image.img')
             real_checksum = NetworkOperationsProvider().get_tails_checksum()
             
             if real_checksum is None:
-                log('> Exception occured. The most common problem is lack of initernet connection or broken network driver.')
-                log('> Trying hash verification from offline blacklist.')
+                Logger().log('> Exception occured. The most common problem is lack of initernet connection or broken network driver.')
+                Logger().log('> Trying hash verification from offline blacklist.')
 
                 return SystemOperationsProvider().offline_verify_checksum(local_image_checksum)
 
@@ -191,7 +191,7 @@ class Evaluator():
             
             if callable(item) and self.__validate_plugin(plugin):
                     if not item(self.__device, self.__device_handle):
-                        log('> External test {} failed or is not valid.'.format(item))
+                        Logger().log('> External test {} failed or is not valid.'.format(item))
                         return False
         return True
     

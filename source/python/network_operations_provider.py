@@ -1,5 +1,5 @@
 import json
-from logger import log
+from logger import Logger
 import urllib
 from collections import namedtuple
 
@@ -11,6 +11,6 @@ class NetworkOperationsProvider():
 
                 return list(received_data['installations'][0].values())[0][0]
         except:
-            log('> No internet connection.')
+            Logger().log('> No internet connection.')
             return None
             

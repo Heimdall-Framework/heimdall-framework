@@ -2,7 +2,7 @@ import os
 import filecmp
 import subprocess
 from subprocess import check_output
-from logger import log
+from logger import Logger
 
 initrd_list = ['initrd', 'initrd.img', 'initrd.gz']
 
@@ -25,7 +25,7 @@ class FileOperationsProvider():
         
         output, error = process.communicate()
         if error != None:
-            log(error)
+            Logger().log(error)
             return False
         
         return True

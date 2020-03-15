@@ -1,11 +1,10 @@
 import usb1 as usb
-from logger import log
+from logger import Logger
 from evaluator import Evaluator
 from queue import Queue
 import gui_elements
 from device_operations_provider import DeviceOperationsProvider
 
-SERVICE_PORTS = [0,2]
 TEST_PORTS = [1,3]
 
 class USBHotplugDetector():
@@ -21,17 +20,17 @@ class USBHotplugDetector():
         print('stoped')
 
     def __begin_detecting(self):
-        log(">>> Hotplug detector was started.")
+        Logger().log(">>> Hotplug detector was started.")
         with usb.USBContext() as context:
             while self.__is_started:
                 # finds a new device that can be tested
                 device = DeviceOperationsProvider().find_new_device(
                     TEST_PORTS,
-                    context
+                    context,
                 )
 
                 # checks if the found device has already been tested
-                if self.__cached_device == device or device is None:
+                if device is None or device == self.__cached_device:
                     continue
 
                 # creates USBDeviceHandle object for given VID and PID
@@ -43,7 +42,7 @@ class USBHotplugDetector():
 
                 # checks if the device is still present ot if the user is allowed to access it
                 if handle is None:
-                    log(">>> Device not present, or user is not allowed to use the device.")
+                    Logger().log(">>> Device not present, or user is not allowed to use the device.")
                 else:
                     # detaches device's kernel driver
                     DeviceOperationsProvider().handle_kernel_driver(handle, False)
@@ -56,17 +55,18 @@ class USBHotplugDetector():
                         )
 
                     if not evaluator.test_device():
-                        log(">>>! DEVICE IS NOT SAFE !<<<")
+                        self.__cached_device = device
+
+                        Logger().log(">>>! DEVICE IS NOT SAFE !<<<")
                         gui_elements.show_msg_box('Dangerous device detected','Tested device is not safe for use.')
 
                         handle.close()
                         evaluator = None
-
-                        self.__cached_device = device
                     else:
-                        log(">>> Device is SAFE for use")
+                        self.__cached_device = device
+                        
+                        Logger().log(">>> Device is SAFE for use")
+                        
                         handle.close()
                         evaluator = None
-
-                        self.__cached_device = device
-            log(">>> Hotplug detector was terminated.")
+            Logger().log(">>> Hotplug detector was terminated.")

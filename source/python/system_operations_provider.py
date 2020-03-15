@@ -6,7 +6,7 @@ import ctypes.util
 import subprocess
 from subprocess import check_output
 from collections import namedtuple
-from logger import log
+from logger import Logger
 
 
 DEVICE_MOUNTPOINT = '/home/ivan/mount_point'
@@ -27,7 +27,7 @@ class SystemOperationsProvider():
                 return False
 
         if error != None:
-            log(error)
+            Logger().log(error)
             return False
 
         return True
@@ -53,7 +53,7 @@ class SystemOperationsProvider():
         process = subprocess.Popen(command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output, error = process.communicate()
         if error != None:
-            log(error)
+            Logger().log(error)
             return None
         return output
 

@@ -1,6 +1,6 @@
 import string
 import random
-from logger import log
+from logger import Logger
 
 class DataProvider():
     def generate_random_data_file(self):
@@ -11,7 +11,7 @@ class DataProvider():
             
             return True
         except:
-            log('> File creation exception.')
+            Logger().log('> File creation exception.')
             return False
 
 
