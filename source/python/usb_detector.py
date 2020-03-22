@@ -17,10 +17,11 @@ class USBHotplugDetector():
 
     def stop(self):
         self.__is_started = False
-        print('stoped')
+        print('>>> Hotplug detector was stopped.')
 
     def __begin_detecting(self):
         Logger().log(">>> Hotplug detector was started.")
+        
         with usb.USBContext() as context:
             while self.__is_started:
                 # finds a new device that can be tested
@@ -53,7 +54,7 @@ class USBHotplugDetector():
                         device.getPortNumber(),
                         context
                         )
-
+                    # indicates that the tested device is NOT safe for use
                     if not evaluator.test_device():
                         self.__cached_device = device
 
@@ -62,6 +63,8 @@ class USBHotplugDetector():
 
                         handle.close()
                         evaluator = None
+                    
+                    # indicates that the tested device is safe for use
                     else:
                         self.__cached_device = device
                         

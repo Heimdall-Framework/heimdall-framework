@@ -188,11 +188,23 @@ class Evaluator():
     def __run_external_tests(self):
         for plugin in dir(plugins):
             item = getattr(plugins, plugin)
+
+            plugin_location = '{}/plugins/{}.py'.format(
+                os.path.dirname(os.path.realpath(__file__)),
+                plugin
+            )
             
+            if os.path.exists(plugin_location):
+                if not SystemOperationsProvider().verify_file_owner(plugin_location):
+                    Logger().log('> Plugin {} does not belong to the user. It execution is being skipped because it might be malicious.'.format(
+                        plugin
+                    ))
+                    continue
+                
             if callable(item) and self.__validate_plugin(plugin):
-                    if not item(self.__device, self.__device_handle):
-                        Logger().log('> External test {} failed or is not valid.'.format(item))
-                        return False
+                if not item(self.__device, self.__device_handle):
+                    Logger().log('> External test {} failed or is not valid.'.format(item))
+                    return False
         return True
     
     # validates if a given demo test exist in the config.json file and if it is allowed to be executed

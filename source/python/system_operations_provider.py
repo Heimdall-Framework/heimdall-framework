@@ -1,7 +1,8 @@
 import os
+import pwd
 import time
 import ctypes
-import pwd
+import getpass
 import datetime
 import subprocess
 import ctypes.util
@@ -61,20 +62,21 @@ class SystemOperationsProvider():
 
     # checks if Tails iso checksum is blackslisted as dangerous
     def offline_verify_checksum(self, checksum):
-        with open('/home/ivan/Documents/Projects/cybersecurity/heimdall/source/python/blacklisted.blck') as blacklisted:
+        with open(os.path.dirname(os.path.realpath(__file__))+ '/blacklisted.blck') as blacklisted:
             if not checksum in blacklisted:
                 return True
             else:
                 return False
     # verifies if the current user owns a specific file
-    def verify_file_owner(self, file_path, true_owner):
+    def verify_file_owner(self, file_path):
         file_owner = pwd.getpwuid(os.stat(file_path, follow_symlinks=False).st_uid).pw_name
 
-        if file_owner == true_owner:
+        if file_owner == getpass.getuser():
             return True
         else:
             return False
 
+# timespec structure
 class timespec_struct(ctypes.Structure):
     _fields_ = [
         ('tv_sec', ctypes.c_long),

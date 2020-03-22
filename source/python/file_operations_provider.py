@@ -19,8 +19,9 @@ class FileOperationsProvider():
                 if f in initrd_list:
                     return '{0}/{1}'.format(root, f)
 
+    # packs the contents of the mount directory into a disk image file
     def create_img_file(self):
-        creation_command = 'mkisofs -o /tmp/temp_image.img /home/ivan/mount_point'
+        creation_command = 'mkisofs -o /tmp/temp_image.img {}'.format(os.environ['DEVS_MOUNTPOINT'])
         process = subprocess.Popen(creation_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         
         output, error = process.communicate()
