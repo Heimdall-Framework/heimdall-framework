@@ -1,7 +1,6 @@
 # Heimdall
 
-Heimdall is a simple USB threat evaluation framework that is designed to 
-This project implements methods for USB mass storage devices analysis that are able to detect potential threats. The approach relies on an embedded system which executes a stack of tests, particularly designed to detect malicious behavioural characteristics in a USB mass storage device and thus to render it as dangerous.
+Heimdall is a simple USB threat evaluation framework that is designed to detect malicious behaviour in USB mass storage devices.
 
 * В /research се намира документацията.
 * На https://slides.com/ivanzlatanov/heimdall/fullscreen#/ може да откриете презентацията.
