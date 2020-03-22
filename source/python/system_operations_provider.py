@@ -1,15 +1,16 @@
 import os
 import time
-import datetime
 import ctypes
-import ctypes.util
+import pwd
+import datetime
 import subprocess
+import ctypes.util
 from subprocess import check_output
 from collections import namedtuple
 from logger import Logger
 
 
-DEVICE_MOUNTPOINT = '/home/ivan/mount_point'
+DEVICE_MOUNTPOINT = os.environ['DEVS_MOUNTPOINT']
 
 class SystemOperationsProvider():
     
@@ -47,6 +48,7 @@ class SystemOperationsProvider():
             ctypes.byref(timespec)
             )
     
+    # returns the checksum of a file for a given file path
     def get_file_checksum(self, file_path):
         command = 'sha256sum {}'.format(file_path)
 
@@ -57,12 +59,21 @@ class SystemOperationsProvider():
             return None
         return output
 
+    # checks if Tails iso checksum is blackslisted as dangerous
     def offline_verify_checksum(self, checksum):
         with open('/home/ivan/Documents/Projects/cybersecurity/heimdall/source/python/blacklisted.blck') as blacklisted:
             if not checksum in blacklisted:
                 return True
             else:
                 return False
+    # verifies if the current user owns a specific file
+    def verify_file_owner(self, file_path, true_owner):
+        file_owner = pwd.getpwuid(os.stat(file_path, follow_symlinks=False).st_uid).pw_name
+
+        if file_owner == true_owner:
+            return True
+        else:
+            return False
 
 class timespec_struct(ctypes.Structure):
     _fields_ = [

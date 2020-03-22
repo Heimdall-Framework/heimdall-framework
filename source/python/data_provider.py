@@ -3,6 +3,8 @@ import random
 from logger import Logger
 
 class DataProvider():
+    
+    # generates a file with random data
     def generate_random_data_file(self):
         try:
             file_content = self.__generate_pseudorandom_string(128)
