@@ -22,54 +22,57 @@ class USBHotplugDetector():
     def __begin_detecting(self):
         Logger().log(">>> Hotplug detector was started.")
         
-        with usb.USBContext() as context:
-            while self.__is_started:
-                # finds a new device that can be tested
-                device = DeviceOperationsProvider().find_new_device(
-                    TEST_PORTS,
-                    context,
-                )
+        try:
+            with usb.USBContext() as context:
+                while self.__is_started:
+                    # finds a new device that can be tested
+                    device = DeviceOperationsProvider().find_new_device(
+                        TEST_PORTS,
+                        context,
+                    )
 
-                # checks if the found device has already been tested
-                if device is None or device == self.__cached_device:
-                    continue
+                    # checks if the found device has already been tested
+                    if device is None or device == self.__cached_device:
+                        continue
 
-                # creates USBDeviceHandle object for given VID and PID
-                handle = context.openByVendorIDAndProductID(
-                    device.getVendorID(),
-                    device.getProductID(),
-                    skip_on_error=True
-                )
+                    # creates USBDeviceHandle object for given VID and PID
+                    handle = context.openByVendorIDAndProductID(
+                        device.getVendorID(),
+                        device.getProductID(),
+                        skip_on_error=True
+                    )
 
-                # checks if the device is still present ot if the user is allowed to access it
-                if handle is None:
-                    Logger().log(">>> Device not present, or user is not allowed to use the device.")
-                else:
-                    # detaches device's kernel driver
-                    DeviceOperationsProvider().handle_kernel_driver(handle, False)
-
-                    # creates Evaluator object with given USBDeviceHandlem, USBDevice and device's USBContext
-                    evaluator = Evaluator(
-                        handle,
-                        device.getPortNumber(),
-                        context
-                        )
-                    # indicates that the tested device is NOT safe for use
-                    if not evaluator.test_device():
-                        self.__cached_device = device
-
-                        Logger().log(">>>! DEVICE IS NOT SAFE !<<<")
-                        gui_elements.show_msg_box('Dangerous device detected','Tested device is not safe for use.')
-
-                        handle.close()
-                        evaluator = None
-                    
-                    # indicates that the tested device is safe for use
+                    # checks if the device is still present ot if the user is allowed to access it
+                    if handle is None:
+                        Logger().log(">>> Device not present, or user is not allowed to use the device.")
                     else:
-                        self.__cached_device = device
+                        # detaches device's kernel driver
+                        DeviceOperationsProvider().handle_kernel_driver(handle, False)
+
+                        # creates Evaluator object with given USBDeviceHandlem, USBDevice and device's USBContext
+                        evaluator = Evaluator(
+                            handle,
+                            device.getPortNumber(),
+                            context
+                            )
+                        # indicates that the tested device is NOT safe for use
+                        if not evaluator.test_device():
+                            self.__cached_device = device
+
+                            Logger().log(">>>! DEVICE IS NOT SAFE !<<<")
+                            gui_elements.show_msg_box('Dangerous device detected','Tested device is not safe for use.')
+
+                            handle.close()
+                            evaluator = None
                         
-                        Logger().log(">>> Device is SAFE for use")
-                        
-                        handle.close()
-                        evaluator = None
-            Logger().log(">>> Hotplug detector was terminated.")
+                        # indicates that the tested device is safe for use
+                        else:
+                            self.__cached_device = device
+                            
+                            Logger().log(">>> Device is SAFE for use")
+                            
+                            handle.close()
+                            evaluator = None
+                Logger().log(">>> Hotplug detector was terminated.")
+        except usb.USBError:
+            Logger().log('>>> An exception has occurred')

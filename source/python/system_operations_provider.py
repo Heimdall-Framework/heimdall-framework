@@ -10,14 +10,13 @@ from subprocess import check_output
 from collections import namedtuple
 from logger import Logger
 
-
-DEVICE_MOUNTPOINT = os.environ['DEVS_MOUNTPOINT']
-
 class SystemOperationsProvider():
-    
+    def __init__(self):
+        self.device_mountpoint = os.environ['DEVS_MOUNTPOINT']
+
     # mounts the device on predetermined point with noexec and rw permission parameters
     def mount_device(self, device_system_name, current_part=0):
-        mounting_command = 'sudo mount {}{} {} -o noexec'.format(device_system_name, current_part, DEVICE_MOUNTPOINT)
+        mounting_command = 'sudo mount {}{} {} -o noexec'.format(device_system_name, current_part, self.device_mountpoint)
 
         process = subprocess.Popen(mounting_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output, error = process.communicate()

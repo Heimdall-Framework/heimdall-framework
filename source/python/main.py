@@ -23,7 +23,7 @@ class Main():
             os.environ['DEVS_MOUNTPOINT']
             os.environ['DUMPS_DIRECTORY_PATH']
         except KeyError:
-            print('Environmental variable has not been set.')
+            print('One or more environmental variables have not been set or exported correctly.')
             raise
         
 if __name__ == '__main__':
