@@ -24,7 +24,7 @@ sudo apt update
 ```
 
 ```
-sudo apt-get install python3 python3-pip python3-pyqt5 python3-tkinter clamav-daemon clamav-freshclam clamav-unofficial-sigs
+sudo apt-get install python3 python3-pip python3-pyqt5 python-tk clamav-daemon clamav-freshclam clamav-unofficial-sigs
 ```
 
 Then you must set the following environmental variables to directories of your choice:
@@ -44,7 +44,7 @@ export LOGS_DIRECTORY_PATH=<LOCATION>
 
 where location is the path to the directory.
 
-Now you can clone the repository with `git clone git@github.com:not-so-cool-anymore/Heimdall.git` and proceed to starting Heimdall in GUI or NOGUI mode.
+Now you can clone the repository with `git@github.com:Heimdall-Framework/heimdall-framework.git` and proceed to starting Heimdall in GUI or NOGUI mode.
 In order to do it you must enter in /source/python and run `./main.py NOGUI` (for NOGUI mode) or `./main.py GUI` (for GUI mode).
 
 ## Possible issues:
