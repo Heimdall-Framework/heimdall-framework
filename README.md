@@ -65,7 +65,7 @@ by running `htop` or `top` and looking for a process that has 'clam' in his name
 A plugin (or external test) is a python file that is kept in a specific directory and contains a test or mupltiple tests that are executed after
 the hardcoded ones. You can create your own test by creating a python file with the following structure:
 
-```
+```python
 import usb1 as usb
 """
 All custom tests have to have the device and device handle as parameters.
@@ -74,18 +74,16 @@ def demo_test(device, device_handle):
     print('> Demo Test was passed.')
 
     return True
-
 ```
 
 Where your test function, the `demo_test` in this case, has to take a usb1 device object and usb1 device handle object as parametes.
 After developing your test you have to add it to the plugins directory - /source/python/plugins, and give it a name. Then you just edit the plugin configuration 
 file - /source/python/config.json, and add the config for your test inside the JSON list.
 Example:
-```
+```json
 [
         {"name" : "demo_test", "enabled" : true},
         {"name" : "YOUR TEST", "enabled" : true}
-
 ]
 ```
 You can enable or disable test by setting the `enabled` parameter next to their name to `true` or `false`. Disabled tests won't be executed.
