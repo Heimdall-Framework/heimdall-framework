@@ -150,24 +150,32 @@ class Evaluator():
             return True
         else:
             Logger().log('> Packing live boot files into image file.')
-            FileOperationsProvider().create_img_file()
+            FileOperationsProvider().create_img_file('img')
+            FileOperationsProvider().create_img_file('iso')
 
             Logger().log('> Generating initrd file checksum.')
 
             local_image_checksum = SystemOperationsProvider().get_file_checksum('/tmp/temp_image.img')
-            real_checksum = NetworkOperationsProvider().get_tails_checksum()
+            local_iso_checksum = SystemOperationsProvider().get_file_checksum('/tmp/temp_image.iso')
+
+            mirror_image_checksum, mirror_iso_checksum = NetworkOperationsProvider().get_tails_checksum()
             
-            if real_checksum is None:
-                Logger().log('> Exception occured. The most common problem is lack of initernet connection or broken network driver.')
+            # checks if any of the checksums is None and proceeds to offline test if they are.  
+            if mirror_image_checksum  is None or mirror_iso_checksum is None:
+                Logger().log('> Exception occurred. The most common problem is lack of internet connection or broken network driver.')
                 Logger().log('> Trying hash verification from offline blacklist.')
 
                 return SystemOperationsProvider().offline_verify_checksum(local_image_checksum)
 
-            if local_image_checksum == real_checksum:
+            # compares the two checksums from the Tails website to the local one
+            if local_image_checksum == mirror_image_checksum or local_iso_checksum == mirror_iso_checksum:
                 os.remove('/tmp/temp_image.img')
+                os.remove('/tmp/temp_image.iso')
                 return True
             else:
                 os.remove('/tmp/temp_image.img')
+                os.remove('/tmp/temp_image.iso')
+                Logger().log('> The Tails image is outdated or has been altered.')
                 return False
 
     def __detect_time_targeted_payload(self):

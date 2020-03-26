@@ -20,8 +20,8 @@ class FileOperationsProvider():
                     return '{0}/{1}'.format(root, f)
 
     # packs the contents of the mount directory into a disk image file
-    def create_img_file(self):
-        creation_command = 'mkisofs -o /tmp/temp_image.img {}'.format(os.environ['DEVS_MOUNTPOINT'])
+    def create_img_file(self, extension):
+        creation_command = 'mkisofs -o /tmp/temp_image.{} {}'.format(extension, os.environ['DEVS_MOUNTPOINT'])
         process = subprocess.Popen(creation_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         
         output, error = process.communicate()

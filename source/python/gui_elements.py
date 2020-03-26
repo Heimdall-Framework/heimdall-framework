@@ -81,7 +81,6 @@ class Ui_HeimdallApp(object):
             evaluator_thread.join()
             evaluator_thread.setDaemon(False)
             evaluator_thread = None
-            evaluator_thread = Thread(target=usb_detector.start)
     
 
 class WritingStream(QtCore.QObject):

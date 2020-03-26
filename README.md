@@ -24,7 +24,7 @@ sudo apt-get install python3 python3-pip python3-pyqt5 python-tk clamav-daemon c
 ```
 
 ```
-sudo pip3 install pymsgbox libusb1 clamd
+sudo pip3 install pymsgbox libusb1 clamd objectpath
 ```
 
 Then you must set the following environmental variables to directories of your choice:
