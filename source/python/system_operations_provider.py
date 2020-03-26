@@ -68,9 +68,9 @@ class SystemOperationsProvider():
                 return False
     # verifies if the current user owns a specific file
     def verify_file_owner(self, file_path):
-        file_owner = pwd.getpwuid(os.stat(file_path, follow_symlinks=False).st_uid).pw_name
+        file_owner = pwd.getpwuid(os.stat(file_path, follow_symlinks=False).st_uid).pw_uid
 
-        if file_owner == getpass.getuser():
+        if str(file_owner) == os.environ['SUDO_UID']:
             return True
         else:
             return False

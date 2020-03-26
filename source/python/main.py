@@ -25,6 +25,12 @@ class Main():
         except KeyError:
             print('One or more environmental variables have not been set or exported correctly.')
             raise
+        try:
+            os.environ['SUDO_UID']
+        except KeyError:
+            print('Please start the application using "sudo -E".')
+            raise
         
 if __name__ == '__main__':
+    Main().validate_env_variables()
     Main().main()

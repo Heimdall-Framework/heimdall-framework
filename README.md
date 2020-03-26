@@ -42,7 +42,7 @@ export DEVS_MOUNTPOINT=<LOCATION>
 export LOGS_DIRECTORY_PATH=<LOCATION>
 ```
 
-where location is the path to the directory.
+where `<LOCATION>` is the path to the directory on your system.
 
 Now you can clone the repository with `git@github.com:Heimdall-Framework/heimdall-framework.git` and proceed to starting Heimdall in GUI or NOGUI mode.
 In order to do it you must enter in heimdall-framework/source/python and run `./main.py NOGUI` (for NOGUI mode) or `./main.py GUI` (for GUI mode).
@@ -51,8 +51,7 @@ In order to do it you must enter in heimdall-framework/source/python and run `./
 
 ### No access or permission exceptions
 It might happen because the user you use does not have the proper access rights to use devices on the USB or to create and read files from the directories in your environmental variables.
-One possible fix can be to give root privileges to your user (actually giving root privileges and not using `sudo` because it will cause conflict
-during one of the tests). To do it, follow this thread in StackOverflow - [CLICK HERE](https://askubuntu.com/questions/168280/how-do-i-grant-sudo-privileges-to-an-existing-user).
+The proper way to fix it is to start the `./main.py` file with `sudo -E` which will grant it the proper access rights and keep the environmental variables.
 
 ### Clamav or clamd can't find or create specific files
 There are multiple possible causes for this issue. One of them is that another clamav instance is already running on your system and uses those files. You can check this

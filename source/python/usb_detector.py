@@ -55,9 +55,12 @@ class USBHotplugDetector():
                             device.getPortNumber(),
                             context
                             )
+
+                        evaluation_result, evaluated_device = evaluator.test_device()
+
                         # indicates that the tested device is NOT safe for use
-                        if not evaluator.test_device():
-                            self.__cached_device = device
+                        if not evaluation_result:
+                            self.__cached_device = evaluated_device
 
                             Logger().log(">>>! DEVICE IS NOT SAFE !<<<")
                             gui_elements.show_msg_box('Dangerous device detected','Tested device is not safe for use.')
@@ -67,7 +70,7 @@ class USBHotplugDetector():
                         
                         # indicates that the tested device is safe for use
                         else:
-                            self.__cached_device = device
+                            self.__cached_device = evaluated_device
                             
                             Logger().log(">>> Device is SAFE for use")
                             
