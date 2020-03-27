@@ -54,6 +54,7 @@ class SystemOperationsProvider():
 
         process = subprocess.Popen(command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output, error = process.communicate()
+        
         if error != None:
             Logger().log(error)
             return None

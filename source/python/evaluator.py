@@ -175,7 +175,7 @@ class Evaluator():
             else:
                 os.remove('/tmp/temp_image.img')
                 os.remove('/tmp/temp_image.iso')
-                Logger().log('> The Tails image is outdated or has been altered.')
+                Logger().log('> The Tails image is outdated or has been altered. Please update your Tails liveboot to the newest version and test again.')
                 return False
 
     def __detect_time_targeted_payload(self):
