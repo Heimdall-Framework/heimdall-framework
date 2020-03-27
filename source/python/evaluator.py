@@ -71,8 +71,9 @@ class Evaluator():
         device_bcd_number = self.__device.getbcdDevice()
 
         for i in range(TESTS_RANGE):
-            #the following line will be removed as part of optimisation when suitable harware is present    
-            gui.show_msg_box('Guidline', 'Unlpug the USB device, click Okay and then plug it in tha same port.')
+            
+            if not self.__execute_hardware_plugin(5):
+                gui.show_msg_box('Guidline', 'Unlpug the USB device, click Okay and then plug it in tha same port.')
 
             self.__device = None
             self.__device_handle = None
@@ -177,7 +178,7 @@ class Evaluator():
                 os.remove('/tmp/temp_image.iso')
                 Logger().log('> The Tails image is outdated or has been altered. Please update your Tails liveboot to the newest version and test again.')
                 return False
-
+    # in development
     def __detect_time_targeted_payload(self):
         print('Await further instructions')
 
@@ -192,7 +193,32 @@ class Evaluator():
                 self.__device.getVendorID(),
                 self.__device.getProductID()
             )
+    
+    def __execute_hardware_plugin(self, delay):
+        for plugin in dir(plugins):
+            item = getattr(plugins, plugin)
 
+            if plugin == "hardware_controller":
+                
+                plugin_location = '{}/plugins/{}.py'.format(
+                os.path.dirname(os.path.realpath(__file__)),
+                plugin
+                )
+            
+                if os.path.exists(plugin_location):
+                    if not SystemOperationsProvider().verify_file_owner(plugin_location):
+                        Logger().log('> Plugin {} does not belong to the user. It execution is being skipped because it might be malicious.'.format(
+                            plugin
+                        ))
+                        return False
+
+                if callable(item):
+                    item(delay)
+                    return True
+                else:
+                    return False
+                
+    # runs external plugins (tests)
     def __run_external_tests(self):
         for plugin in dir(plugins):
             item = getattr(plugins, plugin)
@@ -202,20 +228,22 @@ class Evaluator():
                 plugin
             )
             
+            # verifies that the plugin exists and is owned by the current user
             if os.path.exists(plugin_location):
                 if not SystemOperationsProvider().verify_file_owner(plugin_location):
                     Logger().log('> Plugin {} does not belong to the user. It execution is being skipped because it might be malicious.'.format(
                         plugin
                     ))
                     continue
-                
+            
+            # check if the plugin should be executed
             if callable(item) and self.__validate_plugin(plugin):
                 if not item(self.__device, self.__device_handle):
                     Logger().log('> External test {} failed or is not valid.'.format(item))
                     return False
         return True
     
-    # validates if a given demo test exist in the config.json file and if it is allowed to be executed
+    # validates if a given plugin (test) exist in the config.json file and if it is allowed to be executed
     def __validate_plugin(self, plugin_name):
         for plugin_configuration in self.__plugins_config:
             if plugin_configuration['name'] == plugin_name and plugin_configuration['enabled']:
