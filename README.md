@@ -5,6 +5,13 @@ Heimdall is a simple USB threat evaluation framework that is designed to detect 
 ---
 
 ## Installation:
+You can install manually or automatically, using the script.
+
+### Automatic installation
+In order to install the project automatically you must start the script, namer `install.sh`, located inside the root folder of the project, and provide the proper arguments (desktop or rpi installation, logs folder path and mounting folder path)
+when asked. The script will update the system, install the required dependencies, set the appropriate environmental variables and, if the installation is on RPI, download the hardware controller. 
+
+### Manual installation
 In order to clone and use this project, you must first install the following:
 
 * [Python 3.x.x](https://www.python.org/download/releases/3.0/);
@@ -45,7 +52,10 @@ export LOGS_DIRECTORY_PATH=<LOCATION>
 where `<LOCATION>` is the path to the directory on your system.
 
 Now you can clone the repository with `git@github.com:Heimdall-Framework/heimdall-framework.git` and proceed to starting Heimdall in GUI or NOGUI mode.
-In order to do it you must enter in heimdall-framework/source/python and run `./main.py NOGUI` (for NOGUI mode) or `./main.py GUI` (for GUI mode).
+
+## Execution
+In order to run the program, you must enter in the heimdall-framework/source/python directory and run `./main.py NOGUI` (for NOGUI mode) or `./main.py GUI` (for GUI mode).
+
 
 ## Possible issues:
 
