@@ -10,7 +10,7 @@ TEST_PORTS = [1,3]
 class USBHotplugDetector():
     def __init__(self):
         self.__cached_device = None
-
+    
     def start(self):
         self.__is_started = True
         self.__begin_detecting()

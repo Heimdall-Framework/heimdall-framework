@@ -1,6 +1,6 @@
 # Heimdall
 
-Heimdall is a simple USB threat evaluation framework that is designed to detect malicious behavior in USB mass storage devices.
+Heimdall is a simple USB threat evaluation framework for Linux that is designed to detect malicious behavior in USB mass storage devices.
 
 ---
 

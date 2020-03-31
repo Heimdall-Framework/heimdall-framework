@@ -15,10 +15,11 @@ function export_env_variables ()
 {
     export DEVS_MOUNTPOINT=$1
     export LOGS_DIRECTORY_PATH=$2
-    echo "export DEVS_MOUNTPOINT=$1 >> ~/.bashrc "
+    echo "export DEVS_MOUNTPOINT=$1" >> ~/.bashrc
     mkdir $1
-    echo "export LOGS_DIRECTORY_PATH=$2 >> ~/.bashrc "
+    echo "export LOGS_DIRECTORY_PATH=$2" >> ~/.bashrc 
     mkdir $2
+    source ~/.bashrc
     echo "Environmental variables were imported successfuly."
 }
 
@@ -59,7 +60,6 @@ function install ()
         echo "Importing hardware controller."
         import_hardware_controller
         echo "Increasing swap."
-        
     fi
 
     if [ $4 == "y" ]
@@ -72,9 +72,9 @@ function install ()
             echo "stop on runlevel [!2345] >> /etc/systemd/heimdall_startup.conf"
             echo "exec $path_to_main/source/python/main.py GUI >> /etc/systemd/heimdall_startup.conf" 
         else 
-            echo "start on runlevel [2345] >> /etc/init/heimdall_startup.conf"
-            echo "stop on runlevel [!2345] >> /etc/init/heimdall_startup.conf"
-            echo "exec $path_to_main/source/python/main.py GUI >> /etc/init/heimdall_startup.conf" 
+            echo "start on runlevel [2345]" >> /etc/init/heimdall_startup.conf
+            echo "stop on runlevel [!2345]" >> /etc/init/heimdall_startup.conf
+            echo "exec $path_to_main/source/python/main.py GUI" >> /etc/init/heimdall_startup.conf
        fi
     fi
 

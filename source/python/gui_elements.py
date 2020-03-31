@@ -4,14 +4,19 @@ from threading import Thread
 from usb_detector import USBHotplugDetector
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 usb_detector = USBHotplugDetector()
-evaluator_thread = Thread(target=usb_detector.start)
+#evaluator_thread = Thread(target=usb_detector.start)
 
 class Ui_HeimdallApp(object):
     def setupUi(self, HeimdallApp):
+        self.threadpool = QtCore.QThreadPool()
+
         HeimdallApp.setObjectName("HeimdallApp")
         HeimdallApp.resize(851, 595)
+        
         sys.stdout = WritingStream(outputed_text=self.normal_write_text)
+        
         self.centralwidget = QtWidgets.QWidget(HeimdallApp)
         self.centralwidget.setObjectName("centralwidget")
 
@@ -70,15 +75,12 @@ class Ui_HeimdallApp(object):
         self.logs_text_box.ensureCursorVisible()
     
     def __start_evaluator(self):
-        if not evaluator_thread.daemon:
-            evaluator_thread.setDaemon(True)
-
-        evaluator_thread.start()
+        worker = GuiThreadWorker()
+        self.threadpool.start(worker) 
 
     def __stop_evaluator(self):
         usb_detector.stop()
-        if evaluator_thread.is_alive():
-            evaluator_thread.join()
+        
     
 
 class WritingStream(QtCore.QObject):
@@ -86,6 +88,11 @@ class WritingStream(QtCore.QObject):
 
     def write(self, text):
         self.outputed_text.emit(str(text))
+
+class GuiThreadWorker(QtCore.QRunnable):
+    @QtCore.pyqtSlot()
+    def run(self):
+        usb_detector.start()
 
 def show_gui():
     app = QtWidgets.QApplication(sys.argv)
