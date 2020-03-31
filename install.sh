@@ -16,8 +16,9 @@ function export_env_variables ()
     export DEVS_MOUNTPOINT=$1
     export LOGS_DIRECTORY_PATH=$2
     echo "export DEVS_MOUNTPOINT=$1 >> ~/.bashrc "
+    mkdir $1
     echo "export LOGS_DIRECTORY_PATH=$2 >> ~/.bashrc "
-    
+    mkdir $2
     echo "Environmental variables were imported successfuly."
 }
 
