@@ -166,22 +166,8 @@ class Evaluator():
             local_image_checksum = str(SystemOperationsProvider().get_file_checksum('/tmp/temp_image.img'))
             local_iso_checksum = str(SystemOperationsProvider().get_file_checksum('/tmp/temp_image.iso'))
 
-            mirror_image_checksum, mirror_iso_checksum = NetworkOperationsProvider().get_tails_checksum()
-            print(local_iso_checksum)
-            print(mirror_iso_checksum)
-            print(local_image_checksum)
-            print(mirror_image_checksum)
-
-            # checks if any of the checksums is None and proceeds to offline test if they are.  
-            if mirror_image_checksum  is None or mirror_iso_checksum is None:
-                Logger().log('> Exception occurred. The most common problem is lack of internet connection or broken network driver.')
-                Logger().log('> Trying hash verification from offline blacklist.')
-
-                SystemOperationsProvider().unmount_device(mounted_device_partition)        
-                return SystemOperationsProvider().offline_verify_checksum(local_image_checksum)
-
             # compares the two checksums from the Tails website to the local one
-            if local_image_checksum == mirror_image_checksum or local_iso_checksum == mirror_iso_checksum:
+            if SystemOperationsProvider().offline_verify_checksum(local_image_checksum):
                 os.remove('/tmp/temp_image.img')
                 os.remove('/tmp/temp_image.iso')
 
@@ -194,6 +180,7 @@ class Evaluator():
                 
                 SystemOperationsProvider().unmount_device(mounted_device_partition)                        
                 return False
+                
     # in development
     def __detect_time_targeted_payload(self):
         print('Await further instructions')
