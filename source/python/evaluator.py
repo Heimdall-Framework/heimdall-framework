@@ -108,18 +108,20 @@ class Evaluator():
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
 
-        SystemOperationsProvider().mount_device(device_system_name)
+        mount_status, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
         DataProvider().generate_random_data_file()
-        
+        FileOperationsProvider().find_indicator(self.device_mountpoint)
         shutil.copyfile('dump.me', self.device_mountpoint  + 'dump.me')
         shutil.move(self.device_mountpoint  + 'dump.me', 'received_dump.me')
         if FileOperationsProvider().compare_files('dump.me', 'received_dump.me'):
             os.remove('dump.me')
             os.remove('received_dump.me')
 
+            SystemOperationsProvider().unmount_device(mounted_device_partition)
             DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
             return True
         
+        SystemOperationsProvider().unmount_device(mounted_device_partition)        
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
     
         os.remove('dump.me')
@@ -131,9 +133,12 @@ class Evaluator():
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
-        SystemOperationsProvider().mount_device(device_system_name)
-        
+        mount_status, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
+
+        FileOperationsProvider().find_indicator(self.device_mountpoint)
+
         scan_result = DeviceOperationsProvider().virus_scan_device(self.device_mountpoint)
+        SystemOperationsProvider().unmount_device(mounted_device_partition)
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
 
         return scan_result # bool
@@ -142,41 +147,52 @@ class Evaluator():
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
-        SystemOperationsProvider().mount_device(device_system_name)
-
-        initrd_file_path = FileOperationsProvider().find_initrd(self.device_mountpoint)
+        mount_status, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
         
-        if initrd_file_path is None:
-            Logger().log('> Initrd file does not exist in the filesystem. Test is being flaged as successful.')
+        indicator_file_path = FileOperationsProvider().find_indicator(self.device_mountpoint)
+
+        if indicator_file_path is None:
+            Logger().log('> Indicator file does not exist in the filesystem. Test is being flaged as successful.')
+            SystemOperationsProvider().unmount_device(mounted_device_partition)        
+
             return True
         else:
             Logger().log('> Packing live boot files into image file.')
             FileOperationsProvider().create_img_file('img')
             FileOperationsProvider().create_img_file('iso')
 
-            Logger().log('> Generating initrd file checksum.')
+            Logger().log('> Generating image file checksum.')
 
-            local_image_checksum = SystemOperationsProvider().get_file_checksum('/tmp/temp_image.img')
-            local_iso_checksum = SystemOperationsProvider().get_file_checksum('/tmp/temp_image.iso')
+            local_image_checksum = str(SystemOperationsProvider().get_file_checksum('/tmp/temp_image.img'))
+            local_iso_checksum = str(SystemOperationsProvider().get_file_checksum('/tmp/temp_image.iso'))
 
             mirror_image_checksum, mirror_iso_checksum = NetworkOperationsProvider().get_tails_checksum()
-            
+            print(local_iso_checksum)
+            print(mirror_iso_checksum)
+            print(local_image_checksum)
+            print(mirror_image_checksum)
+
             # checks if any of the checksums is None and proceeds to offline test if they are.  
             if mirror_image_checksum  is None or mirror_iso_checksum is None:
                 Logger().log('> Exception occurred. The most common problem is lack of internet connection or broken network driver.')
                 Logger().log('> Trying hash verification from offline blacklist.')
 
+                SystemOperationsProvider().unmount_device(mounted_device_partition)        
                 return SystemOperationsProvider().offline_verify_checksum(local_image_checksum)
 
             # compares the two checksums from the Tails website to the local one
             if local_image_checksum == mirror_image_checksum or local_iso_checksum == mirror_iso_checksum:
                 os.remove('/tmp/temp_image.img')
                 os.remove('/tmp/temp_image.iso')
+
+                SystemOperationsProvider().unmount_device(mounted_device_partition)        
                 return True
             else:
                 os.remove('/tmp/temp_image.img')
                 os.remove('/tmp/temp_image.iso')
                 Logger().log('> The Tails image is outdated or has been altered. Please update your Tails liveboot to the newest version and test again.')
+                
+                SystemOperationsProvider().unmount_device(mounted_device_partition)                        
                 return False
     # in development
     def __detect_time_targeted_payload(self):
@@ -194,6 +210,7 @@ class Evaluator():
                 self.__device.getProductID()
             )
     
+    # executes hardware relay controll plugin
     def __execute_hardware_plugin(self, delay):
         for plugin in dir(plugins):
             item = getattr(plugins, plugin)

@@ -16,23 +16,32 @@ class SystemOperationsProvider():
 
     # mounts the device on predetermined point with noexec and rw permission parameters
     def mount_device(self, device_system_name, current_part=0):
-        mounting_command = 'sudo mount {}{} {} -o noexec'.format(device_system_name, current_part, self.device_mountpoint)
-
+        mounting_command = 'mount {}{} {} -o noexec'.format(device_system_name, current_part, self.device_mountpoint)
         process = subprocess.Popen(mounting_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output, error = process.communicate()
-        
+
         if 'bad' in str(output) or 'not exist' in str(output) and current_part == 0:
             for i in range(1, 10):
                 if self.mount_device(device_system_name, current_part=i):
-                    return True
-                return False
-
+                    return True, device_system_name+str(i)
+            return False, None
+    
         if error != None:
             Logger().log(error)
-            return False
+            return False, None
+    
+        return True, device_system_name+str(current_part)
 
+    def unmount_device(self, mounted_device_partition,):
+        mounting_command = 'umount {}'.format(mounted_device_partition)
+        process = subprocess.Popen(mounting_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        output, error = process.communicate()
+        
+        if error != None:
+            Logger().log(error)
+            return False, None
+        
         return True
-
     # changes system clock time to a given one
     def change_system_time(self, required_time):
         OS_CLOCK_REALTIME_ID = 0

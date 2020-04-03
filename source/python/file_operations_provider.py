@@ -4,20 +4,25 @@ import subprocess
 from subprocess import check_output
 from logger import Logger
 
-initrd_list = ['initrd', 'initrd.img', 'initrd.gz']
 
 class FileOperationsProvider():
-    
+    def __init__(self):
+        self.device_mountpoint = os.environ['DEVS_MOUNTPOINT']
+        self.indicator_list = ['tails.cfg']
     # compares two files
     def compare_files(self, firstFilePath, secondFilePath):
         return filecmp.cmp(firstFilePath, secondFilePath)
 
-    # finds the initial ramdisk file on a liveboot
-    def find_initrd(self, directory):
-        for root, dirs, files in os.walk(directory):
-            for f in files:
-                if f in initrd_list:
-                    return '{0}/{1}'.format(root, f)
+    # recursively searches for a specific file that identifies the partition as a liveboot distribution of Tails
+    def find_indicator(self, directory):
+        for dir_path, directories, files in os.walk(directory, followlinks=True):
+            for sub_dir in directories:
+                self.find_indicator(self.device_mountpoint + sub_dir)
+
+            for file_name in files:
+                if file_name in self.indicator_list:
+                    return dir_path + file_name
+        return None
 
     # packs the contents of the mount directory into a disk image file
     def create_img_file(self, extension):

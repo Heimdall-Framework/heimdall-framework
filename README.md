@@ -14,7 +14,7 @@ when asked. The script will update the system, install the required dependencies
 ### Manual installation
 In order to clone and use this project, you must first install the following:
 
-* [Python 3.x.x](https://www.python.org/download/releases/3.0/);
+* [Python 3.6+](https://www.python.org/download/releases/3.0/);
 * [PyQT5](https://pypi.org/project/PyQt5/);
 * [Libusb1](https://pypi.org/project/libusb1/);
 * [Clamd](https://pypi.org/project/clamd/);
