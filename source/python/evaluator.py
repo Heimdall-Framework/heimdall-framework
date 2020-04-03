@@ -149,7 +149,7 @@ class Evaluator():
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
         mount_status, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
         
-        indicator_file_path = FileOperationsProvider().find_indicator(self.device_mountpoint)
+        indicator_file_path = FileOperationsProvider().find_file(self.device_mountpoint, 'tails.cfg')
 
         if indicator_file_path is None:
             Logger().log('> Indicator file does not exist in the filesystem. Test is being flaged as successful.')
@@ -180,7 +180,7 @@ class Evaluator():
                 
                 SystemOperationsProvider().unmount_device(mounted_device_partition)                        
                 return False
-                
+
     # in development
     def __detect_time_targeted_payload(self):
         print('Await further instructions')
