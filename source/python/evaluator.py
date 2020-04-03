@@ -110,7 +110,7 @@ class Evaluator():
 
         mount_status, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
         DataProvider().generate_random_data_file()
-        FileOperationsProvider().find_indicator(self.device_mountpoint)
+
         shutil.copyfile('dump.me', self.device_mountpoint  + 'dump.me')
         shutil.move(self.device_mountpoint  + 'dump.me', 'received_dump.me')
         if FileOperationsProvider().compare_files('dump.me', 'received_dump.me'):
@@ -134,8 +134,6 @@ class Evaluator():
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
         mount_status, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
-
-        FileOperationsProvider().find_indicator(self.device_mountpoint)
 
         scan_result = DeviceOperationsProvider().virus_scan_device(self.device_mountpoint)
         SystemOperationsProvider().unmount_device(mounted_device_partition)
