@@ -2,8 +2,8 @@
 
 function install_dependencies () 
 {
-    dependencies="python3 python3-pip python3-pyqt5 python-tk clamav-daemon clamav-freshclam clamav-unofficial-sigs"
-    python_modules="pymsgbox libusb1 clamd"
+    dependencies="python3 python3-pip python3-pyqt5 python-tk clamav-daemon clamav-freshclam clamav-unofficial-sigs gconftool-2"
+    python_modules="pymsgbox libusb1 pyudev clamd"
 
     apt-get update
     apt-get install $dependencies
@@ -15,9 +15,10 @@ function export_env_variables ()
 {
     export DEVS_MOUNTPOINT=$1
     export LOGS_DIRECTORY_PATH=$2
-    echo "export DEVS_MOUNTPOINT=$1" >> ~/.bashrc
+
+    echo "export LOGS_DIRECTORY_PATH=$1" >> ~/.bashrc 
     mkdir $1
-    echo "export LOGS_DIRECTORY_PATH=$2" >> ~/.bashrc 
+    echo "export DEVS_MOUNTPOINT=$2" >> ~/.bashrc
     mkdir $2
     source ~/.bashrc
     echo "Environmental variables were imported successfuly."

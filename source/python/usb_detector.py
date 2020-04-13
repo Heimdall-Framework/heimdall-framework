@@ -74,6 +74,8 @@ class USBHotplugDetector():
                             
                             Logger().log(">>> Device is SAFE for use")
                             
+                            gui_elements.show_msg_box('Device is safe fot use.')
+
                             handle.close()
                             evaluator = None
                 Logger().log(">>> Hotplug detector was terminated.")
