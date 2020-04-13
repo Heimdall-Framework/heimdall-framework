@@ -63,7 +63,7 @@ class USBHotplugDetector():
                             self.__cached_device = evaluated_device
 
                             Logger().log(">>>! DEVICE IS NOT SAFE !<<<")
-                            gui_elements.show_msg_box('Dangerous device detected','Tested device is not safe for use.')
+                            gui_elements.show_msg_box('Dangerous device detected','The tested device is NOT safe for use.')
 
                             handle.close()
                             evaluator = None
@@ -74,7 +74,7 @@ class USBHotplugDetector():
                             
                             Logger().log(">>> Device is SAFE for use")
                             
-                            gui_elements.show_msg_box('Device is safe fot use.')
+                            gui_elements.show_msg_box('Passed','All tests were passed. The tested device is safe fot use.')
 
                             handle.close()
                             evaluator = None
