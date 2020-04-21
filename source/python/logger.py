@@ -1,4 +1,5 @@
 import os 
+import sys
 from datetime import datetime
 
 class Logger():
@@ -21,4 +22,7 @@ class Logger():
         if not silent:
             print(string)
 
-        file.close()
+        file.close()    
+
+    def error_log(self, *args, **kwargs):
+        print(*args, file=sys.stderr, **kwargs)

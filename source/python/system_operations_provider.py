@@ -37,6 +37,8 @@ class SystemOperationsProvider():
         process = subprocess.Popen(mounting_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output, error = process.communicate()
         
+        Logger().log('Device was unmounted.',silent=True)
+
         if error != None:
             Logger().log(error)
             return False, None

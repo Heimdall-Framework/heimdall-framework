@@ -21,7 +21,7 @@ class Main():
     def validate_env_variables(self):
         try:
             os.environ['DEVS_MOUNTPOINT']
-            os.environ['DUMPS_DIRECTORY_PATH']
+            os.environ['LOGS_DIRECTORY_PATH']
         except KeyError:
             print('One or more environmental variables have not been set or exported correctly.')
             raise

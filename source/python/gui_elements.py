@@ -14,7 +14,7 @@ class Ui_HeimdallApp(object):
 
         HeimdallApp.setObjectName("HeimdallApp")
         HeimdallApp.resize(851, 595)
-        
+
         sys.stdout = WritingStream(outputed_text=self.normal_write_text)
         
         self.centralwidget = QtWidgets.QWidget(HeimdallApp)
