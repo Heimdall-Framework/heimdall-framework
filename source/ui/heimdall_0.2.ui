@@ -16,6 +16,9 @@
   <property name="windowTitle">
    <string>USB Threat Evaluator</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgba(61, 61, 61, 253)</string>
+  </property>
   <property name="tabShape">
    <enum>QTabWidget::Triangular</enum>
   </property>
@@ -45,6 +48,9 @@
          <font>
           <pointsize>14</pointsize>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: white;</string>
         </property>
         <property name="text">
          <string>Logs:</string>
@@ -112,6 +118,11 @@
           <pointsize>14</pointsize>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background: grey;
+color: white;
+</string>
+        </property>
         <property name="text">
          <string>Start Evaluator</string>
         </property>
@@ -136,6 +147,10 @@
           <pointsize>14</pointsize>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background: grey;
+color: white;</string>
+        </property>
         <property name="text">
          <string>Stop Evaluator</string>
         </property>
@@ -147,6 +162,9 @@
          <font>
           <pointsize>12</pointsize>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background: white</string>
         </property>
         <property name="readOnly">
          <bool>true</bool>
