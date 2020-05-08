@@ -35,7 +35,7 @@ function disable_automounting (){
 
 function import_hardware_controller()
 {
-    git clone git@github.com:Heimdall-Framework/heimdall-hardware-controller.git
+    git clone https://github.com/Heimdall-Framework/heimdall-framework.git
     mv heimdall-hardware-controller/heimdall_hardware_controller.py source/python/plugins/hardware_controller.py
     rm -rf heimdall-hardware-controller
     echo "Hardware controller was imported successfuly"
@@ -60,7 +60,7 @@ function install ()
     then
         echo "Importing hardware controller."
         import_hardware_controller
-        echo "Increasing swap."
+        echo "Hardware controller was imported."
     fi
 
     if [ $4 == "y" ]
