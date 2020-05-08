@@ -9,10 +9,7 @@ usb_detector = USBHotplugDetector()
 
 
 class HeimdallMainWindow(object):
-    def __init__(self):
-        self.is_started = False
-
-    def setupUi(self, MainWindow):
+    def setupUi(self, MainWindow):        
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
         MainWindow.resize(989, 671)
@@ -26,7 +23,7 @@ class HeimdallMainWindow(object):
         self.threadpool = QtCore.QThreadPool()
 
         
-        sys.stdout = WritingStream(outputted_text=self.normal_write_text)
+        sys.stdout = WritingStream(outputed_text=self.normal_write_text)
 
 
         MainWindow.setStyleSheet("background-color: rgba(61, 61, 61, 253)")
@@ -143,12 +140,8 @@ class HeimdallMainWindow(object):
         self.logs_text_box.ensureCursorVisible()
     
     def __start_evaluator(self):
-        if self.is_started:
-            print('>>> Evaluator has already been started.')
-        else:
-            worker = GuiThreadWorker()
-            self.threadpool.start(worker)
-            self.is_started = True
+        worker = GuiThreadWorker()
+        self.threadpool.start(worker) 
 
     def __stop_evaluator(self):
         usb_detector.stop()
