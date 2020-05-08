@@ -148,10 +148,10 @@ class HeimdallMainWindow(object):
 
 
 class WritingStream(QtCore.QObject):
-    outputed_text = QtCore.pyqtSignal(str)
+    outputted_text = QtCore.pyqtSignal(str)
 
     def write(self, text):
-        self.outputed_text.emit(str(text))
+        self.outputted_text.emit(str(text))
 
 class GuiThreadWorker(QtCore.QRunnable):
     @QtCore.pyqtSlot()
