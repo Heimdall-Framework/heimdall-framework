@@ -2,8 +2,9 @@ import os
 import sys
 import json
 import shutil
-import importlib
 import plugins
+import datetime 
+import importlib
 import usb1 as usb
 import gui_elements as gui
 from logger import Logger
@@ -30,7 +31,7 @@ class Evaluator():
         with open(os.path.join(sys.path[0], 'config.json')) as config_file:
             self.__plugins_config = json.load(config_file)
 
-    def test_device(self):
+    def evaluate_device(self):
         Logger().log('>> Device testing initiated.')
         
         if not self.__validate_device_type():
@@ -73,7 +74,7 @@ class Evaluator():
         for i in range(TESTS_RANGE):
             
             if not self.__execute_hardware_plugin(5):
-                gui.show_msg_box('Guidline', 'Unlpug the USB device, click Okay and then plug it in tha same port.')
+                gui.show_msg_box('Guideline', 'Unplug the USB device, click Okay and then plug it in tha same port.')
 
             self.__device = None
             self.__device_handle = None
@@ -162,7 +163,6 @@ class Evaluator():
             Logger().log('> Generating image file checksum.')
 
             local_image_checksum = str(SystemOperationsProvider().get_file_checksum('/tmp/temp_image.img'))
-            local_iso_checksum = str(SystemOperationsProvider().get_file_checksum('/tmp/temp_image.iso'))
 
             # compares the two checksums from the Tails website to the local one
             if SystemOperationsProvider().offline_verify_checksum(local_image_checksum):
@@ -180,7 +180,18 @@ class Evaluator():
                 return False
 
     # in development
-    def __detect_time_targeted_payload(self):
+    def __detect_time_targeted_payload(self):        
+        current_time = datetime.datetime.now()
+        new_system_time = datetime.datetime(2021, 1, 12, 13, 22, 13)
+
+        # change the system time to a given one
+        SystemOperationsProvider().change_system_time(new_system_time)
+        
+        # test stuff after the system time is changed 
+
+        # return the system time to normal
+        SystemOperationsProvider().change_system_time(new_system_time)
+
         print('Await further instructions')
 
     def __set_device(self):

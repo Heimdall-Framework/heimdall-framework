@@ -1,3 +1,4 @@
+import os
 import usb1 as usb
 from logger import Logger
 from evaluator import Evaluator
@@ -5,7 +6,7 @@ from queue import Queue
 import gui_elements
 from device_operations_provider import DeviceOperationsProvider
 
-TEST_PORTS = [1,3]
+TEST_PORTS = map(int, os.environ['TEST_PORT'].split(' '))
 
 class USBHotplugDetector():
     def __init__(self):
@@ -56,7 +57,7 @@ class USBHotplugDetector():
                             context
                             )
 
-                        evaluation_result, evaluated_device = evaluator.test_device()
+                        evaluation_result, evaluated_device = evaluator.evaluate_device()
 
                         # indicates that the tested device is NOT safe for use
                         if not evaluation_result:
