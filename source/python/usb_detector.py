@@ -6,12 +6,13 @@ from queue import Queue
 import gui_elements
 from device_operations_provider import DeviceOperationsProvider
 
-TEST_PORTS = map(int, os.environ['TEST_PORT'].split(' '))
 
 class USBHotplugDetector():
     def __init__(self):
         self.__cached_device = None
-    
+        self.__testing_ports = [int(port_number) for port_number in os.environ['TESTING_PORTS'].split(',')]
+
+
     def start(self):
         self.__is_started = True
         self.__begin_detecting()
@@ -28,7 +29,7 @@ class USBHotplugDetector():
                 while self.__is_started:
                     # finds a new device that can be tested
                     device = DeviceOperationsProvider().find_new_device(
-                        TEST_PORTS,
+                        self.__testing_ports,
                         context,
                     )
 

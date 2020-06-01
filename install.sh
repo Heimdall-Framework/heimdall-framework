@@ -15,11 +15,13 @@ function export_env_variables ()
 {
     export DEVS_MOUNTPOINT=$1
     export LOGS_DIRECTORY_PATH=$2
+    export TESTING_PORTS=$3
 
     echo "export LOGS_DIRECTORY_PATH=$1" >> ~/.bashrc 
     mkdir $1
     echo "export DEVS_MOUNTPOINT=$2" >> ~/.bashrc
     mkdir $2
+    echo "export TESTING_PORTS=$3" >> ~/.bashrc
     source ~/.bashrc
     echo "Environmental variables were imported successfuly."
 }
@@ -52,7 +54,7 @@ function install ()
     echo "Installing dependencies."
     install_dependencies
     echo "Setting environmental variables."
-    export_env_variables $2 $3 
+    export_env_variables $2 $3 $4
     echo "Disabling automounting."
     disable_automounting
 
@@ -63,7 +65,7 @@ function install ()
         echo "Hardware controller was imported."
     fi
 
-    if [ $4 == "y" ]
+    if [ $5 == "y" ]
     then
         path_to_main = "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" 
         is_ubuntu = $(cat /etc/os-release | grep NAME)
@@ -91,10 +93,12 @@ function main ()
     read logs_location
     echo "Please enter the location of the mounting folder, where device will be temporarely mounted during the testing process: "
     read mountpoin_location
+    echo "Please enter the port numbers on which tested devices will be connected to (if more than one, sepate with comma {number1,number2}):"
+    read testing_ports
     echo "Would you like to start the application on startup (y/n): "
     read set_on_startup
 
-    install $device_category $logs_location $mountpoin_location $set_on_startup
+    install $device_category $logs_location $mountpoin_location $testing_ports $set_on_startup
 }
 
 main

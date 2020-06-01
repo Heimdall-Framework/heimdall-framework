@@ -22,7 +22,7 @@ class Main():
         try:
             os.environ['DEVS_MOUNTPOINT']
             os.environ['LOGS_DIRECTORY_PATH']
-            os.environ['TESTING_PORT']
+            os.environ['TESTING_PORTS']
         except KeyError:
             print('One or more environmental variables have not been set or exported correctly.')
             raise
