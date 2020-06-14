@@ -6,31 +6,31 @@ from threading import Thread
 from usb_detector import USBHotplugDetector
 from file_operations_provider import FileOperationsProvider
 
+ENVIRONMENTAL_VARIABLES = ['DEVS_MOUNTPOINT', 'LOGS_DIRECTORY_PATH', 'TESTING_PORTS']
+
 class Main():
     def main(self):
-        if len(sys.argv) == 0:
-            print('File requires one console argument.')
+        if len(sys.argv) == 1:
+            print('File requires at least one console argument.')
+        else:
+            if sys.argv[1].lower() == 'gui':    
+                gui_elements.show_gui()
 
-        if sys.argv[1].lower() == 'gui':    
-            gui_elements.show_gui()
-
-        elif sys.argv[1].lower() == 'nogui':
-            usb_detector = USBHotplugDetector()
-            usb_detector.start()
+            elif sys.argv[1].lower() == 'nogui':
+                usb_detector = USBHotplugDetector()
+                usb_detector.start()
     
     def validate_env_variables(self):
-        try:
-            os.environ['DEVS_MOUNTPOINT']
-            os.environ['LOGS_DIRECTORY_PATH']
-            os.environ['TESTING_PORTS']
-        except KeyError:
-            print('One or more environmental variables have not been set or exported correctly.')
-            raise
         try:
             os.environ['SUDO_UID']
         except KeyError:
             print('Please start the application using "sudo -E".')
-            raise
+        
+        for env_variable in ENVIRONMENTAL_VARIABLES:
+            try:
+                os.environ[env_variable]
+            except KeyError:
+                print('Environmental variable {} is not set.'.format(env_variable))
         
 if __name__ == '__main__':
     Main().validate_env_variables()

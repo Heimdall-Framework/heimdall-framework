@@ -1,6 +1,6 @@
 # Heimdall
 
-Heimdall is a simple USB threat evaluation framework for Linux that is designed to detect malicious behavior in USB mass storage devices.
+Heimdall is a Python USB threat evaluation framework for Linux that is designed to detect malicious behavior in USB mass storage devices.
 
 ---
 
@@ -8,8 +8,8 @@ Heimdall is a simple USB threat evaluation framework for Linux that is designed 
 You can install manually or automatically, using the script.
 
 ### Automatic installation
-In order to install the project automatically you must start the script, namer `install.sh`, located inside the root folder of the project, and provide the proper arguments (desktop or rpi installation, logs folder path and mounting folder path)
-when asked. The script will update the system, install the required dependencies, set the appropriate environmental variables and, if the installation is on RPI, download the hardware controller. 
+In order to install the project automatically,, you must start the script, namer `install.sh`, located inside the root folder of the project, and provide the proper arguments (desktop or rpi installation, logs folder path and mounting folder path)
+when asked. The script will update the system, install the required dependencies, set the appropriate environment variables, and, if the installation is on RPI, download the hardware controller. 
 
 ### Manual installation
 In order to clone and use this project, you must first install the following:
@@ -34,7 +34,7 @@ sudo apt-get install python3 python3-pip python3-pyqt5 python-tk clamav-daemon c
 sudo pip3 install pymsgbox libusb1 clamd objectpath
 ```
 
-Then you must set the following environmental variables to directories of your choice:
+Then you must set the following environment variables to directories of your choice:
 
 * DEVS_MOUNTPOINT - the location of the directory where the tested devices will be mounted temporary;
 * LOGS_DIRECTORY_PATH - the location of the directory where Heimdall will store its logs.
@@ -60,8 +60,8 @@ In order to run the program, you must enter in the heimdall-framework/source/pyt
 ## Possible issues:
 
 ### No access or permission exceptions
-It might happen because the user you use does not have the proper access rights to use devices on the USB or to create and read files from the directories in your environmental variables.
-The proper way to fix it is to start the `./main.py` file with `sudo -E` which will grant it the proper access rights and keep the environmental variables.
+It might happen because the user you use does not have the proper access rights to use devices on the USB or to create and read files from the directories in your environment variables.
+The proper way to fix it is to start the `./main.py` file with `sudo -E` which will grant it the proper access rights and keep the environment variables.
 
 ### Clamav or clamd can't find or create specific files
 There are multiple possible causes for this issue. One of them is that another clamav instance is already running on your system and uses those files. You can check this
@@ -72,13 +72,13 @@ by running `htop` or `top` and looking for a process that has 'clam' in his name
 * [Clamd Will Not Start](https://www.howtoforge.com/community/threads/clamd-will-not-start.34559/).
 
 ## Creating plugins (external tests):
-A plugin (or external test) is a python file that is kept in a specific directory and contains a test or multiple tests that are executed after
-the hardcoded ones. You can create your own test by creating a python file with the following structure:
+A plugin (or external test) is a Python file that is kept in a specific directory and contains a test or multiple tests that are executed after
+the hardcoded ones. You can create your own test by creating a Python file with the following structure:
 
 ```python
 import usb1 as usb
 """
-All custom tests have to have the device and device handle as parameters.
+All custom tests must to have the device and device handle as parameters.
 """
 def demo_test(device, device_handle):
     print('> Demo Test was passed.')
@@ -86,9 +86,10 @@ def demo_test(device, device_handle):
     return True
 ```
 
-Where your test function, the `demo_test` in this case, has to take a usb1 device object and usb1 device handle object as parameters.
-After developing your test you have to add it to the plugins directory - /source/python/plugins, and give it a name. Then you just edit the plugin configuration 
-file - /source/python/config.json, and add the config for your test inside the JSON list.
+Where your test function, the `demo_test` in this case, has to take a usb1 device object (named as `device`) 
+and usb1 device handle object (named as `device_handle`) as parameters.
+After developing your test you have to add it to the plugins directory - `/source/python/plugins`, and give it a name. Then you just edit the plugin configuration 
+file - `/source/python/config.json`, and add the config for your test inside the JSON list.
 Example:
 ```json
 [
@@ -96,4 +97,4 @@ Example:
         {"name" : "YOUR TEST", "enabled" : true}
 ]
 ```
-You can enable or disable test by setting the `enabled` parameter next to their name to `true` or `false`. Disabled tests won't be executed.
+You can enable or disable tests by setting the `enabled` parameter next to their name to `true` or `false`. Disabled tests won't be executed.

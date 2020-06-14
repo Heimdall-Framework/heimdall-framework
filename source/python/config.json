@@ -2,5 +2,4 @@
         {"name" : "demo_test", "enabled" : true},
         {"name" : "demo_test1", "enabled" : false},
         {"name" : "demo_test2", "enabled" : false}
-
 ]

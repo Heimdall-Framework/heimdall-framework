@@ -165,14 +165,18 @@ class GuiThreadWorker(QtCore.QRunnable):
     def run(self):
         usb_detector.start()
 
-def show_gui():
+def show_gui(fullscreen=True):
     app = QtWidgets.QApplication(sys.argv)
-    HeimdallApp = QtWidgets.QMainWindow()
+    heimdall_app = QtWidgets.QMainWindow()
 
     ui = HeimdallMainWindow()
-    ui.setupUi(HeimdallApp)
+    ui.setupUi(heimdall_app)
 
-    HeimdallApp.show()
+    if fullscreen:
+        heimdall_app.showFullScreen()
+    else:
+        heimdall_app.show()
+
     sys.exit(app.exec_())
 
 

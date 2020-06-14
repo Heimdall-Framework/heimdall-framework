@@ -205,7 +205,7 @@ class Evaluator():
                 self.__device.getVendorID(),
                 self.__device.getProductID()
             )
-    
+
     # executes hardware relay controll plugin
     def __execute_hardware_plugin(self, delay):
         for plugin in dir(plugins):
