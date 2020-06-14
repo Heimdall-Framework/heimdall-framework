@@ -52,10 +52,10 @@ export LOGS_DIRECTORY_PATH=<LOCATION>
 ```
 
 ```
-export TESTING_PORTS=<LOCATION>
+export TESTING_PORTS=<PORT>
 ```
 
-where `<LOCATION>` is the path to the directory on your system.
+where `<LOCATION>` is the path to the directory on your system and `<PORT>` is the port or ports that will be used to test USB mass storage devices.
 
 Now you can clone the repository with `git@github.com:Heimdall-Framework/heimdall-framework.git` and proceed to starting Heimdall in GUI or NOGUI mode.
 
