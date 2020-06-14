@@ -37,7 +37,9 @@ sudo pip3 install pymsgbox libusb1 clamd objectpath
 Then you must set the following environment variables to directories of your choice:
 
 * DEVS_MOUNTPOINT - the location of the directory where the tested devices will be mounted temporary;
-* LOGS_DIRECTORY_PATH - the location of the directory where Heimdall will store its logs.
+* LOGS_DIRECTORY_PATH - the location of the directory where Heimdall will store its logs;
+* TESTING_PORTS - the port or ports that will be used to test USB mass storage devices.
+
 
 You can set and export them with:
 
@@ -47,6 +49,10 @@ export DEVS_MOUNTPOINT=<LOCATION>
 
 ```
 export LOGS_DIRECTORY_PATH=<LOCATION>
+```
+
+```
+export TESTING_PORTS=<LOCATION>
 ```
 
 where `<LOCATION>` is the path to the directory on your system.
