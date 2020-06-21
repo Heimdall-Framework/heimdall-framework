@@ -2,7 +2,7 @@ import os
 import sys
 import json
 import shutil
-import plugins
+import plugypy
 import datetime 
 import importlib
 import usb1 as usb
@@ -24,12 +24,10 @@ class Evaluator():
         self.__device_handle = device_handle
         self.__port_number = port_number
         self.__context = context
-        self.__load_external_tests_config()
-
+        self.__plugins_directory = os.path.dirname(os.path.realpath(__file__)) + '/plugins'
+        self.__configuration_file_directory = self.__plugins_directory + '/config.json'
+        
         Logger().log('>>> Evaluator was initialized.')
-    def __load_external_tests_config(self):
-        with open(os.path.join(sys.path[0], 'config.json')) as config_file:
-            self.__plugins_config = json.load(config_file)
 
     def evaluate_device(self):
         Logger().log('>> Device testing initiated.')
@@ -114,6 +112,7 @@ class Evaluator():
 
         shutil.copyfile('dump.me', self.device_mountpoint  + 'dump.me')
         shutil.move(self.device_mountpoint  + 'dump.me', 'received_dump.me')
+        
         if FileOperationsProvider().compare_files('dump.me', 'received_dump.me'):
             os.remove('dump.me')
             os.remove('received_dump.me')
@@ -208,57 +207,39 @@ class Evaluator():
 
     # executes hardware relay controll plugin
     def __execute_hardware_plugin(self, delay):
-        for plugin in dir(plugins):
-            item = getattr(plugins, plugin)
+        plugin_manager = plugypy.PluginManager(
+            self.__plugins_directory, 
+            self.__configuration_file_directory, 
+            will_verify_ownership=True
+            )
 
-            if plugin == "hardware_controller":
-                
-                plugin_location = '{}/plugins/{}.py'.format(
-                os.path.dirname(os.path.realpath(__file__)),
-                plugin
-                )
-            
-                if os.path.exists(plugin_location):
-                    if not SystemOperationsProvider().verify_file_owner(plugin_location):
-                        Logger().log('> Plugin {} does not belong to the user. It execution is being skipped because it might be malicious.'.format(
-                            plugin
-                        ))
-                        return False
+        hardware_controller_plugin = plugin_manager.import_plugin('hardware_controller')
 
-                if callable(item):
-                    item(delay)
-                    return True
-                else:
-                    return False
+        if hardware_controller_plugin == None:
+            return False
+
+        plugin_manager.execute_plugin(hardware_controller_plugin, (delay,), is_forced=True)
+        return True
                 
     # runs external plugins (tests)
     def __run_external_tests(self):
-        for plugin in dir(plugins):
-            item = getattr(plugins, plugin)
+        plugin_arguments_tuple = (self.__device, self.__device_handle)
 
-            plugin_location = '{}/plugins/{}.py'.format(
-                os.path.dirname(os.path.realpath(__file__)),
-                plugin
+        plugin_manager = plugypy.PluginManager(
+            self.__plugins_directory, 
+            self.__configuration_file_directory, 
+            will_verify_ownership=True
             )
-            
-            # verifies that the plugin exists and is owned by the current user
-            if os.path.exists(plugin_location):
-                if not SystemOperationsProvider().verify_file_owner(plugin_location):
-                    Logger().log('> Plugin {} does not belong to the user. It execution is being skipped because it might be malicious.'.format(
-                        plugin
-                    ))
-                    continue
-            
-            # check if the plugin should be executed
-            if callable(item) and self.__validate_plugin(plugin):
-                if not item(self.__device, self.__device_handle):
-                    Logger().log('> External test {} failed or is not valid.'.format(item))
-                    return False
+        
+        plugins_list = plugin_manager.import_plugins()
+
+        for plugin in plugins_list:
+            result = plugin_manager.execute_plugin(plugin, plugin_arguments_tuple)
+
+            if result == False:
+                print('Custom test: {} was not passed.'.format(plugin['name']))
+                return False
         return True
     
     # validates if a given plugin (test) exist in the config.json file and if it is allowed to be executed
-    def __validate_plugin(self, plugin_name):
-        for plugin_configuration in self.__plugins_config:
-            if plugin_configuration['name'] == plugin_name and plugin_configuration['enabled']:
-                return True
-        return False
+

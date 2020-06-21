@@ -1,0 +1,12 @@
+[
+        {
+                "name" : "demo_test",
+                "main_function" : "demo_test",
+                "enabled" : true
+        },
+        {
+                "name" : "demo_test_two",
+                "main_function" : "demo_test_two",
+                "enabled" : true
+        }
+]
