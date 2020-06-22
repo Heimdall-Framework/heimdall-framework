@@ -1,7 +1,7 @@
 [
         {
                 "name" : "demo_test",
-                "main_function" : "demo_test",
+                "main_function" : "execute_demo_test",
                 "enabled" : true
         },
         {

@@ -94,13 +94,25 @@ def demo_test(device, device_handle):
 
 Where your test function, the `demo_test` in this case, has to take a usb1 device object (named as `device`) 
 and usb1 device handle object (named as `device_handle`) as parameters.
-After developing your test you have to add it to the plugins directory - `/source/python/plugins`, and give it a name. Then you just edit the plugin configuration 
-file - `/source/python/config.json`, and add the config for your test inside the JSON list.
+
+After developing your test you have to add it to the plugins directory - `/source/python/plugins`. Then you must edit the plugin configuration 
+file - `/source/python/plugins/config.json`, and add the config for your test inside the JSON list. Put the name of the test in the `name` field and the 
+function that will be called when executed in the `main_function` field.
 Example:
 ```json
 [
-        {"name" : "demo_test", "enabled" : true},
-        {"name" : "YOUR TEST", "enabled" : true}
+        {
+                "name" : "demo_test",
+                "main_function" : "execute_demo_test",
+                "enabled" : true
+        },
+        {
+                "name" : "YOUR_TEST",
+                "main_function" : "YOUR_TEST_MAIN_FUNCTION",
+                "enabled" : true
+        }
 ]
 ```
-You can enable or disable tests by setting the `enabled` parameter next to their name to `true` or `false`. Disabled tests won't be executed.
+You can enable or disable tests by setting the `enabled` parameter to `true` or `false`. Disabled tests won't be executed.
+
+You can read more about the plugin management system that is being used in this project [HERE](https://github.com/not-so-cool-anymore/plugypy);
