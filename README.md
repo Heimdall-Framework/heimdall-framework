@@ -113,6 +113,6 @@ Example:
         }
 ]
 ```
-You can enable or disable tests by setting the `enabled` parameter to `true` or `false`. Disabled tests won't be executed.
+Enabling or disabling tests can be done by setting the `enabled` parameter to `true` or `false`. Disabled tests won't be executed.
 
 You find out more about the plugin management system that is used in this project [HERE](https://github.com/not-so-cool-anymore/plugypy).
