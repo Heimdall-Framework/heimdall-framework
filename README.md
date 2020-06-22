@@ -115,4 +115,4 @@ Example:
 ```
 You can enable or disable tests by setting the `enabled` parameter to `true` or `false`. Disabled tests won't be executed.
 
-You can read more about the plugin management system that is being used in this project [HERE](https://github.com/not-so-cool-anymore/plugypy);
+You find out more about the plugin management system that is used in this project [HERE](https://github.com/not-so-cool-anymore/plugypy).
