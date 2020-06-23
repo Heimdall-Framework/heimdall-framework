@@ -12,8 +12,8 @@ class USBHotplugDetector():
         self.__cached_device = None
         self.__testing_ports = [int(port_number) for port_number in os.environ['TESTING_PORTS'].split(',')]
         self.__nuking_ports = [int(port_number) for port_number in os.environ['NUKING_PORTS'].split(',')]
-        self.__cached_nuked_device = None
-        self.__cached_tested_device = None
+        self.__nuked_device = None
+        self.__tested_device = None
 
     def start(self):
         self.__is_started = True
@@ -30,10 +30,13 @@ class USBHotplugDetector():
             with usb.USBContext() as context:
                 while self.__is_started:
                     # finds a new device that can be tested
-                    device = DeviceOperationsProvider().find_new_device(self.__testing_ports, self.__nuking_ports, context)
+                    device = DeviceOperationsProvider().find_new_device(
+                        self.__testing_ports, 
+                        self.__nuking_ports, context
+                        )
 
                     # checks if the found device has already been tested
-                    if device is None or device == self.__cached_tested_device or device == self.__cached_nuked_device:
+                    if device is None or device == self.__tested_device or device == self.__nuked_device:
                         continue
 
                     # creates USBDeviceHandle object for given VID and PID
@@ -104,7 +107,10 @@ class USBHotplugDetector():
         self.__cache_nuked_device(device)
         self.__cache_tested_device(None)
 
+    # caches the device that was just tested
     def __cache_tested_device(self, device):
-        self.__cached_tested_device = device
+        self.__tested_device = device
+
+    # caches the device that was just nuked
     def __cache_nuked_device(self, device):
-        self.__cached_nuked_device = device
+        self.__nuked_device = device
