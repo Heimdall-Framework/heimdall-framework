@@ -12,6 +12,8 @@ class USBHotplugDetector():
         self.__cached_device = None
         self.__testing_ports = [int(port_number) for port_number in os.environ['TESTING_PORTS'].split(',')]
         self.__nuking_ports = [int(port_number) for port_number in os.environ['NUKING_PORTS'].split(',')]
+        self.__cached_nuked_device = None
+        self.__cached_tested_device = None
 
     def start(self):
         self.__is_started = True
@@ -31,9 +33,9 @@ class USBHotplugDetector():
                     device = DeviceOperationsProvider().find_new_device(self.__testing_ports, self.__nuking_ports, context)
 
                     # checks if the found device has already been tested
-                    if device is None or device == self.__cached_device and device.getPortNumber() not in self.__nuking_ports:
+                    if device is None or device == self.__cached_tested_device or device == self.__cached_nuked_device:
                         continue
-                        
+
                     # creates USBDeviceHandle object for given VID and PID
                     handle = context.openByVendorIDAndProductID(
                         device.getVendorID(),
@@ -48,7 +50,6 @@ class USBHotplugDetector():
                         if device.getPortNumber() in self.__nuking_ports:
                             self.__nuke_device(device)
                         elif device.getPortNumber() in self.__testing_ports:
-
                             evaluation_result, evaluated_device = self.__evaluate_device(
                                 device,
                                 handle,
@@ -65,7 +66,8 @@ class USBHotplugDetector():
                                 Logger().log(">>> Device is SAFE for use")
                                 gui_elements.show_msg_box('Passed','All tests were passed. The tested device is safe for use.')
                             
-                            self.__cache_device(evaluated_device)
+                            self.__cache_tested_device(evaluated_device)
+                            #self.__cache_nuked_device(None)
                         handle.close()
 
                 Logger().log(">>> Hotplug detector was terminated.")
@@ -83,6 +85,7 @@ class USBHotplugDetector():
             device.getPortNumber(),
             context
             )
+
         result, returned_device = evaluator.evaluate_device()
 
         evaluator = None
@@ -98,7 +101,10 @@ class USBHotplugDetector():
         Logger().log('>>> Nuking finished.')
                             
         # cacheing fake device in order to allow testing for the same device immediately after nuking 
-        self.__cache_device(None)
+        self.__cache_nuked_device(device)
+        self.__cache_tested_device(None)
 
-    def __cache_device(self, device):
-        self.__cached_device = device
+    def __cache_tested_device(self, device):
+        self.__cached_tested_device = device
+    def __cache_nuked_device(self, device):
+        self.__cached_nuked_device = device
