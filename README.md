@@ -23,7 +23,7 @@ In order to clone and use this project, you must first install the following:
 To install them run the following commands:
 
 ```
-sudo apt update
+sudo apt-get update
 ```
 
 ```
@@ -55,7 +55,11 @@ export LOGS_DIRECTORY_PATH=<LOCATION>
 export TESTING_PORTS=<PORT>
 ```
 
-where `<LOCATION>` is the path to the directory on your system and `<PORT>` is the port or ports that will be used to test USB mass storage devices.
+```
+export NUKING_PORTS=<PORT>
+```
+
+where `<LOCATION>` is the path to the directory on your system and `<PORT>` is the port or ports that will be used for either testing or nuking.
 
 Now you can clone the repository with `git@github.com:Heimdall-Framework/heimdall-frame work.git` and proceed to starting Heimdall in GUI or NOGUI mode.
 

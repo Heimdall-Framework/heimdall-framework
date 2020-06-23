@@ -3,18 +3,29 @@ import subprocess
 import pyudev as udev
 import usb1 as usb
 from logger import Logger
+
 INTERFACE = 0
+PORT_MARGIN = [0, 10]
 
 class DeviceOperationsProvider():
 
     # finds new device on the bus
-    def find_new_device(self, test_ports, context):    
+    def find_new_device(self, test_ports, nuke_ports, context): 
+        # checks if a testabl device is present and returns it
         for test_port in test_ports:
             new_device = self.find_by_port_number(test_port, context) 
-            
-            if new_device != None:
+            if new_device !=None:
                 return new_device
+        
+        # checks if a nukable device is present and returns is
+        for nuke_port in nuke_ports:
+            new_device = self.find_by_port_number(nuke_port, context) 
+            if new_device !=None:
+                return new_device
+
+        # if no devices were found a NoneType object is returned
         return None
+
     # finds a device for a given port number and context
     def find_by_port_number(self, p_number, context):
         device_list = context.getDeviceList()
@@ -50,7 +61,7 @@ class DeviceOperationsProvider():
             if vid_hex != 'None' and pid_hex != 'None':
                 if int(vid_hex, 16) == vid and int(pid_hex, 16) == pid:
                     target_property = dev.get(udev_property)
-                    return target_property 
+                    return target_property
                     
         return None
     
@@ -63,7 +74,5 @@ class DeviceOperationsProvider():
 
         scan_result = clam_daemon.scan(mountpoint_path)
         Logger().log('> {}'.format(scan_result), silent=True)
-        if 'OK' in str(scan_result):
-            return True
-        else:
-            return False
+        
+        return 'OK' in str(scan_result)

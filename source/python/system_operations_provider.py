@@ -34,14 +34,19 @@ class SystemOperationsProvider():
 
     def unmount_device(self, mounted_device_partition,):
         mounting_command = 'umount {}'.format(mounted_device_partition)
-        process = subprocess.Popen(mounting_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        process = subprocess.Popen(
+            mounting_command.split(), 
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.STDOUT
+            )
+
         output, error = process.communicate()
         
         Logger().log('Device was unmounted.',silent=True)
 
         if error != None:
             Logger().log(error)
-            return False, None
+            return False
         
         return True
     # changes system clock time to a given one
@@ -78,14 +83,6 @@ class SystemOperationsProvider():
                 return True
             else:
                 return False
-    # verifies if the current user owns a specific file
-    def verify_file_owner(self, file_path):
-        file_owner = pwd.getpwuid(os.stat(file_path, follow_symlinks=False).st_uid).pw_uid
-
-        if str(file_owner) == os.environ['SUDO_UID']:
-            return True
-        else:
-            return False
 
 # timespec structure
 class timespec_struct(ctypes.Structure):

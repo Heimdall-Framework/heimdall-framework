@@ -8,6 +8,7 @@ from logger import Logger
 class FileOperationsProvider():
     def __init__(self):
         self.device_mountpoint = os.environ['DEVS_MOUNTPOINT']
+
     # compares two files
     def compare_files(self, firstFilePath, secondFilePath):
         return filecmp.cmp(firstFilePath, secondFilePath)
