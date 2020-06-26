@@ -75,7 +75,6 @@ class DeviceOperationsProvider():
         for action, dev in devices_monitor:
             if action != 'add':
                 continue
-            print(action)
 
             vid_hex = str(dev.get('ID_VENDOR_ID'))
             pid_hex = str(dev.get('ID_MODEL_ID'))
