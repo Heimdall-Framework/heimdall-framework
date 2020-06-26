@@ -26,8 +26,14 @@ class DeviceOperationsProvider():
         # if no devices were found a NoneType object is returned
         return None
 
-    # finds a device for a given port number and context
     def find_by_port_number(self, p_number, context):
+        """
+        Retrieves a device on a given port number and context
+
+        :param p_number: The port number that is being checked for device
+        :param context: usb1 context object
+        """
+
         device_list = context.getDeviceList()
         for device in device_list:
             if device.getPortNumber() == p_number:
@@ -35,8 +41,14 @@ class DeviceOperationsProvider():
 
         return None
     
-    # attaches or detaches the kernel driver for the device
     def handle_kernel_driver(self, device_handle, driver_status):
+        """
+        Attaches or detaches the kernel driver for the device
+
+        :param device_handle: The usb1 handle object of the device, whose kernel driver is being handled
+        :param driver_status: The desired status of the kernel driver (attached or detached)
+        """
+
         if driver_status:
            while not device_handle.kernelDriverActive(0):
                device_handle.attachKernelDriver(0)
@@ -44,8 +56,14 @@ class DeviceOperationsProvider():
             while device_handle.kernelDriverActive(0):
                 device_handle.detachKernelDriver(0)
 
-    # gets an udev property for a given device
     def get_device_udev_property(self, device, udev_property):
+        """
+        Retrives an udev property for a given device
+
+        :param device: The usb1 device object of the given device
+        :param udev_property: The udev property that is being retrieved 
+        """
+
         vid = device.getVendorID()
         pid = device.getProductID()
 
@@ -69,8 +87,13 @@ class DeviceOperationsProvider():
                     
         return None
     
-    # scnas a device for viruses
     def virus_scan_device(self, mountpoint_path):
+        """
+        Scans a device for viruses
+
+        :param mountpoint_path: The path to the mountpoint directory of the connected device
+        """
+        
         clam_daemon = clamd.ClamdUnixSocket()
         clam_daemon.reload()
 

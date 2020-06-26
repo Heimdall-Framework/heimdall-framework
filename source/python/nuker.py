@@ -5,6 +5,9 @@ class Nuker():
         self.__nukable_partition = partition
 
     def nuke(self):
+        """
+        Rewrites a disk or a partition with zeroes
+        """
         nuking_command = 'dd if=/dev/zero of={} bs=8192'.format(self.__nukable_partition)
         
         process = subprocess.Popen(

@@ -14,8 +14,14 @@ class SystemOperationsProvider():
     def __init__(self):
         self.device_mountpoint = os.environ['DEVS_MOUNTPOINT']
 
-    # mounts the device on predetermined point with noexec and rw permission parameters
     def mount_device(self, device_system_name, current_part=0):
+        """
+        Mounts the device on predetermined point with noexec and rw permission parameters
+        
+        :param device_system_name: The system name of the device
+        :param current_partition: The device partition that is being currently mounted
+        """
+
         mounting_command = 'mount {}{} {} -o noexec'.format(device_system_name, current_part, self.device_mountpoint)
         process = subprocess.Popen(mounting_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output, error = process.communicate()
@@ -32,7 +38,13 @@ class SystemOperationsProvider():
     
         return True, device_system_name+str(current_part)
 
-    def unmount_device(self, mounted_device_partition,):
+    def unmount_device(self, mounted_device_partition):
+        """
+        Unmounts a device's partition
+
+        :param mounted_device_partition: The system name of the partition 
+        """
+
         mounting_command = 'umount {}'.format(mounted_device_partition)
         process = subprocess.Popen(
             mounting_command.split(), 
@@ -49,6 +61,7 @@ class SystemOperationsProvider():
             return False
         
         return True
+
     # changes system clock time to a given one
     def change_system_time(self, required_time):
         OS_CLOCK_REALTIME_ID = 0
@@ -64,8 +77,13 @@ class SystemOperationsProvider():
             ctypes.byref(timespec)
             )
     
-    # returns the checksum of a file for a given file path
     def get_file_checksum(self, file_path):
+        """
+        Retrives a file's checksum
+
+        :param file_path: The path to the file
+        """
+
         command = 'sha256sum {}'.format(file_path)
 
         process = subprocess.Popen(command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -76,8 +94,13 @@ class SystemOperationsProvider():
             return None
         return output
 
-    # checks if Tails iso checksum is blackslisted as dangerous
     def offline_verify_checksum(self, checksum):
+        """
+        Verifies if a Tails image checksum is blacklisted as dangerous
+
+        :param checksum: The checksum of the image
+        """
+
         with open(os.path.dirname(os.path.realpath(__file__))+ '/blacklisted.blck') as blacklisted:
             if not checksum in blacklisted:
                 return True
