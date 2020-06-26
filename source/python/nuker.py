@@ -15,7 +15,7 @@ class Nuker():
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT
         )
-
+ 
         result, error = process.communicate()
 
         if error != None:

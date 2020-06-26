@@ -240,6 +240,3 @@ class Evaluator():
                 print('Custom test: {} was not passed.'.format(plugin['name']))
                 return False
         return True
-    
-    # validates if a given plugin (test) exist in the config.json file and if it is allowed to be executed
-
