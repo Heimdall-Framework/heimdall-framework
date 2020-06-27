@@ -19,6 +19,8 @@ In order to clone and use this project, you must first install the following:
 * [Libusb1](https://pypi.org/project/libusb1/);
 * [Clamd](https://pypi.org/project/clamd/);
 * [Tkinter](https://docs.python.org/3/library/tkinter.html).
+* [PlugyPy](https://pypi.org/project/PlugyPy/).
+
 
 To install them run the following commands:
 
