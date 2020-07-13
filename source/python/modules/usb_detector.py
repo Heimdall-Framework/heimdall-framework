@@ -45,7 +45,9 @@ class USBHotplugDetector():
                         device.getProductID(),
                         skip_on_error=True
                     )
-
+                    
+                    DeviceOperationsProvider().handle_kernel_driver(handle, False)
+                    
                     # checks if the device is still present ot if the user is allowed to access it
                     if handle is None:
                         Logger().log(">>> Device not present or user is not allowed to use the device.")
@@ -70,7 +72,6 @@ class USBHotplugDetector():
                                 gui_elements.show_msg_box('Passed','All tests were passed. The tested device is safe for use.')
                             
                             self.__cache_tested_device(evaluated_device)
-                            #self.__cache_nuked_device(None)
                         handle.close()
 
                 Logger().log(">>> Hotplug detector was terminated.")
@@ -79,9 +80,6 @@ class USBHotplugDetector():
             Logger().log('>>> An exception has occurred')
         
     def __evaluate_device(self, device, handle, context):
-        # detaches device's kernel driver
-        DeviceOperationsProvider().handle_kernel_driver(handle, False)
-
         # creates Evaluator object with given USBDeviceHandlem, USBDevice and device's USBContext
         evaluator = Evaluator(
             handle,
