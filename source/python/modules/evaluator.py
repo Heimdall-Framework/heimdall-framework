@@ -24,7 +24,8 @@ class Evaluator():
         self.__device_handle = device_handle
         self.__port_number = port_number
         self.__context = context
-        self.__plugins_directory = os.path.dirname(os.path.realpath(__file__)) + '/plugins'
+        self.__plugins_directory = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '../..', 'python/plugins'))
+        print(self.__plugins_directory)
         self.__configuration_file_directory = self.__plugins_directory + '/config.json'
         
         Logger().log('>>> Evaluator was initialized.')
