@@ -128,7 +128,7 @@ class Updater():
                             TEMP_DIR_NAME + file_name, 
                             self.plugins_directory_location
                             )
-                    elif not file_name.endswith('.tar.gz'):
+                    else:
                         shutil.move(
                             TEMP_DIR_NAME + file_name, 
                             self.framework_location
