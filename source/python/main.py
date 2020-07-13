@@ -16,6 +16,8 @@ class Main():
             if len(sys.argv) == 1:
                 print('File requires at least one console argument.')
             else:
+                print('Checking for updates...')
+
                 if sys.argv[1].lower() == 'gui':    
                     gui_elements.show_gui()
 
@@ -46,20 +48,21 @@ class Main():
 
         if not os.path.isfile(self.last_update_file_location):
             with open(self.last_update_file_location, 'w'):
-                print('created empty last_updated.log')
+                print('>>> Created empty last_updated.log')
             
         if not os.path.isfile(self.versions_log_file):
             with open(self.versions_log_file, 'w'):
-                print('created empty versions.json')
+                print('>>> Created empty versions.json')
 
         with open(self.last_update_file_location) as last_update_date:
             last_update_date =  last_update_date.read()
 
         if last_update_date == '' or last_update_date != datetime.now().strftime('%b %d %Y'):
-
-            print()
+            print('>>> Updating.')
+            if self.__update():
+                print('>>> Update was successful.')
         else:
-            print('skip')
+            print('>>> Update date is not reached yet.')
     
     def __update(self):
         updater = Updater(

@@ -5,6 +5,7 @@ import shutil
 import tarfile
 import urllib
 import requests
+from .logger import Logger
 
 TEMP_DIR_NAME = '/tmp/temp_update_data/'
 
@@ -12,7 +13,7 @@ class Updater():
     def __init__(self, framework_location, update_url):
         self.framework_location = framework_location
         self.version_logs_location = framework_location + '/update_logs/versions.json'
-        self.plugins_directory_path = framework_location + '/plugins/'
+        self.plugins_directory_location = framework_location + '/plugins/'
         self.update_url = update_url
         self.updated_files_counter = 0
 
@@ -29,7 +30,6 @@ class Updater():
             if self.device_serial_number == 'FAIL':
                 return False
             
-
             self.__load_update_logs()
             self.__load_plugins_config()
 
@@ -73,6 +73,8 @@ class Updater():
                         'version' : update['version'],
                         'type' : update['type']
                     })
+
+                    self.__update_plugins_config(update['name'])
                     
                     break
 
@@ -90,7 +92,7 @@ class Updater():
             self.update_logs = json.loads(update_logs_file.read() or '[]')
 
     def __load_plugins_config(self):
-        with open(self.plugins_directory_path + '/config.json') as plugins_config:
+        with open(self.plugins_directory_location + '/config.json') as plugins_config:
             self.plugins_config = json.loads(plugins_config.read() or '[]')
 
     def __get_available_updates(self):
@@ -102,12 +104,14 @@ class Updater():
         response = requests.get(self.update_url, params=urllib.parse.urlencode(parameters))
 
         if response.status_code == 422:
-            print('Wrong parameters. Aborting update!')
+            Logger().log('>>> Wrong parameters. Aborting update!')
 
         return response.json()
 
     def __process_update(self, download_url, is_plugin):
         try:
+            self.updated_files_counter += 1
+
             if not os.path.isdir(TEMP_DIR_NAME):
                 os.mkdir(TEMP_DIR_NAME)
 
@@ -117,14 +121,12 @@ class Updater():
             archive.extractall()
             archive.close()
 
-            self.__kill_parent()
-
             for dir_path, dir_name, file_names in os.walk(TEMP_DIR_NAME):
                 for file_name in file_names:
                     if is_plugin and file_name.endswith('.py') or file_name.endswith('.pyc'):
                         shutil.move(
                             TEMP_DIR_NAME + file_name, 
-                            self.plugins_directory_path
+                            self.plugins_directory_location
                             )
                     else:
                         shutil.move(
@@ -137,14 +139,22 @@ class Updater():
             return True
         except:
             shutil.rmtree(TEMP_DIR_NAME)
-            return False
+            Logger().log('>>> Processing update failed.')
 
-    def __update_plugins_config(self):
-        return ""
+            return False
+            
+
+    def __update_plugins_config(self, plugin_name):
+        self.plugins_config.append({
+            'name' : plugin_name,
+            'main_function' : 'main',
+            'enabled' : True
+        })
 
     def __get_download_link(self, update_name, update_version, update_type):
         '''
         Get the download link for update.
+
         :param update_name: the name of the update
         :param update_version: the version of the update
         :param update_type: the type of the update
@@ -162,7 +172,7 @@ class Updater():
             )
 
         if response.status_code == 422:
-            print('Wrong parameters. Aborting update!')
+            Logger().log('Wrong parameters. Aborting update!')
 
         return response.json()['url']
     
@@ -184,5 +194,8 @@ class Updater():
         return serial
 
     def restart_parent(self):
+        '''
+        Restart the parent process with the same arguments with which it was started.
+        '''
         os.execl(sys.executable, *([sys.executable]+sys.argv))
     
