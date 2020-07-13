@@ -6,13 +6,13 @@ import plugypy
 import datetime 
 import importlib
 import usb1 as usb
-import gui_elements as gui
-from logger import Logger
-from data_provider import DataProvider
-from file_operations_provider import FileOperationsProvider
-from device_operations_provider import DeviceOperationsProvider
-from system_operations_provider import SystemOperationsProvider
-from network_operations_provider import NetworkOperationsProvider
+from .logger import Logger
+from .data_provider import DataProvider
+from modules import gui_elements as gui
+from .file_operations_provider import FileOperationsProvider
+from .device_operations_provider import DeviceOperationsProvider
+from .system_operations_provider import SystemOperationsProvider
+from .network_operations_provider import NetworkOperationsProvider
 
 TESTS_RANGE = 4
 

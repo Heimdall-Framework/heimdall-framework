@@ -8,7 +8,7 @@ import subprocess
 import ctypes.util
 from subprocess import check_output
 from collections import namedtuple
-from logger import Logger
+from .logger import Logger
 
 class SystemOperationsProvider():
     def __init__(self):

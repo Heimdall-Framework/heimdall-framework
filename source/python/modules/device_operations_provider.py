@@ -2,7 +2,7 @@ import clamd
 import subprocess
 import pyudev as udev
 import usb1 as usb
-from logger import Logger
+from .logger import Logger
 
 INTERFACE = 0
 PORT_MARGIN = [0, 10]

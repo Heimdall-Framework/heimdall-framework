@@ -1,24 +1,27 @@
 #!/usr/bin/env python3
 import os
 import sys
-import gui_elements
+import modules.gui_elements as gui_elements
 from threading import Thread
-from usb_detector import USBHotplugDetector
-from file_operations_provider import FileOperationsProvider
+from modules.usb_detector import USBHotplugDetector
+from modules.file_operations_provider import FileOperationsProvider
 
 ENVIRONMENTAL_VARIABLES = ['DEVS_MOUNTPOINT', 'LOGS_DIRECTORY_PATH', 'TESTING_PORTS']
 
 class Main():
     def main(self):
-        if len(sys.argv) == 1:
-            print('File requires at least one console argument.')
-        else:
-            if sys.argv[1].lower() == 'gui':    
-                gui_elements.show_gui()
+        try:
+            if len(sys.argv) == 1:
+                print('File requires at least one console argument.')
+            else:
+                if sys.argv[1].lower() == 'gui':    
+                    gui_elements.show_gui()
 
-            elif sys.argv[1].lower() == 'nogui':
-                usb_detector = USBHotplugDetector()
-                usb_detector.start()
+                elif sys.argv[1].lower() == 'nogui':
+                    usb_detector = USBHotplugDetector()
+                    usb_detector.start()
+        except KeyboardInterrupt:
+            print('Keyboard interrupt detected.')
     
     def validate_env_variables(self):
         try:

@@ -1,5 +1,5 @@
 import json
-from logger import Logger
+from .logger import Logger
 import urllib
 import urllib.request
 from collections import namedtuple

@@ -1,6 +1,6 @@
 import string
 import random
-from logger import Logger
+from .logger import Logger
 
 class DataProvider():
     

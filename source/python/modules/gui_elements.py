@@ -1,7 +1,7 @@
 import sys
 from pymsgbox import alert
 from threading import Thread
-from usb_detector import USBHotplugDetector
+from .usb_detector import USBHotplugDetector
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 

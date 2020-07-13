@@ -1,10 +1,10 @@
 import os
 import usb1 as usb
-import gui_elements
-from nuker import Nuker
-from logger import Logger
-from evaluator import Evaluator
-from device_operations_provider import DeviceOperationsProvider
+from .nuker import Nuker
+from .logger import Logger
+from .evaluator import Evaluator
+from modules import gui_elements as gui_elements
+from .device_operations_provider import DeviceOperationsProvider
 
 
 class USBHotplugDetector():

@@ -3,7 +3,7 @@ import mmap
 import filecmp
 import subprocess
 from subprocess import check_output
-from logger import Logger
+from .logger import Logger
 
 
 class FileOperationsProvider():
