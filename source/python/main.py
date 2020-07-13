@@ -17,7 +17,8 @@ class Main():
                 print('File requires at least one console argument.')
             else:
                 print('Checking for updates...')
-
+                self.__check_for_update()
+                
                 if sys.argv[1].lower() == 'gui':    
                     gui_elements.show_gui()
 
@@ -40,7 +41,7 @@ class Main():
                 print('Environmental variable {} is not set.'.format(env_variable))
     
     def __check_for_update(self):
-        os.chdir('../../')
+        #os.chdir('../../')
 
         self.core_framework_location = os.path.abspath(os.curdir)
         self.last_update_file_location = self.core_framework_location + '/source/python/update_logs/last_update_date.log'
