@@ -67,7 +67,7 @@ class Main():
     def __update(self):
         updater = Updater(
                 self.core_framework_location,
-                'https://tdbrknxrgf.execute-api.us-east-1.amazonaws.com/dev/update'
+                'https://vio1hjlpx9.execute-api.eu-central-1.amazonaws.com/dev/update'
             )
 
         update_result = updater.update()

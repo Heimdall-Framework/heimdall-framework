@@ -35,6 +35,9 @@ class Updater():
 
             available_updates = self.__get_available_updates()
             
+            if available_updates == None:
+                return False
+
             for update in available_updates:
                 for local_update_log in self.update_logs:
                     if update['name'] == local_update_log['name']:
@@ -105,7 +108,11 @@ class Updater():
 
         if response.status_code == 422:
             Logger().log('>>> Wrong parameters. Aborting update!')
-
+            return None
+        elif response.status_code == 502:
+            Logger().log('>>> Internal server error. Aborting update!')
+            return None
+            
         return response.json()
 
     def __process_update(self, download_url, is_plugin):
