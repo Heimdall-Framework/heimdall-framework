@@ -39,6 +39,10 @@ class Updater():
                 return False
 
             for update in available_updates:
+                if update['name'] == 'none':
+                    Logger().log('>>> There update repository is currently empty. Update is being skipped.')
+                    return False
+                    
                 for local_update_log in self.update_logs:
                     if update['name'] == local_update_log['name']:
                         is_new = False
@@ -112,7 +116,7 @@ class Updater():
         elif response.status_code == 502:
             Logger().log('>>> Internal server error. Aborting update!')
             return None
-            
+
         return response.json()
 
     def __process_update(self, download_url, is_plugin):
