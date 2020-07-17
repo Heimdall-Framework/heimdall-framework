@@ -42,7 +42,7 @@ class Main():
                 print('Environmental variable {} is not set.'.format(env_variable))
     
     def __check_for_update(self):
-        self.core_framework_location = os.path.abspath(os.curdir)
+        self.core_framework_location = os.path.abspath(os.path.join(os.path.dirname( __file__), '../../')) 
         self.last_update_file_location = self.core_framework_location + '/source/python/update_logs/last_update_date.log'
         self.versions_log_file = self.core_framework_location + '/source/python/update_logs/versions.json'
 
