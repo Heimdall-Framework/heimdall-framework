@@ -41,7 +41,7 @@ function disable_automounting (){
 function import_hardware_controller()
 {
     git clone https://github.com/Heimdall-Framework/heimdall-framework.git
-    mv heimdall-hardware-controller/heimdall_hardware_controller.py source/python/plugins/hardware_controller.py
+    cp heimdall-hardware-controller/heimdall_hardware_controller.py source/python/plugins/hardware_controller.py
     rm -rf heimdall-hardware-controller
     echo "Hardware controller was imported successfuly"
 }
