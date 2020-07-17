@@ -18,12 +18,14 @@ function export_env_variables ()
     export TESTING_PORTS=$3
     export NUKING_PORTS=$4
 
-    echo "export LOGS_DIRECTORY_PATH=$1" >> ~/.bashrc 
+    echo "export LOGS_DIRECTORY_PATH=$1" >> ~/.bashrc
+    echo "$LOGS_DIRECTORY_PATH"
     mkdir $1
     echo "export DEVS_MOUNTPOINT=$2" >> ~/.bashrc
     mkdir $2
     echo "export TESTING_PORTS=$3" >> ~/.bashrc
     echo "export NUKING_PORTS=$4" >> ~/.bashrc
+    echo "export $NUKING_PORTS"
 
     source ~/.bashrc
     echo "Environmental variables were exported successfuly."
@@ -41,7 +43,7 @@ function disable_automounting (){
 function import_hardware_controller()
 {
     git clone https://github.com/Heimdall-Framework/heimdall-hardware-controller.git
-    cp heimdall-hardware-controller/heimdall_hardware_controller.py source/python/plugins/hardware_controller.py
+    mv heimdall-hardware-controller/hardware_controller.py source/python/plugins/hardware_controller.py
     rm -rf heimdall-hardware-controller
     echo "Hardware controller was imported successfuly"
 }
