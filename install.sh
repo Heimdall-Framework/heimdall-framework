@@ -40,7 +40,7 @@ function disable_automounting (){
 
 function import_hardware_controller()
 {
-    git clone https://github.com/Heimdall-Framework/heimdall-framework.git
+    git clone https://github.com/Heimdall-Framework/heimdall-hardware-controller.git
     cp heimdall-hardware-controller/heimdall_hardware_controller.py source/python/plugins/hardware_controller.py
     rm -rf heimdall-hardware-controller
     echo "Hardware controller was imported successfuly"
@@ -72,7 +72,7 @@ function install ()
     then
         path_to_main="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" 
         is_ubuntu=$(cat /etc/os-release | grep NAME)
-        if [[$is_ubuntu == *"Ubuntu"*]];
+        if [[is_ubuntu == *"Ubuntu"*]];
         then
             echo "start on runlevel [2345] >> /etc/systemd/heimdall_startup.conf"
             echo "stop on runlevel [!2345] >> /etc/systemd/heimdall_startup.conf"
