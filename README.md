@@ -40,8 +40,8 @@ Then you must set the following environment variables to directories of your cho
 
 * DEVS_MOUNTPOINT - the location of the directory where the tested devices will be mounted temporary;
 * LOGS_DIRECTORY_PATH - the location of the directory where Heimdall will store its logs;
-* TESTING_PORTS - the port or ports that will be used to test USB mass storage devices.
-
+* TESTING_PORTS - the port or ports that will be used to test USB mass storage devices;
+* NUKING_PORTS - the port or ports that will be used to nuke a mass storage device.
 
 You can set and export them with:
 
