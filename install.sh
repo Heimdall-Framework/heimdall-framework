@@ -26,7 +26,7 @@ function export_env_variables ()
     echo "export NUKING_PORTS=$4" >> ~/.bashrc
 
     source ~/.bashrc
-    echo "Environmental variables were imported successfuly."
+    echo "Environmental variables were exported successfuly."
 }
 
 function disable_automounting (){
@@ -61,7 +61,7 @@ function install ()
     echo "Disabling automounting."
     disable_automounting
 
-    if (($1 == "rpi"));
+    if (( $1 == "rpi" ));
     then
         echo "Importing hardware controller."
         import_hardware_controller
@@ -72,7 +72,7 @@ function install ()
     then
         path_to_main="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" 
         is_ubuntu=$(cat /etc/os-release | grep NAME)
-        if [[is_ubuntu == *"Ubuntu"*]];
+        if [[ $is_ubuntu == *"Ubuntu"* ]];
         then
             echo "start on runlevel [2345] >> /etc/systemd/heimdall_startup.conf"
             echo "stop on runlevel [!2345] >> /etc/systemd/heimdall_startup.conf"
