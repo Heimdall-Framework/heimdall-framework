@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+import shutil
 from datetime import datetime
 import modules.gui_elements as gui_elements
 from threading import Thread

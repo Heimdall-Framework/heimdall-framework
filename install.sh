@@ -25,7 +25,7 @@ function export_env_variables ()
     mkdir $2
     echo "export TESTING_PORTS=$3" >> ~/.bashrc
     echo "export NUKING_PORTS=$4" >> ~/.bashrc
-    echo "export $NUKING_PORTS"
+    echo "$NUKING_PORTS"
 
     source ~/.bashrc
     echo "Environmental variables were exported successfuly."
