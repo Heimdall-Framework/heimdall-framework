@@ -40,7 +40,7 @@ class Updater():
 
             for update in available_updates:
                 if update['name'] == 'none':
-                    Logger().log('>>> There update repository is currently empty. Update is being skipped.')
+                    Logger().log('>>> The update repository is currently empty. Update is being skipped.')
                     return False
                     
                 for local_update_log in self.update_logs:
