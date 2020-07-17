@@ -2,7 +2,7 @@
 
 function install_dependencies () 
 {
-    dependencies="python3 python3-pip qt5-default pyqt5-dev pyqt5-dev-tools python3-pyqt5 python-tk clamav-daemon clamav-freshclam clamav-unofficial-sigs gconftool-2"
+    dependencies="python3 python3-pip qt5-default pyqt5-dev pyqt5-dev-tools python3-pyqt5 python-tk clamav-daemon clamav-freshclam clamav-unofficial-sigs gconf-editor"
     python_modules="pymsgbox libusb1 pyudev clamd plugypy"
 
     apt-get update
@@ -70,9 +70,9 @@ function install ()
 
     if (( $6 == "y" ));
     then
-        path_to_main = "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" 
-        is_ubuntu = $(cat /etc/os-release | grep NAME)
-        if ((is_ubuntu == *"Ubuntu"*));
+        path_to_main="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" 
+        is_ubuntu=$(cat /etc/os-release | grep NAME)
+        if [[$is_ubuntu == *"Ubuntu"*]];
         then
             echo "start on runlevel [2345] >> /etc/systemd/heimdall_startup.conf"
             echo "stop on runlevel [!2345] >> /etc/systemd/heimdall_startup.conf"
