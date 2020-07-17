@@ -2,7 +2,7 @@
 
 function install_dependencies () 
 {
-    dependencies="python3 python3-pip python3-pyqt5 python-tk clamav-daemon clamav-freshclam clamav-unofficial-sigs gconftool-2"
+    dependencies="python3 python3-pip qt5-default pyqt5-dev pyqt5-dev-tool python3-pyqt5 python-tk clamav-daemon clamav-freshclam clamav-unofficial-sigs gconftool-2"
     python_modules="pymsgbox libusb1 pyudev clamd plugypy PyQt5"
 
     apt-get update
