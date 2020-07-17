@@ -3,7 +3,7 @@
 function install_dependencies () 
 {
     dependencies="python3 python3-pip python3-pyqt5 python-tk clamav-daemon clamav-freshclam clamav-unofficial-sigs gconftool-2"
-    python_modules="pymsgbox libusb1 pyudev clamd plugypy"
+    python_modules="pymsgbox libusb1 pyudev clamd plugypy PyQt5"
 
     apt-get update
     apt-get install $dependencies
@@ -61,18 +61,18 @@ function install ()
     echo "Disabling automounting."
     disable_automounting
 
-    if [ $1 == "rpi" ]
+    if (($1 == "rpi"));
     then
         echo "Importing hardware controller."
         import_hardware_controller
         echo "Hardware controller was imported."
     fi
 
-    if [ $6 == "y" ]
+    if (( $6 == "y" ));
     then
         path_to_main = "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" 
         is_ubuntu = $(cat /etc/os-release | grep NAME)
-        if [[is_ubuntu == *"Ubuntu"*]]
+        if ((is_ubuntu == *"Ubuntu"*));
         then
             echo "start on runlevel [2345] >> /etc/systemd/heimdall_startup.conf"
             echo "stop on runlevel [!2345] >> /etc/systemd/heimdall_startup.conf"
