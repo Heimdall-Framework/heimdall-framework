@@ -78,7 +78,7 @@ function install ()
         then
             echo "start on runlevel [2345] >> /etc/systemd/heimdall_startup.conf"
             echo "stop on runlevel [!2345] >> /etc/systemd/heimdall_startup.conf"
-            echo "exec $path_to_main/source/python/main.py GUI >> /etc/systemd/heimdall_startup.conf" 
+            echo "exec $path_to_main/source/python/main.py GUI >>" /etc/systemd/heimdall_startup.conf 
         else 
             echo "start on runlevel [2345]" >> /etc/init/heimdall_startup.conf
             echo "stop on runlevel [!2345]" >> /etc/init/heimdall_startup.conf
