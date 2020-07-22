@@ -18,8 +18,6 @@ deploy:
   local_dir: release
 
 after_script:
-  - git branch temp
-  - git branch
   - git add version.txt
   - git clean -f
   - git commit -m"Travis - Version was updated"
