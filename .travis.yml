@@ -24,7 +24,7 @@ after_script:
   - git clean -f
   - git commit -m"Travis - Version was updated"
   - git checkout master
-  - git merge temp
+  - git merge HEAD
   - git push master
 
 branches:
