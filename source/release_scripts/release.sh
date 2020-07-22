@@ -1,5 +1,5 @@
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-VERSIONS_FILE = "$DIR/../../version.txt"
+VERSIONS_FILE="$DIR/../../version.txt"
 
 MAJOR=$(cut -d "=" -f2 <<< $(sed -n '1p' < "$DIR/../../version.txt"))
 MINOR=$(cut -d "=" -f2 <<< $(sed -n '2p' < "$DIR/../../version.txt"))
@@ -19,13 +19,12 @@ function build_version ()
     fi
 
     echo $MAJOR"."$MINOR"."$PATCH 
-    echo -e $"MAJOR=$MAJOR\nMINOR=$MINOR\nPATCH=$PATCH" > $VERSIONS_DIR
+    echo -e $"MAJOR=$MAJOR\nMINOR=$MINOR\nPATCH=$PATCH" > $VERSIONS_FILE
 }
 
 function create_release_archive ()
 {
     archive_name="core-$MAJOR.$MINOR.$PATCH.tar.gz"
-    cd "$Dir/../../"
     ls
     echo "dir"
 }
