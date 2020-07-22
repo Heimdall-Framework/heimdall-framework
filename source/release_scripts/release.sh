@@ -27,6 +27,7 @@ function create_release_archive ()
     archive_name="core-$MAJOR.$MINOR.$PATCH.tar.gz"
     cd "$Dir/../../../"
     ls
+    echo "dir"
 }
 
 function main ()
