@@ -18,10 +18,11 @@ deploy:
   local_dir: release
 
 after_script:
-  - rm release_scripts/release/*
   - git add version.txt
+  - git rm VERSIONS_FILE
+  - git rm source/release_scripts/release/core-0.0.2.tar.gz
   - git commit -m"Travis - Version was updated"
-  - git push origin master
+  - git push
 
 branches:
   only:
