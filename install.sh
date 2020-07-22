@@ -3,11 +3,10 @@
 function install_dependencies () 
 {
     dependencies="python3 python3-pip qt5-default pyqt5-dev pyqt5-dev-tools python3-pyqt5 python-tk clamav-daemon clamav-freshclam clamav-unofficial-sigs gconf-editor"
-    python_modules="pymsgbox libusb1 pyudev clamd plugypy"
 
     apt-get update
     apt-get install $dependencies
-    pip3 install $python_modules
+    pip3 install -r requirements.txt
     echo "Dependencies were installed successfuly."
 }
 

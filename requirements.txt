@@ -1,0 +1,5 @@
+libusb1>=1.8
+PlugyPy>=1.0.4
+PyMsgBox>=1.0.8
+clamd>=1.0.2
+pyudev>=0.22.0

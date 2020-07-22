@@ -43,9 +43,12 @@ class Main():
                 Logger().log('Environmental variable {} is not set.'.format(env_variable))
     
     def __check_for_update(self):
+        '''
+        Check if any new updates are available.
+        '''
         self.core_framework_location = os.path.abspath(os.path.join(os.path.dirname( __file__), '../../')) 
-        self.last_update_file_location = self.core_framework_location + '/source/python/update_logs/last_update_date.log'
-        self.versions_log_file = self.core_framework_location + '/source/python/update_logs/versions.json'
+        self.last_update_file_location = self.core_framework_location + '/source/core/python/update_logs/last_update_date.log'
+        self.versions_log_file = self.core_framework_location + '/source/core/python/update_logs/versions.json'
 
         if not os.path.isfile(self.last_update_file_location):
             with open(self.last_update_file_location, 'w'):
@@ -66,6 +69,9 @@ class Main():
             Logger().log('>>> Update date is not reached yet.')
     
     def __update(self):
+        '''
+        Update the framework on the device.
+        '''
         updater = Updater(
                 self.core_framework_location,
                 'https://vio1hjlpx9.execute-api.eu-central-1.amazonaws.com/dev/update'

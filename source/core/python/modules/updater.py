@@ -12,8 +12,8 @@ TEMP_DIR_NAME = '/tmp/temp_update_data/'
 class Updater():
     def __init__(self, framework_location, update_url):
         self.framework_location = framework_location
-        self.version_logs_location = framework_location + '/source/python/update_logs/versions.json'
-        self.plugins_directory_location = framework_location + '/source/python/plugins/'
+        self.version_logs_location = framework_location + '/source/core/python/update_logs/versions.json'
+        self.plugins_directory_location = framework_location + '/source/core/python/plugins/'
         self.update_url = update_url
         self.updated_files_counter = 0
 
