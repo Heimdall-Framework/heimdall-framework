@@ -18,14 +18,11 @@ deploy:
   local_dir: release
 
 after_script:
-  - git branch temp
-  - git branch
+  - git config user.email 
   - git add version.txt
   - git clean -f
-  - git commit -m"Travis - Version was updated"
-  - git checkout master
-  - git merge HEAD
-  - git push master
+  - git commit --allow-empty -m"Travis - Version was updated"
+  - git push https://heimdall-framework:${GITHUB_API_KEY}@${GITHUB_REF} HEAD:master
 
 branches:
   only:
