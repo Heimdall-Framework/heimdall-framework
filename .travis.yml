@@ -1,8 +1,3 @@
-branches:
-  only:
-  - master
-  - development
-
 language: python
 python:
   - "3.6"
@@ -14,8 +9,6 @@ install:
 
 script: source/release_scripts/release.sh
 
-
-
 deploy:
   provider: s3
   access_key_id: $AWS_ACCESS_KEY_ID
@@ -23,3 +16,14 @@ deploy:
   bucket: "premium-plugins-bucket"
   skip_cleanup: true
   local_dir: release
+
+after_deployment:
+  - rm release_scripts/release/*
+  - git add version.txt
+  - git commit -m"Travis - Version was updated"
+  - git push origin master
+
+branches:
+  only:
+  - master
+  - development
