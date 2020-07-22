@@ -20,8 +20,7 @@ deploy:
 after_script:
   - git branch temp
   - git add version.txt
-  - git rm VERSIONS_FILE
-  - git rm source/release_scripts/release/core-0.0.2.tar.gz
+  - git clean -f
   - git commit -m"Travis - Version was updated"
   - git checkout master
   - git merge temp
