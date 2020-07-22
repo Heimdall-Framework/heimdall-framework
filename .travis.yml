@@ -17,7 +17,7 @@ deploy:
   skip_cleanup: true
   local_dir: release
 
-after_deployment:
+after_script:
   - rm release_scripts/release/*
   - git add version.txt
   - git commit -m"Travis - Version was updated"
