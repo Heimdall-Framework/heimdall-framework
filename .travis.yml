@@ -22,7 +22,7 @@ after_script:
   - git rm VERSIONS_FILE
   - git rm source/release_scripts/release/core-0.0.2.tar.gz
   - git commit -m"Travis - Version was updated"
-  - git push
+  - git push HEAD:master
 
 branches:
   only:
