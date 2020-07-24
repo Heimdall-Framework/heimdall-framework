@@ -46,7 +46,7 @@ class Main():
         '''
         Check if any new updates are available.
         '''
-        self.core_framework_location = os.path.abspath(os.path.join(os.path.dirname( __file__), '../../')) 
+        self.core_framework_location = os.path.abspath(os.path.join(os.path.dirname( __file__), '../../../')) 
         self.last_update_file_location = self.core_framework_location + '/source/core/python/update_logs/last_update_date.log'
         self.versions_log_file = self.core_framework_location + '/source/core/python/update_logs/versions.json'
 
@@ -86,6 +86,7 @@ class Main():
                 last_update_date.write(str(datetime.now().strftime('%b %d %Y')))
     
             updater.restart_parent()
-if __name__ == '__main__':
+
+def main():             
     Main().validate_env_variables()
     Main().main()
