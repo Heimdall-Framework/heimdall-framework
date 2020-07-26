@@ -15,7 +15,7 @@ deploy:
   secret_access_key: &3
     secure: $AWS_SECRET_ACCESS_KEY
   bucket: "core-framework bucket"
-  skip_cleanup: false
+  skip_cleanup: true
   local_dir: release
 
 before_deploy:
