@@ -6,7 +6,6 @@ python:
 install:
   - pip install -r requirements.txt
 
-
 script: source/release_scripts/release.sh
 
 deploy:
@@ -14,8 +13,11 @@ deploy:
   access_key_id: $AWS_ACCESS_KEY_ID
   secret_access_key: $AWS_SECRET_ACCESS_KEY
   bucket: "core-framework bucket"
-  skip_cleanup: true
+  skip_cleanup: false
   local_dir: release
+
+after_failure:
+  - ls /home/travis/build/Heimdall-Framework/heimdall-framework/source/release_scripts/release
 
 branches:
   only:
