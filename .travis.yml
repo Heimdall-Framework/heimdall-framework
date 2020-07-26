@@ -22,6 +22,7 @@ deploy:
 after_script:
   - echo "[DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG]"
   - echo "$AWS_ACCESS_KEY_ID"
+  - apt install awscli
   - aws sts get-caller-identity
 
 branches:
