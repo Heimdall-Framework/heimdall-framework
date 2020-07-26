@@ -17,6 +17,7 @@ deploy:
   bucket: "core-framework-bucket"
   skip_cleanup: true
   local_dir: source/release_scripts/release
+  region: eu-central-1
 
 before_deploy:
   - echo "[DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG]"
