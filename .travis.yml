@@ -14,7 +14,7 @@ deploy:
     secure: $AWS_ACCESS_KEY_ID
   secret_access_key: &3
     secure: $AWS_SECRET_ACCESS_KEY
-  bucket: "core-framework bucket"
+  bucket: "core-framework-bucket"
   skip_cleanup: true
   local_dir: source/release_scripts/release
 
