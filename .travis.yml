@@ -20,6 +20,7 @@ deploy:
   region: eu-central-1
 
 before_deploy:
+  - echo "$AWS_ACCESS_KEY_ID"
   - echo "[DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG]"
   - ls /home/travis/build/Heimdall-Framework/heimdall-framework/source/release_scripts/release
 
