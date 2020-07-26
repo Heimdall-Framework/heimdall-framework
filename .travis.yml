@@ -16,7 +16,8 @@ deploy:
   skip_cleanup: false
   local_dir: release
 
-after_failure:
+after_deploy:
+  - echo "[DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG]"
   - ls /home/travis/build/Heimdall-Framework/heimdall-framework/source/release_scripts/release
 
 branches:
