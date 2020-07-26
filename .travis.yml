@@ -22,6 +22,7 @@ deploy:
 before_deploy:
   - echo "[DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG]"
   - echo "$AWS_ACCESS_KEY_ID"
+  - aws sts get-caller-identity
 
 branches:
   only:
