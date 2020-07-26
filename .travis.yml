@@ -19,7 +19,7 @@ deploy:
   local_dir: source/release_scripts/release
   region: eu-central-1
 
-before_deploy:
+after_script:
   - echo "[DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG]"
   - echo "$AWS_ACCESS_KEY_ID"
   - aws sts get-caller-identity
