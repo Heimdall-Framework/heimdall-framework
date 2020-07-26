@@ -16,7 +16,7 @@ deploy:
     secure: $AWS_SECRET_ACCESS_KEY
   bucket: "core-framework bucket"
   skip_cleanup: true
-  local_dir: release
+  local_dir: source/release_scripts/release
 
 before_deploy:
   - echo "[DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG]"
