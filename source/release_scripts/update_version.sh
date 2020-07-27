@@ -4,20 +4,6 @@ MAJOR=$(cut -d'.' -f1 <<<$VERSION)
 MINOR=$(cut -d'.' -f2 <<<$VERSION)
 PATCH=$(cut -d'.' -f3 <<<$VERSION)
 
-function build_version ()
-{
-    if ((PATCH < 20)); then
-        PATCH=$((PATCH+1))
-    elif ((MINOR < 20)); then
-        MINOR=$((MINOR+1))
-        PATCH=0
-    else
-        MAJOR=$((MAJOR+1))
-        MINOR=0
-        PATCH=0
-    fi
-}
-
 function update_versioning_controller_data ()
 {
     echo $MAJOR"."$MINOR"."$PATCH 
