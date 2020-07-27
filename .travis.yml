@@ -21,6 +21,7 @@ deploy:
 
 after_deploy:
   - source/release_scripts/update_version.sh
+  - source/release_scripts/clear_bucket.sh
 
 branches:
   only:
