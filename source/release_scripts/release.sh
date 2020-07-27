@@ -36,7 +36,7 @@ function main ()
     echo "Building release archive..."
     create_release_archive
     echo "Exporting old version number..."
-    export VERSION=$VERSION
+    export OLD_VERSION=$VERSION
 }
 
 main
