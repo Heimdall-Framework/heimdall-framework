@@ -27,7 +27,7 @@ after_script:
   - sudo ./aws/install
   - aws sts get-caller-identity
 
-after_success:
+after_deploy:
   - source/release_scripts/update_version.sh
 
 branches:
