@@ -18,7 +18,6 @@ function build_version ()
     fi
 }
 
-
 function update_versioning_controller_data ()
 {
     echo $MAJOR"."$MINOR"."$PATCH 
