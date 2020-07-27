@@ -22,7 +22,9 @@ deploy:
 after_script:
   - echo "[DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG]"
   - echo "$AWS_ACCESS_KEY_ID"
-  - sudo apt install awscli
+  - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  - unzip awscliv2.zip
+  - sudo ./aws/install
   - aws sts get-caller-identity
 
 after_success:

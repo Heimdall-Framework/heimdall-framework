@@ -24,6 +24,7 @@ function update_versioning_controller_data ()
     echo $MAJOR"."$MINOR"."$PATCH 
     (curl --header "Content-Type: application/json" --request POST --data '{"ci_secret":"'$CI_SECRET'","old_version":"'$VERSION'","new_version":"'$MAJOR'.'$MINOR'.'$PATCH'"}' "$VERSIONING_CONTROLLER_UPDATE_URL")
 }
+
 build_version
 echo "Uploading new version back to the controller..."
 update_versioning_controller_data
