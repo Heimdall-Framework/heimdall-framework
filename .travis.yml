@@ -10,10 +10,8 @@ script: source/release_scripts/release.sh
 
 deploy:
   provider: s3
-  access_key_id: &3
-    secure: $AWS_ACCESS_KEY_ID
-  secret_access_key: &3
-    secure: $AWS_SECRET_ACCESS_KEY
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
   bucket: "core-framework-bucket"
   skip_cleanup: true
   local_dir: source/release_scripts/release
