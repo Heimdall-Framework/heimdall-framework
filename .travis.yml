@@ -25,6 +25,9 @@ after_script:
   - sudo apt install awscli
   - aws sts get-caller-identity
 
+after_success:
+  - source/release_scripts/update_version.sh
+
 branches:
   only:
   - master

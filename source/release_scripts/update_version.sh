@@ -1,7 +1,3 @@
-#!/bin/bash
-
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-
 VERSION=$((curl -sb -H "Accept: application/json" "$VERSIONING_CONTROLLER_GET_URL") | jq -r '.version')
 
 MAJOR=$(cut -d'.' -f1 <<<$VERSION)
@@ -22,18 +18,12 @@ function build_version ()
     fi
 }
 
-function create_release_archive ()
-{
-    archive_name="core-$MAJOR.$MINOR.$PATCH.tar.gz"
-    tar -czf $DIR/release/$archive_name $DIR/../../../heimdall-framework
-}
 
-function main ()
+function update_versioning_controller_data ()
 {
-    echo "Building version number..."
-    build_version
-    echo "Building release archive..."
-    create_release_archive
+    echo $MAJOR"."$MINOR"."$PATCH 
+    (curl --header "Content-Type: application/json" --request POST --data '{"ci_secret":"'$CI_SECRET'","old_version":"'$VERSION'","new_version":"'$MAJOR'.'$MINOR'.'$PATCH'"}' "$VERSIONING_CONTROLLER_UPDATE_URL")
 }
-
-main
+build_version
+echo "Uploading new version back to the controller..."
+update_versioning_controller_data
