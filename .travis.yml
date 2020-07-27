@@ -6,17 +6,26 @@ python:
 install:
   - pip install -r requirements.txt
 
-
 script: source/release_scripts/release.sh
 
 deploy:
   provider: s3
-  access_key_id: $AWS_ACCESS_KEY_ID
-  secret_access_key: $AWS_SECRET_ACCESS_KEY
-  bucket: "premium-plugins-bucket"
+  access_key_id: &3
+    secure: $AWS_ACCESS_KEY_ID
+  secret_access_key: &3
+    secure: $AWS_SECRET_ACCESS_KEY
+  bucket: "core-framework-bucket"
   skip_cleanup: true
-  local_dir: release
+  local_dir: source/release_scripts/release
+  region: eu-central-1
+
+after_script:
+  - echo "[DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG][DEBUG]"
+  - echo "$AWS_ACCESS_KEY_ID"
+  - apt install awscli
+  - aws sts get-caller-identity
 
 branches:
   only:
   - master
+  - development

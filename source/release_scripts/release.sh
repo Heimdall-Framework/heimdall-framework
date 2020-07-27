@@ -20,8 +20,6 @@ function build_version ()
         MINOR=0
         PATCH=0
     fi
-
-    echo $MAJOR"."$MINOR"."$PATCH 
 }
 
 function create_release_archive ()
@@ -32,6 +30,7 @@ function create_release_archive ()
 
 function update_versioning_controller_data ()
 {
+    echo $MAJOR"."$MINOR"."$PATCH 
     (curl --header "Content-Type: application/json" --request POST --data '{"ci_secret":"'$CI_SECRET'","old_version":"'$VERSION'","new_version":"'$MAJOR'.'$MINOR'.'$PATCH'"}' "$VERSIONING_CONTROLLER_UPDATE_URL")
 }
 
