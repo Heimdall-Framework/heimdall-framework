@@ -35,6 +35,8 @@ function main ()
     build_version
     echo "Building release archive..."
     create_release_archive
+    echo "Exporting old version number..."
+    export VERSION=$VERSION
 }
 
 main
