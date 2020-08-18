@@ -8,8 +8,9 @@ install:
   - unzip awscliv2.zip
   - sudo ./aws/install
 
-script: source/release_scripts/release.sh
-
+script:
+  - source/release_scripts/release.sh
+  - source/release_scripts/clear_bucket.sh
 deploy:
   provider: s3
   access_key_id: $AWS_ACCESS_KEY_ID
