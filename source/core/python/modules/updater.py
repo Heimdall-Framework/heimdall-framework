@@ -41,6 +41,7 @@ class Updater():
 
             for update in available_updates:
                 if update['name'] == 'none':
+                    print(update)
                     Logger().log('>>> The update repository is currently empty. Update is being skipped.')
                     return False
                     
@@ -143,6 +144,7 @@ class Updater():
                             self.plugins_directory_location
                             )
                     else:
+                        print(file_name)
                         shutil.move(
                             TEMP_DIR_NAME + file_name, 
                             self.framework_location
