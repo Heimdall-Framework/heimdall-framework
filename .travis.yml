@@ -26,4 +26,3 @@ after_deploy:
 branches:
   only:
   - master
-  - development

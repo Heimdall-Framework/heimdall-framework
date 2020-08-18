@@ -18,7 +18,7 @@ In order to clone and use this project, you must first install the following:
 * [PyQT5](https://pypi.org/project/PyQt5/);
 * [Libusb1](https://pypi.org/project/libusb1/);
 * [Clamd](https://pypi.org/project/clamd/);
-* [Tkinter](https://docs.python.org/3/library/tkinter.html).
+* [Tkinter](https://docs.python.org/3/library/tkinter.html);
 * [PlugyPy](https://pypi.org/project/PlugyPy/).
 
 

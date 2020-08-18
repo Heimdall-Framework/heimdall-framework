@@ -163,7 +163,7 @@ class Evaluator():
 
             local_image_checksum = str(SystemOperationsProvider().get_file_checksum('/tmp/temp_image.img'))
 
-            # compares the two checksums from the Tails website to the local one
+            # compares the checksums from the Tails website to the local one
             if SystemOperationsProvider().offline_verify_checksum(local_image_checksum):
                 os.remove('/tmp/temp_image.img')
                 os.remove('/tmp/temp_image.iso')

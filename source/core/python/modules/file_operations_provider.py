@@ -12,7 +12,7 @@ class FileOperationsProvider():
 
     def compare_files(self, first_file_path, second_file_path):
         """
-        Compares two files
+        Compare two files
 
         :param first_file_path: The path to first file that will be compared
         :param second_file_path: The path to first file that will be compared
@@ -37,18 +37,18 @@ class FileOperationsProvider():
                     return dir_path + file_name
         return None
 
-        def file_contains_string(self, string, file_path):
-            """
-            Checks if a file contains a string.
-            Returns True if yes and False if no.
+    def file_contains_string(self, string, file_path):
+        """
+        Checks if a file contains a string.
+        Returns True if yes and False if no.
 
-            :param string: The string that will be searched for 
-            :param file_path: The path to the file that will be searched
-            """
+        :param string: The string that will be searched for 
+        :param file_path: The path to the file that will be searched
+        """
 
-            with open(file_path) as file:
-                file_string_object = mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ)
-                return file_string_object.find(string) != -1
+        with open(file_path) as file:
+            file_string_object = mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ)
+            return file_string_object.find(string) != -1
 
     def create_img_file(self, extension):
         """
