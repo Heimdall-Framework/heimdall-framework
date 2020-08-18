@@ -136,7 +136,6 @@ class Updater():
             archive.extractall(TEMP_DIR_NAME)
             archive.close()
 
-<<<<<<< HEAD
             for root, dirs, files in os.walk(TEMP_DIR_NAME):
                 if is_plugin:
                     for file_name in files:
@@ -151,27 +150,10 @@ class Updater():
                     print(root)
                     if 'heimdall-framework' in root:
                         for file in files:
-                            print(root.replace(TEMP_DIR_NAME + 'heimdall-framework', self.framework_location) + '/' + file)
                             shutil.copy(
                                 root + '/' + file, 
                                 root.replace(TEMP_DIR_NAME + 'heimdall-framework', self.framework_location) + '/' + file
                                 )
-=======
-            for dir_path, dir_name, file_names in os.walk(TEMP_DIR_NAME):
-                for file_name in file_names:
-                    if is_plugin and file_name.endswith('.py') or file_name.endswith('.pyc'):
-                        shutil.move(
-                            TEMP_DIR_NAME + file_name, 
-                            self.plugins_directory_location
-                            )
-                    else:
-                        print(file_name)
-                        shutil.move(
-                            TEMP_DIR_NAME + file_name, 
-                            self.framework_location
-                            )
-                        
->>>>>>> development
             
             shutil.rmtree(TEMP_DIR_NAME)
             return True
