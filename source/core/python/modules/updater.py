@@ -6,6 +6,7 @@ import tarfile
 import urllib
 import requests
 from .logger import Logger
+from .system_operations_provider import SystemOperationsProvider
 
 TEMP_DIR_NAME = '/tmp/temp_update_data/'
 
@@ -88,7 +89,9 @@ class Updater():
                 is_new = True
 
             with open(self.version_logs_location, 'w') as update_logs_file:
-                update_logs_file.write(json.dumps(self.update_logs))     
+                update_logs_file.write(json.dumps(self.update_logs))
+            
+            SystemOperationsProvider().rebuild_package(self.framework_location)
             return True
         except:
             raise
@@ -164,7 +167,7 @@ class Updater():
 
     def __get_download_link(self, update_name, update_version, update_type):
         '''
-        Get the download link for update.
+        Get the download link for the update.
 
         :param update_name: the name of the update
         :param update_version: the version of the update

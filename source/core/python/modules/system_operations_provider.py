@@ -13,10 +13,22 @@ from .logger import Logger
 class SystemOperationsProvider():
     def __init__(self):
         self.device_mountpoint = os.environ['DEVS_MOUNTPOINT']
+    
+    def rebuild_package(self, setup_file_location):
+        """
+        """
+        rebuild_command = "pip install -e ."
+        command_execution_proccess = subprocess.Popen(rebuild_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+        output, error = command_execution_proccess.communicate()
+
+        if error != None:
+            return False
+        return True
 
     def mount_device(self, device_system_name, current_part=0):
         """
-        Mounts the device on predetermined point with noexec and rw permission parameters
+        Mount the device on a predetermined mountpoint with noexec and rw permission parameters
         
         :param device_system_name: The system name of the device
         :param current_partition: The device partition that is being currently mounted
