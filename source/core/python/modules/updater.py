@@ -177,7 +177,7 @@ class Updater():
             'action' : 'update',
             'device_serial_number' : self.device_serial_number,
             'update_type' : update_type,
-            'version' : update_version
+            'version' : update_name + '-' + update_version
         }
 
         response = requests.get(
