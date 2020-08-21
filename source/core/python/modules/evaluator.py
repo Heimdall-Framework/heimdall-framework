@@ -209,8 +209,8 @@ class Evaluator():
     # executes hardware relay controll plugin
     def __execute_hardware_plugin(self, delay):
         plugin_manager = plugypy.PluginManager(
-            self.__plugins_directory, 
-            self.__configuration_file_directory, 
+            self.__plugins_directory,
+            self.__configuration_file_directory,
             will_verify_ownership=True
             )
 
