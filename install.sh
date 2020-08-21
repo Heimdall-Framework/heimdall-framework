@@ -36,6 +36,8 @@ function disable_automounting (){
     --type bool \
     --set /desktop/gnome/volume_manager/automount_drives false
 
+    
+
     echo "Automounting was disabled."
 }
 
