@@ -70,7 +70,6 @@ class Evaluator():
         device_bcd_number = self.__device.getbcdDevice()
 
         for i in range(TESTS_RANGE):
-            
             if not self.__execute_hardware_plugin(5):
                 gui.show_msg_box('Guideline', 'Unplug the USB device, click Okay and then plug it in tha same port.')
 
@@ -193,11 +192,13 @@ class Evaluator():
 
         print('Await further instructions')
 
+    # set a device object with a given port
     def __set_device(self):
         while self.__device is None:
             self.__device = DeviceOperationsProvider().find_by_port_number(self.__port_number, self.__context)
 
 
+    # set the device handle object of the currently connected device
     def __set_device_handle(self):
         while self.__device_handle is None:
             self.__device_handle = self.__context.openByVendorIDAndProductID(
@@ -208,8 +209,8 @@ class Evaluator():
     # executes hardware relay controll plugin
     def __execute_hardware_plugin(self, delay):
         plugin_manager = plugypy.PluginManager(
-            self.__plugins_directory, 
-            self.__configuration_file_directory, 
+            self.__plugins_directory,
+            self.__configuration_file_directory,
             will_verify_ownership=True
             )
 
