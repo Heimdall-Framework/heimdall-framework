@@ -1,5 +1,5 @@
 import sys
-from pymsgbox import alert
+from pymsgbox import alert, confirm
 from threading import Thread
 from .usb_detector import USBHotplugDetector
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -182,3 +182,12 @@ def show_gui(fullscreen=True):
 
 def show_msg_box(box_title, box_content, buttons = 'Okay'):
     alert(box_content, box_title, buttons)
+
+def show_confirm_box(box_title, box_content, displayed_buttons = ['Yes', 'No']):
+    result = confirm(text=box_content, title=box_title, buttons=displayed_buttons)
+    if result == 'OK':
+        return True
+    else:
+        return False
+        
+    
