@@ -221,7 +221,7 @@ class Evaluator():
 
         plugin_manager.execute_plugin(hardware_controller_plugin, (delay,), is_forced=True)
         return True
-                
+ 
     # runs external plugins (tests)
     def __run_external_tests(self):
         plugin_arguments_tuple = (self.__device, self.__device_handle)

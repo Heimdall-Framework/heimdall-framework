@@ -17,16 +17,16 @@ function export_env_variables ()
     export TESTING_PORTS=$3
     export NUKING_PORTS=$4
 
-    echo "export LOGS_DIRECTORY_PATH=$1" >> ~/.bashrc
+    echo "export LOGS_DIRECTORY_PATH=$1" >> /home/$USER/.bashrc
     echo "$LOGS_DIRECTORY_PATH"
     mkdir $1
-    echo "export DEVS_MOUNTPOINT=$2" >> ~/.bashrc
+    echo "export DEVS_MOUNTPOINT=$2" >> /home/$USER/.bashrc
     mkdir $2
-    echo "export TESTING_PORTS=$3" >> ~/.bashrc
-    echo "export NUKING_PORTS=$4" >> ~/.bashrc
+    echo "export TESTING_PORTS=$3" >> /home/$USER/.bashrc
+    echo "export NUKING_PORTS=$4" >> /home/$USER/.bashrc
     echo "$NUKING_PORTS"
 
-    source ~/.bashrc
+    source /home/$USER/.bashrc
     echo "Environmental variables were exported successfuly."
 }
 
@@ -35,6 +35,8 @@ function disable_automounting (){
     --config-source xml:readwrite:/etc/gconf/gconf.xml.mandatory \
     --type bool \
     --set /desktop/gnome/volume_manager/automount_drives false
+
+    
 
     echo "Automounting was disabled."
 }

@@ -13,6 +13,7 @@ TEMP_DIR_NAME = '/tmp/temp_update_data/'
 class Updater():
     def __init__(self, framework_location, update_url):
         self.framework_location = framework_location
+        self.framework_parent_directory = framework_location + '/../'
         self.version_logs_location = framework_location + '/source/core/python/update_logs/versions.json'
         self.plugins_directory_location = framework_location + '/source/core/python/plugins/'
         self.update_url = update_url
@@ -56,11 +57,10 @@ class Updater():
                                 update['type']
                             )
 
-                        if update['type'] == 'plugin':
-                            self.__process_update(download_link, True)
-                        else:
-                            self.__process_update(download_link, False)
-
+                            if update['type'] == 'plugin':
+                                self.__process_update(download_link, True)
+                            else:
+                                self.__process_update(download_link, False)
                         local_update_log['version'] = update['version']
                         break
                 
@@ -133,32 +133,35 @@ class Updater():
             urllib.request.urlretrieve(download_url, TEMP_DIR_NAME + '/update.tar.gz')
 
             archive = tarfile.open(TEMP_DIR_NAME + '/update.tar.gz', "r:gz")
-            archive.extractall()
+            archive.extractall(TEMP_DIR_NAME)
             archive.close()
 
-            for dir_path, dir_name, file_names in os.walk(TEMP_DIR_NAME):
-                for file_name in file_names:
-                    if is_plugin and file_name.endswith('.py') or file_name.endswith('.pyc'):
-                        shutil.move(
-                            TEMP_DIR_NAME + file_name, 
-                            self.plugins_directory_location
-                            )
-                    else:
-                        print(file_name)
-                        shutil.move(
-                            TEMP_DIR_NAME + file_name, 
-                            self.framework_location
-                            )
-                        
+            for root, dirs, files in os.walk(TEMP_DIR_NAME):
+                if is_plugin:
+                    for file_name in files:
+                        if file_name.endswith('.py') or file_name.endswith('.pyc'):
+                            shutil.copy(
+                                TEMP_DIR_NAME + file_name, 
+                                self.plugins_directory_location
+                                )
+                            print('in')
+                    break
+                else:
+                    print(root)
+                    if 'heimdall-framework' in root:
+                        for file in files:
+                            shutil.copy(
+                                root + '/' + file, 
+                                root.replace(TEMP_DIR_NAME + 'heimdall-framework', self.framework_location) + '/' + file
+                                )
             
             shutil.rmtree(TEMP_DIR_NAME)
             return True
         except:
             shutil.rmtree(TEMP_DIR_NAME)
             Logger().log('>>> Processing update failed.')
-
+            raise
             return False
-            
 
     def __update_plugins_config(self, plugin_name):
         self.plugins_config.append({
