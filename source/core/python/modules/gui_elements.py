@@ -149,9 +149,13 @@ class HeimdallMainWindow(object):
             worker = GuiThreadWorker()
             self.threadpool.start(worker)
             self.is_started = True
+            self.start_evaluator_btn.setEnabled(False)
+            self.stop_evaluator_btn.setEnabled(True)
 
     def __stop_evaluator(self):
         usb_detector.stop()
+        self.start_evaluator_btn.setEnabled(True)
+        self.stop_evaluator_btn.setEnabled(False)
 
 
 class WritingStream(QtCore.QObject):
