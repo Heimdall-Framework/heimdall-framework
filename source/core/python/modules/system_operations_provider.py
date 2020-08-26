@@ -17,7 +17,7 @@ class SystemOperationsProvider():
     def rebuild_package(self, setup_file_location):
         """
         """
-        rebuild_command = "pip install -e ."
+        rebuild_command = "pip3 install -e ."
         command_execution_proccess = subprocess.Popen(rebuild_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
         output, error = command_execution_proccess.communicate()
