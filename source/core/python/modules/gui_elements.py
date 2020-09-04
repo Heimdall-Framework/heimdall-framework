@@ -24,12 +24,10 @@ class HeimdallMainWindow(object):
         large_font.setPointSize(14)
 
         self.threadpool = QtCore.QThreadPool()
-
         
         sys.stdout = WritingStream(outputted_text=self.normal_write_text)
 
-
-        MainWindow.setStyleSheet("background-color: rgba(61, 61, 61, 253)")
+        MainWindow.setStyleSheet("background-color: rgba(255, 255, 255, 253)")
         MainWindow.setTabShape(QtWidgets.QTabWidget.Triangular)
         MainWindow.setUnifiedTitleAndToolBarOnMac(True)
         
@@ -74,8 +72,8 @@ class HeimdallMainWindow(object):
         font.setPointSize(14)
  
         self.start_evaluator_btn.setFont(large_font)
-        self.start_evaluator_btn.setStyleSheet("background: grey;\n"
-            "color: white;\n"
+        self.start_evaluator_btn.setStyleSheet("background: white;\n"
+            "color: black;\n"
             ""
             )
         
@@ -92,8 +90,8 @@ class HeimdallMainWindow(object):
         self.stop_evaluator_btn.setMinimumSize(QtCore.QSize(200, 50))
         
         self.stop_evaluator_btn.setFont(large_font)
-        self.stop_evaluator_btn.setStyleSheet("background: grey;\n"
-            "color: white;"
+        self.stop_evaluator_btn.setStyleSheet("background: white;\n"
+            "color: black;"
             )
         
         self.stop_evaluator_btn.setObjectName("stop_evaluator_btn")
