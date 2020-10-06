@@ -4,11 +4,14 @@ python:
 
 install:
   - pip install -r requirements.txt
+  - cd ../../
   - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
   - unzip awscliv2.zip
   - sudo ./aws/install
+  - cd -
 
-script: source/release_scripts/release.sh
+script:
+  - source/release_scripts/release.sh
 
 deploy:
   provider: s3
@@ -19,11 +22,12 @@ deploy:
   local_dir: source/release_scripts/release
   region: eu-central-1
 
+before_deploy:
+  - source/release_scripts/clear_bucket.sh
+
 after_deploy:
   - source/release_scripts/update_version.sh
-  - source/release_scripts/clear_bucket.sh
 
 branches:
   only:
   - master
-  - development

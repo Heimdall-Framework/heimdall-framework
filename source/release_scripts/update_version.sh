@@ -23,6 +23,7 @@ function update_versioning_controller_data ()
     echo "$MAJOR.$MINOR.$PATCH" 
     echo $VERSION
     (curl --header "Content-Type: application/json" --request POST --data '{"ci_secret":"'$CI_SECRET'","old_version":"'$VERSION'","new_version":"'$MAJOR'.'$MINOR'.'$PATCH'"}' "$VERSIONING_CONTROLLER_UPDATE_URL")
+    rm source/release_scripts/release/*.tar.gz
 }
 
 echo $VERSION

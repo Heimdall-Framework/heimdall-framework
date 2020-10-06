@@ -6,18 +6,21 @@ import tarfile
 import urllib
 import requests
 from .logger import Logger
+from .system_operations_provider import SystemOperationsProvider
 
 TEMP_DIR_NAME = '/tmp/temp_update_data/'
 
 class Updater():
-    def __init__(self, framework_location, update_url):
+    def __init__(self, framework_location: str, update_url: str):
         self.framework_location = framework_location
+        self.framework_parent_directory = framework_location + '/../'
         self.version_logs_location = framework_location + '/source/core/python/update_logs/versions.json'
         self.plugins_directory_location = framework_location + '/source/core/python/plugins/'
+
         self.update_url = update_url
         self.updated_files_counter = 0
 
-    def update(self):
+    def update(self) -> None:
         '''
         Update the running version of the framework or it's plugins if newer ones exist.
         Return True or False, depending on the outcome of the operation.
@@ -40,6 +43,7 @@ class Updater():
 
             for update in available_updates:
                 if update['name'] == 'none':
+                    print(update)
                     Logger().log('>>> The update repository is currently empty. Update is being skipped.')
                     return False
                     
@@ -54,11 +58,10 @@ class Updater():
                                 update['type']
                             )
 
-                        if update['type'] == 'plugin':
-                            self.__process_update(download_link, True)
-                        else:
-                            self.__process_update(download_link, False)
-
+                            if update['type'] == 'plugin':
+                                self.__process_update(download_link, True)
+                            else:
+                                self.__process_update(download_link, False)
                         local_update_log['version'] = update['version']
                         break
                 
@@ -88,21 +91,23 @@ class Updater():
                 is_new = True
 
             with open(self.version_logs_location, 'w') as update_logs_file:
-                update_logs_file.write(json.dumps(self.update_logs))     
+                update_logs_file.write(json.dumps(self.update_logs))
+            
+            SystemOperationsProvider().rebuild_package(self.framework_location)
             return True
         except:
             raise
             return False
 
-    def __load_update_logs(self):
+    def __load_update_logs(self) -> None:
         with open(self.version_logs_location, 'r') as update_logs_file:
             self.update_logs = json.loads(update_logs_file.read() or '[]')
 
-    def __load_plugins_config(self):
+    def __load_plugins_config(self) -> None:
         with open(self.plugins_directory_location + '/config.json') as plugins_config:
             self.plugins_config = json.loads(plugins_config.read() or '[]')
 
-    def __get_available_updates(self):
+    def __get_available_updates(self) -> str:
         parameters = {
             'action' : 'info',
             'device_serial_number' : self.device_serial_number
@@ -119,7 +124,12 @@ class Updater():
 
         return response.json()
 
-    def __process_update(self, download_url, is_plugin):
+    def __process_update(self, download_url: str, is_plugin: bool) -> bool:
+        '''
+        Download, decompress and install a given update.
+        :param download_url: the temporary link from which the update can be downloaded
+        :param is_plugin: a boolean that indicates whether the update is plugin or the core framework
+        '''
         try:
             self.updated_files_counter += 1
 
@@ -129,42 +139,59 @@ class Updater():
             urllib.request.urlretrieve(download_url, TEMP_DIR_NAME + '/update.tar.gz')
 
             archive = tarfile.open(TEMP_DIR_NAME + '/update.tar.gz', "r:gz")
-            archive.extractall()
+            archive.extractall(TEMP_DIR_NAME)
             archive.close()
 
-            for dir_path, dir_name, file_names in os.walk(TEMP_DIR_NAME):
-                for file_name in file_names:
-                    if is_plugin and file_name.endswith('.py') or file_name.endswith('.pyc'):
-                        shutil.move(
-                            TEMP_DIR_NAME + file_name, 
+            for root, dirs, files in os.walk(TEMP_DIR_NAME):
+                if is_plugin:
+                    plugin_files = self.__get_python_plugin_files(files)
+
+                    for file in plugin_files:
+                        shutil.copy(
+                            file, 
                             self.plugins_directory_location
                             )
-                    else:
-                        shutil.move(
-                            TEMP_DIR_NAME + file_name, 
-                            self.framework_location
-                            )
-                        
+                        print('in')
+                    break
+                else:
+                    if 'heimdall-framework' in root:
+                        for file in files:
+                            shutil.copy(
+                                root + '/' + file, 
+                                root.replace(TEMP_DIR_NAME + 'heimdall-framework', self.framework_location) + '/' + file
+                                )
             
             shutil.rmtree(TEMP_DIR_NAME)
             return True
-        except:
+        except Exception as exception:
             shutil.rmtree(TEMP_DIR_NAME)
-            Logger().log('>>> Processing update failed.')
-
+            Logger().log('>>> Processing update failed. Excpetion: ' + str(exception))
             return False
-            
 
-    def __update_plugins_config(self, plugin_name):
+    def __update_plugins_config(self, plugin_name: str) -> None:
         self.plugins_config.append({
             'name' : plugin_name,
             'main_function' : 'main',
             'enabled' : True
         })
 
-    def __get_download_link(self, update_name, update_version, update_type):
+    def __get_python_plugin_files(self, files: str) -> list:
         '''
-        Get the download link for update.
+        Get all plugin files from a temporary directory.
+
+        :param files: a list of the names of all files in a directory
+        '''
+        python_files = list()
+
+        for file_name in files:
+            if file_name.endswith('.py') or file_name.endswith('.pyc'):
+                python_files.append(TEMP_DIR_NAME + file_name)
+
+        return python_files
+
+    def __get_download_link(self, update_name: str, update_version: str, update_type: str) -> str:
+        '''
+        Get the download link for the update.
 
         :param update_name: the name of the update
         :param update_version: the version of the update
@@ -174,7 +201,7 @@ class Updater():
             'action' : 'update',
             'device_serial_number' : self.device_serial_number,
             'update_type' : update_type,
-            'version' : update_version
+            'version' : update_name + '-' + update_version
         }
 
         response = requests.get(
@@ -187,7 +214,7 @@ class Updater():
 
         return response.json()['url']
     
-    def __get_device_serial_number(self):
+    def __get_device_serial_number(self) -> str:
         '''
         Get the serial number of the device that the script runs on.
         Return default value of "0000000000000000" if the serial number is not in the "cpuinfo" file.
@@ -204,7 +231,7 @@ class Updater():
 
         return serial
 
-    def restart_parent(self):
+    def restart_parent(self) -> None:
         '''
         Restart the parent process with the same arguments with which it was started.
         '''

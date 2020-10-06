@@ -17,16 +17,24 @@ function export_env_variables ()
     export TESTING_PORTS=$3
     export NUKING_PORTS=$4
 
-    echo "export LOGS_DIRECTORY_PATH=$1" >> ~/.bashrc
+    echo "export LOGS_DIRECTORY_PATH=$1" >> /home/$SUDO_USER/.bashrc
+    echo "export LOGS_DIRECTORY_PATH=$1" >> /home/$USER/.bashrc
+
     echo "$LOGS_DIRECTORY_PATH"
     mkdir $1
-    echo "export DEVS_MOUNTPOINT=$2" >> ~/.bashrc
+    echo "export DEVS_MOUNTPOINT=$2" >> /home/$SUDO_USER/.bashrc
+    echo "export DEVS_MOUNTPOINT=$2" >> /home/$USER/.bashrc
     mkdir $2
-    echo "export TESTING_PORTS=$3" >> ~/.bashrc
-    echo "export NUKING_PORTS=$4" >> ~/.bashrc
+    echo "export TESTING_PORTS=$3" >> /home/$SUDO_USER/.bashrc
+    echo "export TESTING_PORTS=$3" >> /home/$USER/.bashrc
+
+    echo "export NUKING_PORTS=$4" >> /home/$SUDO_USER/.bashrc
+    echo "export NUKING_PORTS=$4" >> /home/$USER/.bashrc
+
     echo "$NUKING_PORTS"
 
-    source ~/.bashrc
+    source /home/$SUDO_USER/.bashrc
+    source /home/$USER/.bashrc
     echo "Environmental variables were exported successfuly."
 }
 
@@ -62,20 +70,20 @@ function install ()
     echo "Disabling automounting."
     disable_automounting
 
-    pip install -e .
+    pip3 install -e .
 
-    if (( $1 == "rpi" ));
+    if [ $1 = "rpi" ];
     then
         echo "Importing hardware controller."
         import_hardware_controller
         echo "Hardware controller was imported."
     fi
 
-    if (( $6 == "y" ));
+    if [ $6 = "y" ];
     then
         path_to_main="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" 
         is_ubuntu=$(cat /etc/os-release | grep NAME)
-        if [[ $is_ubuntu == *"Ubuntu"* ]];
+        if [ $is_ubuntu = *"Ubuntu"* ];
         then
             echo "start on runlevel [2345] >> /etc/systemd/heimdall_startup.conf"
             echo "stop on runlevel [!2345] >> /etc/systemd/heimdall_startup.conf"

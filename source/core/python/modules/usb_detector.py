@@ -53,7 +53,8 @@ class USBHotplugDetector():
                         Logger().log(">>> Device not present or user is not allowed to use the device.")
                     else:
                         if device.getPortNumber() in self.__nuking_ports:
-                            self.__nuke_device(device)
+                            if gui_elements.show_confirm_box('Nuking Alert', 'You will not be able to recover the data from the nuked device. \nDo you want to proceed?'):
+                                self.__nuke_device(device)
                         elif device.getPortNumber() in self.__testing_ports:
                             evaluation_result, evaluated_device = self.__evaluate_device(
                                 device,

@@ -8,7 +8,7 @@ Heimdall is a Python USB threat evaluation framework for Linux that is designed 
 You can install manually or automatically, using the script.
 
 ### Automatic installation
-In order to install the project automatically,, you must start the script, namer `install.sh`, located inside the root folder of the project, and provide the proper arguments (desktop or rpi installation, logs folder path and mounting folder path)
+In order to install the project automatically,, you must start the script, named `install.sh`, located inside the root folder of the project, and provide the proper arguments (desktop or rpi installation, logs folder path and mounting folder path)
 when asked. The script will update the system, install the required dependencies, set the appropriate environment variables, and, if the installation is on RPI, download the hardware controller. 
 
 ### Manual installation
@@ -18,7 +18,7 @@ In order to clone and use this project, you must first install the following:
 * [PyQT5](https://pypi.org/project/PyQt5/);
 * [Libusb1](https://pypi.org/project/libusb1/);
 * [Clamd](https://pypi.org/project/clamd/);
-* [Tkinter](https://docs.python.org/3/library/tkinter.html).
+* [Tkinter](https://docs.python.org/3/library/tkinter.html);
 * [PlugyPy](https://pypi.org/project/PlugyPy/).
 
 

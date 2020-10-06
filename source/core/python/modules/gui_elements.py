@@ -1,5 +1,5 @@
 import sys
-from pymsgbox import alert
+from pymsgbox import alert, confirm
 from threading import Thread
 from .usb_detector import USBHotplugDetector
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -24,12 +24,10 @@ class HeimdallMainWindow(object):
         large_font.setPointSize(14)
 
         self.threadpool = QtCore.QThreadPool()
-
         
         sys.stdout = WritingStream(outputted_text=self.normal_write_text)
 
-
-        MainWindow.setStyleSheet("background-color: rgba(61, 61, 61, 253)")
+        MainWindow.setStyleSheet("background-color: rgba(255, 255, 255, 253)")
         MainWindow.setTabShape(QtWidgets.QTabWidget.Triangular)
         MainWindow.setUnifiedTitleAndToolBarOnMac(True)
         
@@ -74,8 +72,8 @@ class HeimdallMainWindow(object):
         font.setPointSize(14)
  
         self.start_evaluator_btn.setFont(large_font)
-        self.start_evaluator_btn.setStyleSheet("background: grey;\n"
-            "color: white;\n"
+        self.start_evaluator_btn.setStyleSheet("background: white;\n"
+            "color: black;\n"
             ""
             )
         
@@ -92,8 +90,8 @@ class HeimdallMainWindow(object):
         self.stop_evaluator_btn.setMinimumSize(QtCore.QSize(200, 50))
         
         self.stop_evaluator_btn.setFont(large_font)
-        self.stop_evaluator_btn.setStyleSheet("background: grey;\n"
-            "color: white;"
+        self.stop_evaluator_btn.setStyleSheet("background: white;\n"
+            "color: black;"
             )
         
         self.stop_evaluator_btn.setObjectName("stop_evaluator_btn")
@@ -149,9 +147,13 @@ class HeimdallMainWindow(object):
             worker = GuiThreadWorker()
             self.threadpool.start(worker)
             self.is_started = True
+            self.start_evaluator_btn.setEnabled(False)
+            self.stop_evaluator_btn.setEnabled(True)
 
     def __stop_evaluator(self):
         usb_detector.stop()
+        self.start_evaluator_btn.setEnabled(True)
+        self.stop_evaluator_btn.setEnabled(False)
 
 
 class WritingStream(QtCore.QObject):
@@ -182,3 +184,12 @@ def show_gui(fullscreen=True):
 
 def show_msg_box(box_title, box_content, buttons = 'Okay'):
     alert(box_content, box_title, buttons)
+
+def show_confirm_box(box_title, box_content, displayed_buttons = ['Yes', 'No']):
+    result = confirm(text=box_content, title=box_title, buttons=displayed_buttons)
+    if result == 'OK':
+        return True
+    else:
+        return False
+        
+    

@@ -19,7 +19,7 @@ class Main():
             else:
                 Logger().log('Checking for updates...')
 
-                self.__check_for_update()
+                #self.__check_for_update()
 
                 if sys.argv[1].lower() == 'gui':    
                     gui_elements.show_gui()
