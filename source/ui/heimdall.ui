@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>USBEvaluatorGui</class>
+ <widget class="QWidget" name="USBEvaluatorGui">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>USBEvaluatorGui</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">font: 12pt &quot;Nirmala UI&quot;;
+color: white;
+background: #2c3e50;
+</string>
+  </property>
+  <widget class="QWidget" name="sidebar" native="true">
+   <property name="geometry">
+    <rect>
+     <x>-6</x>
+     <y>0</y>
+     <width>130</width>
+     <height>480</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background: #253442;</string>
+   </property>
+   <widget class="QWidget" name="about_btn_widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>113</y>
+      <width>130</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: #212c38;</string>
+    </property>
+    <widget class="QLabel" name="question_image_label">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>10</y>
+       <width>80</width>
+       <height>70</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>question.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="about_label_btn">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>80</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>About</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="evaluator_btn_widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>130</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: #212c38;</string>
+    </property>
+    <widget class="QLabel" name="shield_image_label">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>10</y>
+       <width>80</width>
+       <height>70</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>shield.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="evaluator_label_btn">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>80</y>
+       <width>70</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Evaluator</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>0</y>
+     <width>670</width>
+     <height>480</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="evaluator_page">
+    <widget class="QPlainTextEdit" name="logs_text_box">
+     <property name="geometry">
+      <rect>
+       <x>7</x>
+       <y>260</y>
+       <width>650</width>
+       <height>210</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Nirmala UI</family>
+       <pointsize>10</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 10pt;</string>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="plainText">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="logs_label">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>230</y>
+       <width>60</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Logs:</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="toggle_evaluator_btn">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>50</y>
+       <width>150</width>
+       <height>150</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Nirmala UI</family>
+       <pointsize>14</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+	font: 14pt;
+    border: 2px solid green;
+    border-radius: 75px;
+    border-style: outset;
+	background: #34495e;
+	color: white;
+    padding: 5px;
+    }
+
+QPushButton:pressed {
+    border-style: inset;
+    background: #7ba8d6;
+    }</string>
+     </property>
+     <property name="text">
+      <string>Start</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="about_page"/>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
