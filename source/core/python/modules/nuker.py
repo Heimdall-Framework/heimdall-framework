@@ -1,14 +1,15 @@
 import subprocess
 
 class Nuker():
-    def __init__(self, partition):
+    def __init__(self, partition: str):
         self.__nukable_partition = partition
 
-    def nuke(self):
+    def nuke(self) -> None:
         """
-        Rewrites a disk or a partition with zeroes
+        Rewrites a disk or a partition with a random set of bytes.
         """
-        nuking_command = 'dd if=/dev/zero of={} bs=8192'.format(self.__nukable_partition)
+
+        nuking_command = 'dd if=/dev/random of={} bs=8192'.format(self.__nukable_partition)
         
         process = subprocess.Popen(
             nuking_command.split(),
@@ -16,7 +17,7 @@ class Nuker():
             stderr=subprocess.STDOUT
         )
  
-        result, error = process.communicate()
+        _, error = process.communicate()
 
         if error != None:
             return False

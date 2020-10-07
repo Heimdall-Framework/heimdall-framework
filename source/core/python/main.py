@@ -12,7 +12,7 @@ from modules.file_operations_provider import FileOperationsProvider
 ENVIRONMENTAL_VARIABLES = ['DEVS_MOUNTPOINT', 'LOGS_DIRECTORY_PATH', 'TESTING_PORTS']
 
 class Main():
-    def main(self):
+    def main(self) -> None:
         try:
             if len(sys.argv) == 1:
                 Logger().log('File requires at least one console argument.')
@@ -30,7 +30,7 @@ class Main():
         except KeyboardInterrupt:
             Logger().log('Keyboard interrupt detected.')
     
-    def validate_env_variables(self):
+    def validate_env_variables(self) -> None:
         try:
             os.environ['SUDO_UID']
         except KeyError:
@@ -42,7 +42,7 @@ class Main():
             except KeyError:
                 Logger().log('Environmental variable {} is not set.'.format(env_variable))
     
-    def __check_for_update(self):
+    def __check_for_update(self) -> None:
         '''
         Check if any new updates are available.
         '''
@@ -68,7 +68,7 @@ class Main():
         else:
             Logger().log('>>> Update date is not reached yet.')
     
-    def __update(self):
+    def __update(self) -> None:
         '''
         Update the framework on the device.
         '''

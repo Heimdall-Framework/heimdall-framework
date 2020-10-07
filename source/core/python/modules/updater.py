@@ -95,11 +95,14 @@ class Updater():
             
             SystemOperationsProvider().rebuild_package(self.framework_location)
             return True
-        except:
-            raise
+        except Exception as exception:
+            Logger().log('>>> Updating procedure failed. Excpetion: ' + str(exception))
             return False
 
     def __load_update_logs(self) -> None:
+        '''
+        Loads the update logs file into a list.
+        '''
         with open(self.version_logs_location, 'r') as update_logs_file:
             self.update_logs = json.loads(update_logs_file.read() or '[]')
 
@@ -108,6 +111,10 @@ class Updater():
             self.plugins_config = json.loads(plugins_config.read() or '[]')
 
     def __get_available_updates(self) -> str:
+        '''
+        Get all available updates from a remote host.
+        '''
+        
         parameters = {
             'action' : 'info',
             'device_serial_number' : self.device_serial_number
@@ -169,6 +176,11 @@ class Updater():
             return False
 
     def __update_plugins_config(self, plugin_name: str) -> None:
+        '''
+        Update the plugin configuration list.
+        
+        :param plugin_name: the name of the plugin
+        '''
         self.plugins_config.append({
             'name' : plugin_name,
             'main_function' : 'main',
@@ -181,6 +193,7 @@ class Updater():
 
         :param files: a list of the names of all files in a directory
         '''
+        
         python_files = list()
 
         for file_name in files:
@@ -197,6 +210,7 @@ class Updater():
         :param update_version: the version of the update
         :param update_type: the type of the update
         '''
+
         parameters = {
             'action' : 'update',
             'device_serial_number' : self.device_serial_number,

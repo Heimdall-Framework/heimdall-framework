@@ -14,8 +14,11 @@ class SystemOperationsProvider():
     def __init__(self):
         self.device_mountpoint = os.environ['DEVS_MOUNTPOINT']
     
-    def rebuild_package(self, setup_file_location):
+    def rebuild_package(self, setup_file_location: str) -> bool:
         """
+        Reinstalls the framework after update.
+        
+        :param setup_file_location: the location of the setup.py file
         """
         rebuild_command = "pip3 install -e ."
         command_execution_proccess = subprocess.Popen(rebuild_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
