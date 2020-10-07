@@ -29,7 +29,7 @@ class SystemOperationsProvider():
             return False
         return True
 
-    def mount_device(self, device_system_name, current_part=0):
+    def mount_device(self, device_system_name: str, current_part=0):
         """
         Mount the device on a predetermined mountpoint with noexec and rw permission parameters
         
@@ -53,7 +53,7 @@ class SystemOperationsProvider():
     
         return True, device_system_name+str(current_part)
 
-    def unmount_device(self, mounted_device_partition):
+    def unmount_device(self, mounted_device_partition: str) -> bool:
         """
         Unmounts a device's partition
 

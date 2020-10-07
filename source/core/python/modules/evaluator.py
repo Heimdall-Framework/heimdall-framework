@@ -64,12 +64,16 @@ class Evaluator():
 
         return True, self.__device
 
-    def __validate_vendor_information(self):
+    def __validate_vendor_information(self) -> bool:
+        """
+        Validate the vendor information of the tested device.
+        """
+
         device_vendor_id = self.__device.getVendorID()
         device_product_id = self.__device.getProductID()
         device_bcd_number = self.__device.getbcdDevice()
 
-        for i in range(TESTS_RANGE):
+        for _ in range(TESTS_RANGE):
             if not self.__execute_hardware_plugin(5):
                 gui.show_msg_box('Guideline', 'Unplug the USB device, click Okay and then plug it in tha same port.')
 
@@ -106,7 +110,7 @@ class Evaluator():
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
 
-        mount_status, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
+        _, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
         DataProvider().generate_random_data_file()
 
         shutil.copyfile('dump.me', self.device_mountpoint  + 'dump.me')
@@ -132,7 +136,7 @@ class Evaluator():
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
-        mount_status, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
+        _, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
 
         scan_result = DeviceOperationsProvider().virus_scan_device(self.device_mountpoint)
         SystemOperationsProvider().unmount_device(mounted_device_partition)
@@ -144,7 +148,7 @@ class Evaluator():
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
-        mount_status, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
+        _, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
         
         indicator_file_path = FileOperationsProvider().find_file(self.device_mountpoint, 'tails.cfg')
 
