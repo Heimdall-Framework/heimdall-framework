@@ -29,7 +29,11 @@ class Evaluator():
         
         Logger().log('>>> Evaluator was initialized.')
 
-    def evaluate_device(self):
+    def evaluate_device(self) -> bool:
+        """
+        Evaluate device.
+        """
+
         Logger().log('>> Device testing initiated.')
         
         if not self.__validate_device_type():
@@ -94,7 +98,7 @@ class Evaluator():
         
         return True
 
-    def __validate_device_type(self):
+    def __validate_device_type(self) -> bool:
         for device_configuration in self.__device.iterConfigurations():
             device_interface_class = next(device_configuration.__getitem__(0).__iter__()).getClass()
             
@@ -105,7 +109,7 @@ class Evaluator():
             return True
 
 
-    def __test_io (self):
+    def __test_io (self) -> bool:
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
@@ -132,7 +136,10 @@ class Evaluator():
         
         return False
 
-    def __virus_scan(self):
+    def __virus_scan(self) -> bool:
+        """
+        Scan tested device for viruses.
+        """
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
@@ -144,7 +151,7 @@ class Evaluator():
 
         return scan_result # bool
 
-    def __intird_backdoor_test(self):
+    def __intird_backdoor_test(self) -> bool:
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
@@ -182,7 +189,7 @@ class Evaluator():
                 return False
 
     # in development
-    def __detect_time_targeted_payload(self):        
+    def __detect_time_targeted_payload(self) -> bool:
         current_time = datetime.datetime.now()
         new_system_time = datetime.datetime(2021, 1, 12, 13, 22, 13)
 
@@ -197,13 +204,13 @@ class Evaluator():
         print('Await further instructions')
 
     # set a device object with a given port
-    def __set_device(self):
+    def __set_device(self) -> None:
         while self.__device is None:
             self.__device = DeviceOperationsProvider().find_by_port_number(self.__port_number, self.__context)
 
 
     # set the device handle object of the currently connected device
-    def __set_device_handle(self):
+    def __set_device_handle(self) -> None:
         while self.__device_handle is None:
             self.__device_handle = self.__context.openByVendorIDAndProductID(
                 self.__device.getVendorID(),
@@ -211,7 +218,7 @@ class Evaluator():
             )
 
     # executes hardware relay controll plugin
-    def __execute_hardware_plugin(self, delay):
+    def __execute_hardware_plugin(self, delay) -> bool:
         plugin_manager = plugypy.PluginManager(
             self.__plugins_directory,
             self.__configuration_file_directory,
@@ -227,7 +234,7 @@ class Evaluator():
         return True
  
     # runs external plugins (tests)
-    def __run_external_tests(self):
+    def __run_external_tests(self) -> bool:
         plugin_arguments_tuple = (self.__device, self.__device_handle)
 
         plugin_manager = plugypy.PluginManager(
