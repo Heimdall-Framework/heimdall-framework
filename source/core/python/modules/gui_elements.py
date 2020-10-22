@@ -181,7 +181,6 @@ def show_gui(fullscreen=True):
 
     sys.exit(app.exec_())
 
-
 def show_msg_box(box_title, box_content, buttons = 'Okay'):
     alert(box_content, box_title, buttons)
 
@@ -192,4 +191,3 @@ def show_confirm_box(box_title, box_content, displayed_buttons = ['Yes', 'No']):
     else:
         return False
         
-    

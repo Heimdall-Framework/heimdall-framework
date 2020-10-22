@@ -7,6 +7,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 usb_detector = USBHotplugDetector()
 
+SMALL_FONT = 10
+MEDIUM_FONT = 12
+LARGE_FONT = 14
+
 class HeimdallMainWindow(object):
     def __init__(self):
         self.is_started = False
@@ -72,7 +76,7 @@ class HeimdallMainWindow(object):
 
         font = QtGui.QFont()
         font.setFamily("Nirmala UI")
-        font.setPointSize(10)
+        font.setPointSize(SMALL_FONT)
         font.setBold(False)
         font.setItalic(False)
         font.setWeight(50)
@@ -92,7 +96,7 @@ class HeimdallMainWindow(object):
         
         font = QtGui.QFont()
         font.setFamily("Nirmala UI")
-        font.setPointSize(14)
+        font.setPointSize(LARGE_FONT)
         font.setBold(False)
         font.setItalic(False)
         font.setWeight(50)
@@ -141,6 +145,7 @@ class HeimdallMainWindow(object):
         cursor = self.logs_text_box.textCursor()
         cursor.movePosition(QtGui.QTextCursor.End)
         cursor.insertText(text)
+
         self.logs_text_box.setTextCursor(cursor)
         self.logs_text_box.ensureCursorVisible()
     
