@@ -67,7 +67,7 @@ class SystemOperationsProvider():
             stderr=subprocess.STDOUT
             )
 
-        output, error = process.communicate()
+        _, error = process.communicate()
         
         Logger().log('Device was unmounted.',silent=True)
 
