@@ -51,7 +51,8 @@ class SystemOperationsProvider():
             Logger().log(error)
             return False, None
     
-        return True, device_system_name+str(current_part)
+        device_system_name = device_system_name + str(current_part)
+        return True, device_system_name
 
     def unmount_device(self, mounted_device_partition: str) -> bool:
         """
