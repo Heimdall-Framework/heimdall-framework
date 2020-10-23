@@ -186,6 +186,7 @@ def show_msg_box(box_title, box_content, buttons = 'Okay'):
 
 def show_confirm_box(box_title, box_content, displayed_buttons = ['Yes', 'No']):
     result = confirm(text=box_content, title=box_title, buttons=displayed_buttons)
+    
     if result == 'OK':
         return True
     else:
