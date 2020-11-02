@@ -57,7 +57,6 @@ function import_hardware_controller()
 
 function increase_rpi_swap() 
 {
-
     echo "Swap size was increased."
 }
 
