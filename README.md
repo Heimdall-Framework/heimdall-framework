@@ -8,7 +8,7 @@ Heimdall is a Python USB threat evaluation framework for Linux that is designed 
 You can install manually or automatically, using the script.
 
 ### Automatic installation
-In order to install the project automatically,, you must start the script, named `install.sh`, located inside the root folder of the project, and provide the proper arguments (desktop or rpi installation, logs folder path and mounting folder path)
+In order to install the project automatically, you must start the script, named `install.sh`, located inside the root folder of the project, and provide the proper arguments (desktop or RPI installation, logs folder path, and mounting folder path)
 when asked. The script will update the system, install the required dependencies, set the appropriate environment variables, and, if the installation is on RPI, download the hardware controller. 
 
 ### Manual installation
@@ -38,7 +38,7 @@ sudo pip3 install pymsgbox libusb1 clamd objectpath
 
 Then you must set the following environment variables to directories of your choice:
 
-* DEVS_MOUNTPOINT - the location of the directory where the tested devices will be mounted temporary;
+* DEVS_MOUNTPOINT - the location of the directory where the tested devices will be mounted temporarily;
 * LOGS_DIRECTORY_PATH - the location of the directory where Heimdall will store its logs;
 * TESTING_PORTS - the port or ports that will be used to test USB mass storage devices;
 * NUKING_PORTS - the port or ports that will be used to nuke a mass storage device.
@@ -63,7 +63,7 @@ export NUKING_PORTS=<PORT>
 
 where `<LOCATION>` is the path to the directory on your system and `<PORT>` is the port or ports that will be used for either testing or nuking.
 
-Now you can clone the repository with `git@github.com:Heimdall-Framework/heimdall-frame work.git` and proceed to starting Heimdall in GUI or NOGUI mode.
+Now you can clone the repository with `git@github.com:Heimdall-Framework/heimdall-frame work.git` and proceed to start Heimdall in GUI or NOGUI mode.
 
 ## Execution
 In order to run the program, you must enter in the heimdall-framework/source/python directory and run `./main.py NOGUI` (for NOGUI mode) or `./main.py GUI` (for GUI mode).
@@ -101,8 +101,7 @@ def demo_test(device, device_handle):
 Where your test function, the `demo_test` in this case, has to take a usb1 device object (named as `device`) 
 and usb1 device handle object (named as `device_handle`) as parameters.
 
-After developing your test you have to add it to the plugins directory - `/source/python/plugins`. Then you must edit the plugin configuration 
-file - `/source/python/plugins/config.json`, and add the config for your test inside the JSON list. Put the name of the test in the `name` field and the 
+After developing your test you have to add it to the plugins directory - `/source/python/plugins`. Then you must edit the plugin configuration file - `/source/python/plugins/config.json`, and add the config for your test inside the JSON list. Put the name of the test in the `name` field and the 
 function that will be called when executed in the `main_function` field.
 Example:
 ```json
