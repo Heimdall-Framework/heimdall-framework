@@ -180,6 +180,7 @@ class Updater():
         
         :param plugin_name: the name of the plugin
         '''
+        
         self.plugins_config.append({
             'name' : plugin_name,
             'main_function' : 'main',
