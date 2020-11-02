@@ -158,7 +158,6 @@ class Updater():
                             file, 
                             self.plugins_directory_location
                             )
-                        print('in')
                     break
                 else:
                     if 'heimdall-framework' in root:
