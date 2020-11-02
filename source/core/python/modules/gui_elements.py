@@ -8,152 +8,160 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 usb_detector = USBHotplugDetector()
 
 
+usb_detector = USBHotplugDetector()
+
+SMALL_FONT = 10
+MEDIUM_FONT = 12
+LARGE_FONT = 14
+
 class HeimdallMainWindow(object):
     def __init__(self):
         self.is_started = False
 
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.setEnabled(True)
-        MainWindow.resize(989, 671)
-
-        small_font = QtGui.QFont()
-        small_font.setPointSize(12)
-
-        large_font = QtGui.QFont()
-        large_font.setPointSize(14)
+    def setupUi(self, USBEvaluatorGui):
+        USBEvaluatorGui.setObjectName("USBEvaluatorGui")
+        USBEvaluatorGui.resize(800, 480)
+        USBEvaluatorGui.setStyleSheet(
+            "font: 12pt \"Nirmala UI\";\n"
+            "color: white;\n"
+            "background: #2c3e50;\n"
+            "")
 
         self.threadpool = QtCore.QThreadPool()
-        
-        sys.stdout = WritingStream(outputted_text=self.normal_write_text)
+        sys.stdout = WritingStream(outputted_text= self.normal_write_text)
+            
+        self.sidebar = QtWidgets.QWidget(USBEvaluatorGui)
+        self.sidebar.setGeometry(QtCore.QRect(-6, 0, 130, 480))
+        self.sidebar.setStyleSheet("background: #253442;")
+        self.sidebar.setObjectName("sidebar")
 
-        MainWindow.setStyleSheet("background-color: rgba(255, 255, 255, 253)")
-        MainWindow.setTabShape(QtWidgets.QTabWidget.Triangular)
-        MainWindow.setUnifiedTitleAndToolBarOnMac(True)
+        self.about_btn_widget = QtWidgets.QWidget(self.sidebar)
+        self.about_btn_widget.setGeometry(QtCore.QRect(0, 113, 130, 111))
+        self.about_btn_widget.setStyleSheet("background: #212c38;")
+        self.about_btn_widget.setObjectName("about_btn_widget")
+
+        self.question_image_label = QtWidgets.QLabel(self.about_btn_widget)
+        self.question_image_label.setGeometry(QtCore.QRect(30, 10, 80, 70))
+        self.question_image_label.setText("")
+        self.question_image_label.setPixmap(QtGui.QPixmap("question.png"))
+        self.question_image_label.setScaledContents(True)
+        self.question_image_label.setObjectName("question_image_label")
+
+        self.about_label_btn = QtWidgets.QLabel(self.about_btn_widget)
+        self.about_label_btn.setGeometry(QtCore.QRect(50, 80, 51, 20))
+        self.about_label_btn.setObjectName("about_label_btn")
+
+        self.evaluator_btn_widget = QtWidgets.QWidget(self.sidebar)
+        self.evaluator_btn_widget.setGeometry(QtCore.QRect(0, 0, 130, 111))
+        self.evaluator_btn_widget.setStyleSheet("background: #212c38;")
+        self.evaluator_btn_widget.setObjectName("evaluator_btn_widget")
+
+        self.shield_image_label = QtWidgets.QLabel(self.evaluator_btn_widget)
+        self.shield_image_label.setGeometry(QtCore.QRect(30, 10, 80, 70))
+        self.shield_image_label.setText("")
+        self.shield_image_label.setPixmap(QtGui.QPixmap("shield.png"))
+        self.shield_image_label.setScaledContents(True)
+        self.shield_image_label.setObjectName("shield_image_label")
         
-        icon = QtGui.QIcon()
-        
-        MainWindow.setProperty("icon", icon)
- 
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setAutoFillBackground(False)
-        self.centralwidget.setObjectName("centralwidget")
-        self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
-        self.gridLayout.setObjectName("gridLayout")
-        self.main_grid = QtWidgets.QGridLayout()
-        self.main_grid.setHorizontalSpacing(40)
-        self.main_grid.setVerticalSpacing(20)
-        self.main_grid.setObjectName("main_grid")
-        self.label = QtWidgets.QLabel(self.centralwidget)
- 
-        self.label.setFont(large_font)
-        self.label.setStyleSheet("color: white;")
-        self.label.setObjectName("label")
-        self.main_grid.addWidget(self.label, 3, 0, 1, 1)
- 
-        spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.main_grid.addItem(spacer_item, 0, 3, 1, 1)
-        spacer_item_one = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
-        self.main_grid.addItem(spacer_item_one, 2, 1, 1, 1)
-        spacer_item_two = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.main_grid.addItem(spacer_item_two, 0, 0, 1, 1)
-        
-        self.start_evaluator_btn = QtWidgets.QPushButton(self.centralwidget)
- 
-        size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
-        size_policy.setHorizontalStretch(0)
-        size_policy.setVerticalStretch(0)
-        size_policy.setHeightForWidth(self.start_evaluator_btn.sizePolicy().hasHeightForWidth())
- 
-        self.start_evaluator_btn.setSizePolicy(size_policy)
-        self.start_evaluator_btn.setMinimumSize(QtCore.QSize(200, 50))
- 
+        self.evaluator_label_btn = QtWidgets.QLabel(self.evaluator_btn_widget)
+        self.evaluator_label_btn.setGeometry(QtCore.QRect(40, 80, 70, 20))
+        self.evaluator_label_btn.setObjectName("evaluator_label_btn")
+
+        self.stackedWidget = QtWidgets.QStackedWidget(USBEvaluatorGui)
+        self.stackedWidget.setGeometry(QtCore.QRect(130, 0, 670, 480))
+        self.stackedWidget.setObjectName("stackedWidget")
+
+        self.evaluator_page = QtWidgets.QWidget()
+        self.evaluator_page.setObjectName("evaluator_page")
+
+        self.logs_text_box = QtWidgets.QPlainTextEdit(self.evaluator_page)
+        self.logs_text_box.setGeometry(QtCore.QRect(7, 260, 650, 210))
+
         font = QtGui.QFont()
-        font.setPointSize(14)
- 
-        self.start_evaluator_btn.setFont(large_font)
-        self.start_evaluator_btn.setStyleSheet("background: white;\n"
-            "color: black;\n"
-            ""
-            )
-        
-        self.start_evaluator_btn.setObjectName("start_evaluator_btn")
-        self.main_grid.addWidget(self.start_evaluator_btn, 0, 1, 1, 1)
-        self.stop_evaluator_btn = QtWidgets.QPushButton(self.centralwidget)
-        
-        size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
-        size_policy.setHorizontalStretch(0)
-        size_policy.setVerticalStretch(0)
-        size_policy.setHeightForWidth(self.stop_evaluator_btn.sizePolicy().hasHeightForWidth())
-        
-        self.stop_evaluator_btn.setSizePolicy(size_policy)
-        self.stop_evaluator_btn.setMinimumSize(QtCore.QSize(200, 50))
-        
-        self.stop_evaluator_btn.setFont(large_font)
-        self.stop_evaluator_btn.setStyleSheet("background: white;\n"
-            "color: black;"
-            )
-        
-        self.stop_evaluator_btn.setObjectName("stop_evaluator_btn")
-        self.main_grid.addWidget(self.stop_evaluator_btn, 0, 2, 1, 1)
-        self.logs_text_box = QtWidgets.QTextEdit(self.centralwidget)
+        font.setFamily("Nirmala UI")
+        font.setPointSize(SMALL_FONT)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
 
-       
-        self.logs_text_box.setFont(small_font)
-        self.logs_text_box.setStyleSheet("background: white;\n" 
-        "color: black;"
-        )
-
+        self.logs_text_box.setFont(font)
+        self.logs_text_box.setStyleSheet("font: 10pt;")
         self.logs_text_box.setReadOnly(True)
-        self.logs_text_box.setAcceptRichText(False)
+        self.logs_text_box.setPlainText("")
         self.logs_text_box.setObjectName("logs_text_box")
-        self.logs_text_box.moveCursor(QtGui.QTextCursor.End)
-        self.main_grid.addWidget(self.logs_text_box, 4, 0, 1, 4)
-       
-        self.gridLayout.addLayout(self.main_grid, 1, 0, 1, 1)
-        spacer_item_three = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
-        self.gridLayout.addItem(spacer_item_three, 0, 0, 1, 1)
-        MainWindow.setCentralWidget(self.centralwidget)
-       
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.logs_label = QtWidgets.QLabel(self.evaluator_page)
+        self.logs_label.setGeometry(QtCore.QRect(10, 230, 60, 20))
+        self.logs_label.setObjectName("logs_label")
 
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "USB Threat Evaluator"))
+        self.toggle_evaluator_btn = QtWidgets.QPushButton(self.evaluator_page)
+        self.toggle_evaluator_btn.setGeometry(QtCore.QRect(240, 50, 150, 150))
         
-        self.label.setText(_translate("MainWindow", "Logs:"))
-        self.start_evaluator_btn.setText(_translate("MainWindow", "Start Evaluator"))
-        self.stop_evaluator_btn.setText(_translate("MainWindow", "Stop Evaluator"))
+        font = QtGui.QFont()
+        font.setFamily("Nirmala UI")
+        font.setPointSize(LARGE_FONT)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
 
-        self.start_evaluator_btn.clicked.connect(self.__start_evaluator)
-        self.stop_evaluator_btn.clicked.connect(self.__stop_evaluator)
+        self.toggle_evaluator_btn.setFont(font)
+        self.toggle_evaluator_btn.setStyleSheet("QPushButton {\n"
+            "    font: 14pt;\n"
+            "    border: 2px solid green;\n"
+            "    border-radius: 75px;\n"
+            "    border-style: outset;\n"
+            "    background: #34495e;\n"
+            "    color: white;\n"
+            "    padding: 5px;\n"
+            "    }\n"
+            "\n"
+            "QPushButton:pressed {\n"
+            "    border-style: inset;\n"
+            "    background: #7ba8d6;\n"
+            "    }")
+        self.toggle_evaluator_btn.setObjectName("toggle_evaluator_btn")
+
+        self.stackedWidget.addWidget(self.evaluator_page)
+        
+        self.about_page = QtWidgets.QWidget()
+        self.about_page.setObjectName("about_page")
+        
+        self.stackedWidget.addWidget(self.about_page)
+
+        self.retranslateUi(USBEvaluatorGui)
+        self.stackedWidget.setCurrentIndex(0)
+        
+        QtCore.QMetaObject.connectSlotsByName(USBEvaluatorGui)
+
+    def retranslateUi(self, USBEvaluatorGui):
+        _translate = QtCore.QCoreApplication.translate
+        USBEvaluatorGui.setWindowTitle(_translate("USBEvaluatorGui", "USBEvaluatorGui"))
+
+        self.toggle_evaluator_btn.clicked.connect(self.__toggle_evaluator)
+
+        self.about_label_btn.setText(_translate("USBEvaluatorGui", "About"))
+        self.evaluator_label_btn.setText(_translate("USBEvaluatorGui", "Evaluator"))
+        self.logs_label.setText(_translate("USBEvaluatorGui", "Logs:"))
+        self.toggle_evaluator_btn.setText(_translate("USBEvaluatorGui", "Start"))
 
     def normal_write_text(self, text):
         cursor = self.logs_text_box.textCursor()
         cursor.movePosition(QtGui.QTextCursor.End)
         cursor.insertText(text)
+
         self.logs_text_box.setTextCursor(cursor)
         self.logs_text_box.ensureCursorVisible()
     
-    def __start_evaluator(self):
+    def __toggle_evaluator(self):
         if self.is_started:
-            print('>>> Evaluator has already been started.')
+            print('>>> Stopping evaluator.')
+            usb_detector.stop()
         else:
+            print('>>> Starting evaluator')
+            
             worker = GuiThreadWorker()
             self.threadpool.start(worker)
             self.is_started = True
-            self.start_evaluator_btn.setEnabled(False)
-            self.stop_evaluator_btn.setEnabled(True)
-
-    def __stop_evaluator(self):
-        usb_detector.stop()
-        self.start_evaluator_btn.setEnabled(True)
-        self.stop_evaluator_btn.setEnabled(False)
 
 
 class WritingStream(QtCore.QObject):
@@ -177,16 +185,18 @@ def show_gui(fullscreen=True):
     if fullscreen:
         heimdall_app.showFullScreen()
     else:
+        print()
         heimdall_app.show()
 
     sys.exit(app.exec_())
+
 
 def show_msg_box(box_title, box_content, buttons = 'Okay'):
     alert(box_content, box_title, buttons)
 
 def show_confirm_box(box_title, box_content, displayed_buttons = ['Yes', 'No']):
     result = confirm(text=box_content, title=box_title, buttons=displayed_buttons)
-    
+  
     if result == 'OK':
         return True
     else:

@@ -9,7 +9,7 @@ from modules.updater import Updater
 from modules.usb_detector import USBHotplugDetector
 from modules.file_operations_provider import FileOperationsProvider
 
-ENVIRONMENTAL_VARIABLES = ['DEVS_MOUNTPOINT', 'LOGS_DIRECTORY_PATH', 'TESTING_PORTS']
+ENVIRONMENTAL_VARIABLES = ['DEVS_MOUNTPOINT', 'LOGS_DIRECTORY_PATH', 'TESTING_PORTS', 'NUKING_PORTS']
 
 class Main():
     def main(self) -> None:
@@ -21,8 +21,11 @@ class Main():
 
                 #self.__check_for_update()
 
-                if sys.argv[1].lower() == 'gui':    
-                    gui_elements.show_gui()
+                if sys.argv[1].lower() == 'gui':
+                    if sys.argv[2].lower() == '--normal':
+                        gui_elements.show_gui(False)
+                    else:
+                        gui_elements.show_gui(True)
 
                 elif sys.argv[1].lower() == 'nogui':
                     usb_detector = USBHotplugDetector()
@@ -90,3 +93,5 @@ class Main():
 def main():             
     Main().validate_env_variables()
     Main().main()
+
+main()
