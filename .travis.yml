@@ -1,3 +1,5 @@
+dist: bionic
+os: linux
 language: python
 python:
   - "3.7"
@@ -18,7 +20,7 @@ deploy:
   access_key_id: $AWS_ACCESS_KEY_ID
   secret_access_key: $AWS_SECRET_ACCESS_KEY
   bucket: "core-framework-bucket"
-  skip_cleanup: true
+  cleanup: true
   local_dir: source/release_scripts/release
   region: eu-central-1
 
