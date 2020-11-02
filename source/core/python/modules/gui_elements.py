@@ -7,9 +7,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 usb_detector = USBHotplugDetector()
 
-
-usb_detector = USBHotplugDetector()
-
 SMALL_FONT = 10
 MEDIUM_FONT = 12
 LARGE_FONT = 14
@@ -156,11 +153,14 @@ class HeimdallMainWindow(object):
         if self.is_started:
             print('>>> Stopping evaluator.')
             usb_detector.stop()
+            
+            self.is_started = False
         else:
             print('>>> Starting evaluator')
             
             worker = GuiThreadWorker()
             self.threadpool.start(worker)
+           
             self.is_started = True
 
 
