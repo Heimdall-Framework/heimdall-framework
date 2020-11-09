@@ -2,8 +2,6 @@
 
 Heimdall is a Python USB threat evaluation framework for Linux that is designed to detect malicious behavior in USB mass storage devices.
 
----
-
 ## Installation:
 You can install manually or automatically, using the script.
 
