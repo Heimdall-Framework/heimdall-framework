@@ -1,3 +1,30 @@
+
+version: 2.1
+
+orbs:
+  aws-s3: circleci/aws-s3@2.0.0
+
+jobs:
+  build-and-deploy:
+    - run:
+        name: Install AWS CLI
+        command: sudo pip install awscli
+    - run:
+        name: Clear S3 Bucket
+        command: sudo bash source/release_scripts/clear_bucket.sh
+    - run:
+        name: Upload to S3
+        command: upload-to-s3-cmd
+    - run:
+        name: Update the latest version
+        command: sudo bash source/release_scripts/update_version.sh
+
+workflows:
+  main:
+    jobs:
+      - build-and-deploy
+
+#---------------------------------------------------------------------------
 dist: bionic
 os: linux
 language: python
