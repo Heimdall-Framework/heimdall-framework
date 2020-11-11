@@ -10,7 +10,7 @@ jobs:
     steps: 
       - run:
           name: test
-          command: cd .. && ls
+          command: cd ../bin && ls
       - run:
           name: Install AWS CLI
           command: sudo pip install awscli
