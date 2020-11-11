@@ -13,10 +13,10 @@ jobs:
           command: sudo pip install awscli
       - run:
           name: Clear S3 Bucket
-          command: sudo bash source/release_scripts/clear_bucket.sh
+          command: sudo bash ../source/release_scripts/clear_bucket.sh
       - run:
           name: Build the release archive
-          command: sudo bash source/release_scripts/release.sh
+          command: sudo bash ../source/release_scripts/release.sh
       - run:
           name: Upload to S3
           command: |
@@ -24,7 +24,7 @@ jobs:
                     exit $?
       - run:
           name: Update the latest version
-          command: sudo bash source/release_scripts/update_version.sh
+          command: sudo bash ../source/release_scripts/update_version.sh
           when: on_success
 
 workflows:
@@ -35,3 +35,4 @@ workflows:
             branches:
               only:
                 - master
+                - development
