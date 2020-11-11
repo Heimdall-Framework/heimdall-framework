@@ -9,6 +9,9 @@ jobs:
       image: ubuntu-1604:202010-01
     steps: 
       - run:
+          name: test
+          command: pwd
+      - run:
           name: Install AWS CLI
           command: sudo pip install awscli
       - run:
