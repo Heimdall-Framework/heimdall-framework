@@ -7,8 +7,9 @@ jobs:
   build-and-deploy:
     machine:
       image: ubuntu-1604:202010-01
-    working_directory: ~/heimdall_framework
+    working_directory: ~/repo
     steps: 
+      - checkout
       - run:
           name: Install AWS CLI
           command: sudo pip install awscli
