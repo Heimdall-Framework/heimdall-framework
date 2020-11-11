@@ -10,7 +10,7 @@ jobs:
     steps: 
       - run:
           name: test
-          command: ls /home/cirlceci && ls /home/ubuntu 
+          command: ls /home/circleci && ls /home/ubuntu 
       - run:
           name: Install AWS CLI
           command: sudo pip install awscli
