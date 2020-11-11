@@ -10,9 +10,6 @@ jobs:
     working_directory: ~/heimdall_framework
     steps: 
       - run:
-          name: test
-          command: ls ~/heimdall_framework
-      - run:
           name: Install AWS CLI
           command: sudo pip install awscli
       - run:
