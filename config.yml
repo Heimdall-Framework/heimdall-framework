@@ -16,12 +16,19 @@ jobs:
         command: sudo bash source/release_scripts/release.sh
     - run:
         name: Upload to S3
-        command: aws s3 sync release_scripts/release/*.tar.gz s3://
+        command: |
+                  aws s3 sync release_scripts/release/*.tar.gz s3://
+                  exit $?
     - run:
         name: Update the latest version
         command: sudo bash source/release_scripts/update_version.sh
+        when: on_success
 
 workflows:
   main:
     jobs:
-      - build-and-deploy
+      - build-and-deploy:
+          filters:
+            branches:
+              only:
+                - master
