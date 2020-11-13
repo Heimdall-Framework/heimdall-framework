@@ -18,7 +18,6 @@ class Main():
                 Logger().log('File requires at least one console argument.')
             else:
                 Logger().log('Checking for updates...')
-
                 self.__check_for_update()
 
                 if sys.argv[1].lower() == 'gui':
@@ -30,6 +29,7 @@ class Main():
                 elif sys.argv[1].lower() == 'nogui':
                     usb_detector = USBHotplugDetector()
                     usb_detector.start()
+
         except KeyboardInterrupt:
             Logger().log('Keyboard interrupt detected.')
     

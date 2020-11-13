@@ -18,7 +18,6 @@ class Updater():
         self.plugins_directory_location = framework_location + '/source/core/python/plugins/'
 
         self.update_url = update_url
-        self.updated_files_counter = 0
 
     def update(self) -> None:
         '''
@@ -43,7 +42,6 @@ class Updater():
 
             for update in available_updates:
                 if update['name'] == 'none':
-                    print(update)
                     Logger().log('>>> The update repository is currently empty. Update is being skipped.')
                     return False
                     
@@ -95,6 +93,7 @@ class Updater():
             
             SystemOperationsProvider().rebuild_package(self.framework_location)
             return True
+
         except Exception as exception:
             Logger().log('>>> Updating procedure failed. Excpetion: ' + str(exception))
             return False
@@ -103,6 +102,7 @@ class Updater():
         '''
         Loads the update logs file into a list.
         '''
+
         with open(self.version_logs_location, 'r') as update_logs_file:
             self.update_logs = json.loads(update_logs_file.read() or '[]')
 
@@ -134,12 +134,12 @@ class Updater():
     def __process_update(self, download_url: str, is_plugin: bool) -> bool:
         '''
         Download, decompress and install a given update.
+        
         :param download_url: the temporary link from which the update can be downloaded
         :param is_plugin: a boolean that indicates whether the update is plugin or the core framework
         '''
-        try:
-            self.updated_files_counter += 1
 
+        try:
             if not os.path.isdir(TEMP_DIR_NAME):
                 os.mkdir(TEMP_DIR_NAME)
 
@@ -169,6 +169,7 @@ class Updater():
             
             shutil.rmtree(TEMP_DIR_NAME)
             return True
+
         except Exception as exception:
             shutil.rmtree(TEMP_DIR_NAME)
             Logger().log('>>> Processing update failed. Excpetion: ' + str(exception))
