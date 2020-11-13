@@ -38,6 +38,7 @@ class Updater():
             available_updates = self.__get_available_updates()
             
             if available_updates == None:
+                Logger().log('>>> No available updates were loaded.')
                 return False
 
             for update in available_updates:
