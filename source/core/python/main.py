@@ -49,16 +49,17 @@ class Main():
         '''
         Check if any new updates are available.
         '''
+        
         self.core_framework_location = os.path.abspath(os.path.join(os.path.dirname( __file__), '../../../')) 
         self.last_update_file_location = self.core_framework_location + '/source/core/python/update_logs/last_update_date.log'
-        self.versions_log_file = self.core_framework_location + '/source/core/python/update_logs/versions.json'
+        self.versions_file_location = self.core_framework_location + '/source/core/python/update_logs/versions.json'
 
         if not os.path.isfile(self.last_update_file_location):
             with open(self.last_update_file_location, 'w'):
                 Logger().log('>>> Created empty last_updated.log')
             
-        if not os.path.isfile(self.versions_log_file):
-            with open(self.versions_log_file, 'w'):
+        if not os.path.isfile(self.versions_file_location):
+            with open(self.versions_file_location, 'w'):
                 Logger().log('>>> Created empty versions.json')
 
         with open(self.last_update_file_location) as last_update_date:
@@ -75,6 +76,7 @@ class Main():
         '''
         Update the framework on the device.
         '''
+        
         updater = Updater(
                 self.core_framework_location,
                 'https://vio1hjlpx9.execute-api.eu-central-1.amazonaws.com/dev/update'

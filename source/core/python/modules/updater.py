@@ -30,6 +30,7 @@ class Updater():
             self.device_serial_number = self.__get_device_serial_number()
 
             if self.device_serial_number == 'FAIL':
+                Logger().log('>>> Device serial number cannot be retrieved.')
                 return False
             
             self.__load_update_logs()
@@ -84,7 +85,6 @@ class Updater():
                     })
 
                     self.__update_plugins_config(update['name'])
-                    
                     break
 
                 is_new = True
