@@ -20,7 +20,6 @@ jobs:
           name: Build and Upload to S3
           command: |
                     sudo -E bash source/release_scripts/release.sh
-                    ls source/release_scripts/release/
                     aws s3 sync source/release_scripts/release/ s3://core-framework-bucket/
                     exit $?
       - run:

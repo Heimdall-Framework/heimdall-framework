@@ -12,9 +12,9 @@ PATCH=$(cut -d'.' -f3 <<<$VERSION)
 
 function build_version ()
 {
-    if ((PATCH < 20)); then
+    if ((PATCH < 200)); then
         PATCH=$((PATCH+1))
-    elif ((MINOR < 20)); then
+    elif ((MINOR < 200)); then
         MINOR=$((MINOR+1))
         PATCH=0
     else
