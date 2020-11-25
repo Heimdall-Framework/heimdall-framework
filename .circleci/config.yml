@@ -17,11 +17,9 @@ jobs:
           name: Clear S3 Bucket
           command: sudo -E bash source/release_scripts/clear_bucket.sh
       - run:
-          name: Build the release archive
-          command: sudo -E bash source/release_scripts/release.sh
-      - run:
-          name: Upload to S3
+          name: Build and Upload to S3
           command: |
+                    sudo -E bash source/release_scripts/release.sh
                     aws s3 sync source/release_scripts/release/*.tar.gz s3://core-framework-bucket/
                     exit $?
       - run:
