@@ -170,7 +170,6 @@ class Releaser():
             'new_version': new_version
         }
 
-
         request_result = requests.post(update_version_service_url, data = request_body) 
 
         return request_result.status_code == 200
