@@ -15,7 +15,7 @@ jobs:
           command: sudo pip install awscli
       - run:
           name: Release
-          command: sudo -E bash python3 source/releaser/releaser.py
+          command: sudo -E python3 source/releaser/releaser.py
 
 workflows:
   main:
