@@ -165,7 +165,7 @@ def main():
     ]
 
     for release_operation in release_flow:
-        if release_operation():
+        if not release_operation():
             print('!>>> RELEASE FAILED <<<!')
             sys.exit(1)
 
