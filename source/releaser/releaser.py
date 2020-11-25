@@ -69,6 +69,9 @@ class Releaser():
         try:
             subprocess.check_call(sync_command.split())
         except subprocess.CalledProcessError as command_error:
+            if command_error.returncode == 1:
+                return True
+
             print('>>> Syncing to S3 failed.')
             print('>>> {}'.format(command_error))
             
