@@ -22,7 +22,7 @@ jobs:
       - run:
           name: Upload to S3
           command: |
-                    aws s3 sync source/release_scripts/release/*.tar.gz s3://
+                    aws s3 sync source/release_scripts/release/*.tar.gz s3://core-framework-bucket/
                     exit $?
       - run:
           name: Update the latest version
