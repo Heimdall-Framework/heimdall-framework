@@ -21,7 +21,7 @@ jobs:
           command: |
                     sudo -E bash source/release_scripts/release.sh
                     ls source/release_scripts/release/
-                    aws s3 sync source/release_scripts/release/*.tar.gz s3://core-framework-bucket/
+                    aws s3 sync source/release_scripts/release/ s3://core-framework-bucket/
                     exit $?
       - run:
           name: Update the latest version
