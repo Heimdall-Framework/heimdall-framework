@@ -83,6 +83,9 @@ class Releaser():
         try:
             subprocess.check_call(build_tar_command.split())
         except subprocess.CalledProcessError as command_error:
+            if command_error.returncode == 1:
+                return True
+
             print('>>> Release archive creating failed.')
             print('>>> {}'.format(command_error))
             
@@ -140,7 +143,7 @@ class Releaser():
             print('>>> Something went terribly wrong while checking release level!')
             return '', False
 
-        return new_release_version, True
+        return new_release_version.replace('', '.'), True
 
     def __update_latest_version(self, old_version, new_version):
         ci_secret = os.environ['CI_SECRET_KEY']
