@@ -26,24 +26,41 @@ class Releaser():
     def release(self):
         print('>>> Releasing new version.')
         
+        latest_release_version, retrieval_result = self.__get_latest_version()
+        if not retrieval_result:
+            print('>>> Failure to retrieve latest release version broke the release procedure.')
+            return '', False
+
+
         release_level, retrieval_result = self.__get_release_level()
         if not retrieval_result:
-            print(">>> Failure to retrieve release commit message broke the release procedure.")
+            print('>>> Failure to retrieve release commit message broke the release procedure.')
             return False
 
         if release_level == '':
             release_level = 'patch'
 
-        new_version, building_result = self.__build_new_version(release_level)
+        new_version, building_result = self.__build_new_version(release_level, latest_release_version)
         if not building_result:
-            print(">>> Failure to build new version broke the release procedure.")
+            print('>>> Failure to build new version broke the release procedure.')
             return False
 
         if not self.__build_release_archive(new_version):
-            False
+            print ('>>  Failure to build release archive broke the release procedure.')
+            return False
 
+        if not self.__upload_new_release():
+            print('>>> Failure to upload new release broke the release procedure.')
+            return False
 
-    def __upload_new_version(self):
+        if not self.__update_latest_version(new_version, latest_release_version):
+            print('>>> Failure to upload new release broke the release procedure.')
+            print('>>> Check the release versions immediately!')
+            return False
+        
+        return True
+
+    def __upload_new_release(self):
         print('>>> Uploading new release version.')
 
         deployment_bucket = os.environ['DEPLOYMENT_BUCKET']
@@ -108,14 +125,9 @@ class Releaser():
         return request_body['version'], True
 
     
-    def __build_new_version(self, release_level):
+    def __build_new_version(self, release_level, latest_release_version):
         print('>>> Building new release version.')
         new_release_version = ''
-
-        latest_release_version, retrieval_result = self.__get_latest_version()
-        if not retrieval_result:
-            print(">>> Failure to retrieve latest release version broke the release procedure.")
-            return '', False
 
         if release_level == 'major':
             str(int(latest_release_version.split('.')[0] + 1)) + latest_release_version.split('.')[1] +latest_release_version.split('.')[2]
@@ -128,6 +140,20 @@ class Releaser():
             return '', False
 
         return new_release_version, True
+
+    def __update_latest_version(self, old_version, new_version):
+        ci_secret = os.environ['CI_SECRET_KEY']
+        update_version_service_url = os.environ['VERSIONING_CONTROLLER_UPDATE_URL'] 
+
+        request_body = {
+            'ci_secret': ci_secret,
+            'old_version': old_version,
+            'new_version': new_version
+        }
+
+        request_result = requests.post(update_version_service_url, request_body) 
+
+        return request_result.status_code == 200
 
 
 def main():
@@ -142,5 +168,7 @@ def main():
         if release_operation():
             print('!>>> RELEASE FAILED <<<!')
             sys.exit(1)
+
+    print('>>> Release was SUCCESSFUL.')
 
 main()

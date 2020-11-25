@@ -14,18 +14,8 @@ jobs:
           name: Install AWS CLI
           command: sudo pip install awscli
       - run:
-          name: Clear S3 Bucket
-          command: sudo -E bash source/release_scripts/clear_bucket.sh
-      - run:
-          name: Build and Upload to S3
-          command: |
-                    sudo -E bash source/release_scripts/release.sh
-                    aws s3 sync source/release_scripts/release/ s3://core-framework-bucket/
-                    exit $?
-      - run:
-          name: Update the latest version
-          command: sudo -E bash source/release_scripts/update_version.sh
-          when: on_success
+          name: Release
+          command: sudo -E bash python3 source/releaser/releaser.py
 
 workflows:
   main:
