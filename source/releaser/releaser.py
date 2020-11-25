@@ -165,14 +165,13 @@ class Releaser():
         update_version_service_url = os.environ['VERSIONING_CONTROLLER_UPDATE_URL'] 
 
         request_body = {
-            'body': {
             'ci_secret': ci_secret,
             'old_version': old_version,
             'new_version': new_version
-            }
         }
 
-        request_result = requests.post(update_version_service_url, request_body) 
+
+        request_result = requests.post(update_version_service_url, data = request_body) 
 
         return request_result.status_code == 200
 
