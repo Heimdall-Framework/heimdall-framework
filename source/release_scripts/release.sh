@@ -28,7 +28,7 @@ function create_release_archive ()
 {
     echo "core-$MAJOR.$MINOR.$PATCH.tar.gz"
     archive_name="core-$MAJOR.$MINOR.$PATCH.tar.gz"
-    tar -czf $DIR/release/$archive_name $DIR/../../../heimdall-framework
+    tar -czf $DIR/release/$archive_name $DIR/../../../repo
 }
 
 function main ()
