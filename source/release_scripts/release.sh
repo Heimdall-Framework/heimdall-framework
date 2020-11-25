@@ -4,6 +4,8 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 VERSION=$((curl -sb -H "Accept: application/json" "$VERSIONING_CONTROLLER_GET_URL") | jq -r '.version')
 
+echo "$VERSION"
+
 MAJOR=$(cut -d'.' -f1 <<<$VERSION)
 MINOR=$(cut -d'.' -f2 <<<$VERSION)
 PATCH=$(cut -d'.' -f3 <<<$VERSION)
