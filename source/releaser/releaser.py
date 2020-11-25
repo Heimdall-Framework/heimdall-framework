@@ -54,7 +54,7 @@ class Releaser():
             print('>>> Failure to upload new release broke the release procedure.')
             return False
 
-        if not self.__update_latest_version(new_version, latest_release_version):
+        if not self.__update_latest_version(latest_release_version, new_version):
             print('>>> Failure to upload new release broke the release procedure.')
             print('>>> Check the release versions immediately!')
             return False
