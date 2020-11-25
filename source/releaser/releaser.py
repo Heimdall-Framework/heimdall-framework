@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import json
 import requests
 import subprocess
 
@@ -170,7 +171,7 @@ class Releaser():
             'new_version': new_version
         }
 
-        request_result = requests.post(update_version_service_url, data = body)
+        request_result = requests.post(update_version_service_url, data = json.dumps(body))
         print(request_result.text)
         return request_result.status_code == 200
 
