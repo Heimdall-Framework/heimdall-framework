@@ -64,7 +64,7 @@ class Releaser():
         print('>>> Uploading new release version.')
 
         deployment_bucket = os.environ['DEPLOYMENT_BUCKET']
-        sync_command = 'aws s3 sync source/release_scripts/release/ {}'.format(deployment_bucket)
+        sync_command = 'aws s3 sync source/releaser/release/ {}'.format(deployment_bucket)
 
         try:
             subprocess.check_call(sync_command.split())
@@ -134,16 +134,28 @@ class Releaser():
         new_release_version = ''
 
         if release_level == 'major':
-            new_release_version = str(int(latest_release_version.split('.')[0]) + 1) + latest_release_version.split('.')[1] +latest_release_version.split('.')[2]
+            new_release_version = '{}.{}.{}'.format(
+                str(int(latest_release_version.split('.')[0]) + 1),
+                 latest_release_version.split('.')[1],
+                 latest_release_version.split('.')[2]
+                )
         elif release_level == 'minor':
-            new_release_version = latest_release_version.split('.')[0] + str(int(latest_release_version.split('.')[1]) + 1) + latest_release_version.split('.')[2]
+            new_release_version = '{}.{}.{}'.format(
+                latest_release_version.split('.')[0],
+                str(int(latest_release_version.split('.')[1]) + 1),
+                latest_release_version.split('.')[2]
+            )
         elif release_level == 'patch':
-            new_release_version = latest_release_version.split('.')[0] + latest_release_version.split('.')[1] + str(int(latest_release_version.split('.')[2]) + 1)
+            new_release_version = '{}.{}.{}'.format(
+                latest_release_version.split('.')[0],
+                latest_release_version.split('.')[1],
+                str(int(latest_release_version.split('.')[2]) + 1)
+            )
         else:
             print('>>> Something went terribly wrong while checking release level!')
             return '', False
 
-        return new_release_version.replace('', '.'), True
+        return new_release_version, True
 
     def __update_latest_version(self, old_version, new_version):
         ci_secret = os.environ['CI_SECRET_KEY']
