@@ -77,7 +77,8 @@ class Releaser():
 
     def __build_release_archive(self, version):
         print('>>> Building release archive.')
-        build_tar_command = 'tar -czf $DIR/release/core-{}.tar,g $DIR/../../../repo'.format(version)
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        build_tar_command = 'tar -czf {}/release/core-{}.tar,g {}/../../../repo'.format(dir_path, version, dir_path)
 
         try:
             subprocess.check_call(build_tar_command.split())
