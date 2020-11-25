@@ -130,11 +130,11 @@ class Releaser():
         new_release_version = ''
 
         if release_level == 'major':
-            new_release_version = str(int(latest_release_version.split('.')[0] + 1)) + latest_release_version.split('.')[1] +latest_release_version.split('.')[2]
+            new_release_version = str(int(latest_release_version.split('.')[0]) + 1) + latest_release_version.split('.')[1] +latest_release_version.split('.')[2]
         elif release_level == 'minor':
-            new_release_version = latest_release_version.split('.')[0] + str(int(latest_release_version.split('.')[1] + 1)) + latest_release_version.split('.')[2]
+            new_release_version = latest_release_version.split('.')[0] + str(int(latest_release_version.split('.')[1]) + 1) + latest_release_version.split('.')[2]
         elif release_level == 'patch':
-            new_release_version = latest_release_version.split('.')[0] + latest_release_version.split('.')[1] + str(int(latest_release_version.split('.')[2] + 1))
+            new_release_version = latest_release_version.split('.')[0] + latest_release_version.split('.')[1] + str(int(latest_release_version.split('.')[2]) + 1)
         else:
             print('>>> Something went terribly wrong while checking release level!')
             return '', False
