@@ -140,14 +140,14 @@ class Releaser():
         if release_level == 'major':
             new_release_version = '{}.{}.{}'.format(
                 str(int(latest_release_version.split('.')[0]) + 1),
-                 latest_release_version.split('.')[1],
-                 latest_release_version.split('.')[2]
+                 '0',
+                 '0'
                 )
         elif release_level == 'minor':
             new_release_version = '{}.{}.{}'.format(
                 latest_release_version.split('.')[0],
                 str(int(latest_release_version.split('.')[1]) + 1),
-                latest_release_version.split('.')[2]
+                '0'
             )
         elif release_level == 'patch':
             new_release_version = '{}.{}.{}'.format(
