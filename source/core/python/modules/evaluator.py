@@ -37,35 +37,19 @@ class Evaluator():
 
         Logger().log('>> Device testing initiated.')
         
-        if not self.__validate_device_type():
-            Logger().log('> Device type validation test failed.')
-            return False, self.__device
-        Logger().log('> Device type validation test was passed.')
+        tests = [
+            self.__validate_device_type,
+            self.__validate_vendor_information,
+            self.__virus_scan,
+            self.__test_io,
+            self.__intird_backdoor_test,
+            self.__run_external_tests
+        ]
 
-        if not self.__validate_vendor_information():
-            Logger().log('> Vendor validation test failed.')
-            return False, self.__device
-        Logger().log('> Vendor validation test was passed.')
-    
-        if not self.__virus_scan():
-            Logger().log('> Virus scan failed.')
-            return False, self.__device
-        Logger().log('> Virus scan was passed.')
-
-        if not self.__test_io():
-            Logger().log('> IO test failed.')
-            return False, self.__device
-        Logger().log('> IO test was passed.')
-
-        if not self.__intird_backdoor_test():
-            Logger().log('> Initrd validation test failed.')
-            return False, self.__device
-        Logger().log('> Initrd validation test was passed.')       
-
-        if not self.__run_external_tests():
-            Logger().log('> External Test failed.')
-            return False
-        Logger().log('> All tests were successful.')
+        for test in tests:
+            if not test():
+                Logger().log('>>> Test: {} FAILED.'.format(test.__name__))
+                return False, None
 
         return True, self.__device
 
