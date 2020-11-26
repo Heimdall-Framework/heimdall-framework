@@ -9,7 +9,10 @@ class Releaser():
     def __init__(self):
         pass
     
-    def clear_deployment_bucket(self):
+    def clear_deployment_bucket(self) -> bool:
+        """
+        Clears the AWS S3 deployment bucket of the core framework.
+        """
         print('>>> Clearing deployment bucket.')
         
         deployment_bucket = os.environ['DEPLOYMENT_BUCKET']
@@ -24,7 +27,10 @@ class Releaser():
             return False
         return True
 
-    def release(self):
+    def release(self) -> (str, bool):
+        """
+        Releases the current framework version.
+        """        
         print('>>> Releasing new version.')
         
         latest_release_version, retrieval_result = self.__get_latest_version()
@@ -61,7 +67,7 @@ class Releaser():
         
         return True
 
-    def __upload_new_release(self):
+    def __upload_new_release(self) -> bool:
         print('>>> Uploading new release version.')
 
         deployment_bucket = os.environ['DEPLOYMENT_BUCKET']
@@ -79,7 +85,7 @@ class Releaser():
             return False
         return True
 
-    def __build_release_archive(self, version):
+    def __build_release_archive(self, version) -> bool:
         print('>>> Building release archive.')
         dir_path = os.path.dirname(os.path.realpath(__file__))
         build_tar_command = 'tar -czf {}/release/core-{}.tar.gz {}/../../../repo'.format(dir_path, version, dir_path)
@@ -97,7 +103,7 @@ class Releaser():
         return True
 
 
-    def __get_release_level(self):
+    def __get_release_level(self) -> (str, bool):
         print('>>> Retrieving current release level.')
         get_release_level_command = 'git log --oneline -1 --pretty=%B'
         release_message = ''
@@ -133,7 +139,7 @@ class Releaser():
         return request_body['version'], True
 
     
-    def __build_new_version(self, release_level, latest_release_version):
+    def __build_new_version(self, release_level, latest_release_version) -> (str, bool):
         print('>>> Building new release version.')
         new_release_version = ''
 
@@ -161,7 +167,7 @@ class Releaser():
 
         return new_release_version, True
 
-    def __update_latest_version(self, old_version, new_version):
+    def __update_latest_version(self, old_version, new_version) -> bool:
         ci_secret = os.environ['CI_SECRET_KEY']
         update_version_service_url = os.environ['VERSIONING_CONTROLLER_UPDATE_URL'] 
 
@@ -172,7 +178,6 @@ class Releaser():
         }
 
         request_result = requests.post(update_version_service_url, data = json.dumps(body))
-        print(request_result.text)
         return request_result.status_code == 200
 
 
