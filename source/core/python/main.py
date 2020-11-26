@@ -8,6 +8,7 @@ from modules.logger import Logger
 from modules.updater import Updater
 from modules.usb_detector import USBHotplugDetector
 from modules.file_operations_provider import FileOperationsProvider
+from modules.configuration_loader import ConfigurationLoader
 
 ENVIRONMENTAL_VARIABLES = ['DEVS_MOUNTPOINT', 'LOGS_DIRECTORY_PATH', 'TESTING_PORTS', 'NUKING_PORTS']
 
@@ -16,19 +17,24 @@ class Main():
         try:
             if len(sys.argv) == 1:
                 Logger().log('File requires at least one console argument.')
-            else:
-                Logger().log('Checking for updates...')
-                self.__check_for_update()
+                return
 
-                if sys.argv[1].lower() == 'gui':
-                    if sys.argv[2].lower() == '--normal':
-                        gui_elements.show_gui(False)
-                    else:
-                        gui_elements.show_gui(True)
+            Logger().log('Loading configuration')
+            configuration_loader = ConfigurationLoader('../configuration.json')
+            configuration = configuration_loader.load()
 
-                elif sys.argv[1].lower() == 'nogui':
-                    usb_detector = USBHotplugDetector()
-                    usb_detector.start()
+            Logger().log('Checking for updates...')
+            self.__check_for_update(configuration)
+
+            if sys.argv[1].lower() == 'gui':
+                if sys.argv[2].lower() == '--normal':
+                    gui_elements.show_gui(configuration, False)
+                else:
+                    gui_elements.show_gui(configuration, True)
+
+            elif sys.argv[1].lower() == 'nogui':
+                usb_detector = USBHotplugDetector(configuration)
+                usb_detector.start()
 
         except KeyboardInterrupt:
             Logger().log('Keyboard interrupt detected.')
@@ -45,7 +51,7 @@ class Main():
             except KeyError:
                 Logger().log('Environmental variable {} is not set.'.format(env_variable))
     
-    def __check_for_update(self) -> None:
+    def __check_for_update(self, configuration) -> None:
         '''
         Check if any new updates are available.
         '''

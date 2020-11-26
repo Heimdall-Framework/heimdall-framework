@@ -8,10 +8,11 @@ from .device_operations_provider import DeviceOperationsProvider
 
 
 class USBHotplugDetector():
-    def __init__(self):
+    def __init__(self, configuration):
+        self.__configuration = configuration
+        self.__testing_ports = configuration.testing_ports
+        self.__nuking_ports = configuration.nuking_ports
         self.__cached_device = None
-        self.__testing_ports = [int(port_number) for port_number in os.environ['TESTING_PORTS'].split(',')]
-        self.__nuking_ports = [int(port_number) for port_number in os.environ['NUKING_PORTS'].split(',')]
         self.__nuked_device = None
         self.__tested_device = None
 

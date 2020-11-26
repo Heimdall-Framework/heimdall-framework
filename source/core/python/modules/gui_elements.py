@@ -4,16 +4,18 @@ from threading import Thread
 from .usb_detector import USBHotplugDetector
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-
-usb_detector = USBHotplugDetector()
-
 SMALL_FONT = 10
 MEDIUM_FONT = 12
 LARGE_FONT = 14
 
+usb_detector = None
+
 class HeimdallMainWindow(object):
-    def __init__(self):
+    def __init__(self, configuration):
+        global usb_detector
+
         self.is_started = False
+        usb_detector = USBHotplugDetector(configuration)
 
     def setupUi(self, USBEvaluatorGui):
         USBEvaluatorGui.setObjectName("USBEvaluatorGui")
@@ -175,11 +177,11 @@ class GuiThreadWorker(QtCore.QRunnable):
     def run(self):
         usb_detector.start()
 
-def show_gui(fullscreen=True):
+def show_gui(configuration, fullscreen=True):
     app = QtWidgets.QApplication(sys.argv)
     heimdall_app = QtWidgets.QMainWindow()
 
-    ui = HeimdallMainWindow()
+    ui = HeimdallMainWindow(configuration)
     ui.setupUi(heimdall_app)
 
     if fullscreen:
