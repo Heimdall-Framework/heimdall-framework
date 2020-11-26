@@ -70,13 +70,16 @@ class Main():
 
         with open(self.last_update_file_location) as last_update_date:
             last_update_date =  last_update_date.read()
+        
+        if configuration.updates_intensity == 'normal':
+            if not (last_update_date == '' or last_update_date != datetime.now().strftime('%b %d %Y')):
+                Logger().log('>>> Update date is not reached yet.')
+                return
 
-        if last_update_date == '' or last_update_date != datetime.now().strftime('%b %d %Y'):
-            Logger().log('>>> Updating.')
-            if self.__update():
-                Logger().log('>>> Update was successful.')
-        else:
-            Logger().log('>>> Update date is not reached yet.')
+        Logger().log('>>> Updating.')
+        if self.__update():
+            Logger().log('>>> Update was successful.')
+            
     
     def __update(self) -> None:
         '''

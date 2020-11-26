@@ -18,14 +18,15 @@ TESTS_RANGE = 4
 
 class Evaluator():
 
-    def __init__(self, device_handle, port_number, context):
-        self.device_mountpoint = os.environ['DEVS_MOUNTPOINT']
+    def __init__(self, configuration, device_handle, port_number, context):
+        self.__configuration = configuration
+        self.device_mountpoint = configuration.mounting_point
         self.__device = device_handle.getDevice()
         self.__device_handle = device_handle
         self.__port_number = port_number
         self.__context = context
         self.__plugins_directory = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '../..', 'python/plugins'))
-        self.__configuration_file_directory = self.__plugins_directory + '/config.json'
+        self.__plugins_config= self.__plugins_directory + '/config.json'
         
         Logger().log('>>> Evaluator was initialized.')
 
@@ -221,7 +222,7 @@ class Evaluator():
     def __execute_hardware_plugin(self, delay) -> bool:
         plugin_manager = plugypy.PluginManager(
             self.__plugins_directory,
-            self.__configuration_file_directory,
+            self.__plugins_config,
             will_verify_ownership=True
             )
 
@@ -239,7 +240,7 @@ class Evaluator():
 
         plugin_manager = plugypy.PluginManager(
             self.__plugins_directory, 
-            self.__configuration_file_directory, 
+            self.__plugins_config, 
             will_verify_ownership=True
             )
         

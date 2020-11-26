@@ -1,4 +1,3 @@
-import os
 import usb1 as usb
 from .nuker import Nuker
 from .logger import Logger
@@ -84,6 +83,7 @@ class USBHotplugDetector():
     def __evaluate_device(self, device, handle, context):
         # creates Evaluator object with given USBDeviceHandlem, USBDevice and device's USBContext
         evaluator = Evaluator(
+            self.__configuration,
             handle,
             device.getPortNumber(),
             context
