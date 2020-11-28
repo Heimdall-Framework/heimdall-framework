@@ -38,7 +38,6 @@ class Releaser():
             print('>>> Failure to retrieve latest release version broke the release procedure.')
             return '', False
 
-
         release_level, retrieval_result = self.__get_release_level()
         if not retrieval_result:
             print('>>> Failure to retrieve release commit message broke the release procedure.')

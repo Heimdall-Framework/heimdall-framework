@@ -2,54 +2,43 @@
 import os
 import sys
 import shutil
+import argparse
 from datetime import datetime
 import modules.gui_elements as gui_elements
 from modules.logger import Logger
 from modules.updater import Updater
 from modules.usb_detector import USBHotplugDetector
 from modules.file_operations_provider import FileOperationsProvider
-from modules.configuration_loader import ConfigurationLoader
-
-ENVIRONMENTAL_VARIABLES = ['DEVS_MOUNTPOINT', 'LOGS_DIRECTORY_PATH', 'TESTING_PORTS', 'NUKING_PORTS']
+from modules.configuration_deserializer import ConfigurationDeserializer
 
 class Main():
     def main(self) -> None:
-        try:
-            if len(sys.argv) == 1:
-                Logger().log('File requires at least one console argument.')
-                return
+        parser = argparse.ArgumentParser(description='Load CLI flags for the framework.')
+        parser.add_argument('--config',type=str, help='Path to your custom configuration file. If no passed, will load the default one.')
+        parser.add_argument('--interface', type=str, help='Indicates whether the GUI will be initialized or not.')
 
-            Logger().log('Loading configuration')
-            configuration_loader = ConfigurationLoader('../configuration.json')
-            configuration = configuration_loader.load()
+        cli_arguments = parser.parse_args()
 
-            Logger().log('Checking for updates...')
-            self.__check_for_update(configuration)
+        if cli_arguments.interface == '':
+            Logger().log('Interface must be specified.')
+            return
 
-            if sys.argv[1].lower() == 'gui':
-                if sys.argv[2].lower() == '--normal':
-                    gui_elements.show_gui(configuration, False)
-                else:
-                    gui_elements.show_gui(configuration, True)
+        Logger().log('Loading configuration')
+        configuration_deserializer = ConfigurationDeserializer('../configuration.json')
+        configuration = configuration_deserializer.deserialize()
 
-            elif sys.argv[1].lower() == 'nogui':
-                usb_detector = USBHotplugDetector(configuration)
-                usb_detector.start()
+        Logger().log('Checking for updates...')
+        self.__check_for_update(configuration)
 
-        except KeyboardInterrupt:
-            Logger().log('Keyboard interrupt detected.')
-    
-    def validate_env_variables(self) -> None:
-        try:
-            os.environ['SUDO_UID']
-        except KeyError:
-            Logger().log('Please start the application using "sudo -E".')
-        
-        for env_variable in ENVIRONMENTAL_VARIABLES:
-            try:
-                os.environ[env_variable]
-            except KeyError:
-                Logger().log('Environmental variable {} is not set.'.format(env_variable))
+        if sys.argv[1].lower() == 'gui':
+            if sys.argv[2].lower() == '--normal':
+                gui_elements.show_gui(configuration, False)
+            else:
+                gui_elements.show_gui(configuration, True)
+
+        elif sys.argv[1].lower() == 'nogui':
+            usb_detector = USBHotplugDetector(configuration)
+            usb_detector.start()
     
     def __check_for_update(self, configuration) -> None:
         '''
@@ -102,7 +91,6 @@ class Main():
             updater.restart_parent()
 
 def main():             
-    Main().validate_env_variables()
     Main().main()
 
 main()

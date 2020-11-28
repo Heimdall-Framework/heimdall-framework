@@ -33,7 +33,7 @@ class Evaluator():
     def evaluate_device(self) -> bool:
         """
         Evaluate device.
-        """
+        """ 
 
         Logger().log('>> Device testing initiated.')
         
@@ -173,22 +173,6 @@ class Evaluator():
                 SystemOperationsProvider().unmount_device(mounted_device_partition)                        
                 return False
 
-    # in development
-    def __detect_time_targeted_payload(self) -> bool:
-        current_time = datetime.datetime.now()
-        new_system_time = datetime.datetime(2021, 1, 12, 13, 22, 13)
-
-        # change the system time to a given one
-        SystemOperationsProvider().change_system_time(new_system_time)
-        
-        # test stuff after the system time is changed 
-
-        # return the system time to normal
-        SystemOperationsProvider().change_system_time(new_system_time)
-
-        print('Await further instructions')
-
-    # set a device object with a given port
     def __set_device(self) -> None:
         while self.__device is None:
             self.__device = DeviceOperationsProvider().find_by_port_number(self.__port_number, self.__context)

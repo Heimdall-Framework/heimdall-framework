@@ -1,0 +1,26 @@
+{
+    "logs_directory":"/home/logs",
+    "mounting_point":"/home/mounting_point",
+    "updates_intensity":"normal",
+    "testing_ports":[
+       0,
+       1
+    ],
+    "nuking_ports":[
+       2,
+       3
+    ],
+    "plugins_config":{
+       "load_all":true,
+       "plugins":[
+          {
+             "name":"123",
+             "is_enabled":true
+          },
+          {
+             "name":"123",
+             "is_enabled":true
+          }
+       ]
+    }
+ }
