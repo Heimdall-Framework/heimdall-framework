@@ -5,21 +5,27 @@ import shutil
 import tarfile
 import urllib
 import requests
+from datetime import datetime
 from .logger import Logger
+from .framework_configuration import FrameworkConfiguration
 from .system_operations_provider import SystemOperationsProvider
 
 TEMP_DIR_NAME = '/tmp/temp_update_data/'
 
 class Updater():
-    def __init__(self, framework_location: str, update_url: str):
-        self.framework_location = framework_location
-        self.framework_parent_directory = framework_location + '/../'
-        self.version_logs_location = framework_location + '/source/core/python/update_logs/versions.json'
-        self.plugins_directory_location = framework_location + '/source/core/python/plugins/'
+    def __init__(self,configuration: FrameworkConfiguration, logger: Logger, framework_location: str, update_url: str):
+        self.__configuration = configuration
+        self.__logger = logger
+        self.__framework_location = framework_location
+        self.__framework_parent_directory = framework_location + '/../'
+        self.__version_logs_location = framework_location + '/source/core/python/update_logs/versions.json'
+        self.__plugins_directory_location = framework_location + '/source/core/python/plugins/'
+        self.__last_update_file_location = framework_location + '/source/core/python/update_logs/last_update_date.log'
+
 
         self.update_url = update_url
 
-    def update(self) -> None:
+    def update(self, logger) -> None:
         '''
         Update the running version of the framework or it's plugins if newer ones exist.
         Return True or False, depending on the outcome of the operation.
@@ -30,7 +36,7 @@ class Updater():
             self.device_serial_number = self.__get_device_serial_number()
 
             if self.device_serial_number == 'FAIL':
-                Logger().log('>>> Device serial number cannot be retrieved.')
+                self.__logger.log('>>> Device serial number cannot be retrieved.')
                 return False
             
             self.__load_update_logs()
@@ -39,12 +45,12 @@ class Updater():
             available_updates = self.__get_available_updates()
             
             if available_updates == None:
-                Logger().log('>>> No available updates were loaded.')
+                self.__logger.log('>>> No available updates were loaded.')
                 return False
 
             for update in available_updates:
                 if update['name'] == 'none':
-                    Logger().log('>>> The update repository is currently empty. Update is being skipped.')
+                    self.__logger.log('>>> The update repository is currently empty. Update is being skipped.')
                     return False
                     
                 for local_update_log in self.update_logs:
@@ -71,12 +77,11 @@ class Updater():
                         update['version'],
                         update['type']
                     )
-
+                    
                     if update['type'] == 'plugin':
                         self.__process_update(download_link, True)
                     else:
                         self.__process_update(download_link, False)
-
 
                     self.update_logs.append({
                         'name' : update['name'],
@@ -89,26 +94,53 @@ class Updater():
 
                 is_new = True
 
-            with open(self.version_logs_location, 'w') as update_logs_file:
+            with open(self.__version_logs_location, 'w') as update_logs_file:
                 update_logs_file.write(json.dumps(self.update_logs))
             
-            SystemOperationsProvider().rebuild_package(self.framework_location)
+            SystemOperationsProvider().rebuild_package(self.__framework_location)
             return True
 
         except Exception as exception:
-            Logger().log('>>> Updating procedure failed. Excpetion: ' + str(exception))
+            self.__logger.log('>>> Updating procedure failed. Excpetion: ' + str(exception))
             return False
+
+    def can_update(self, logger):
+        '''
+        Check if any new updates are available.
+        '''
+
+        current_file_directory = os.path.join(os.path.dirname(__file__))
+        self.core_framework_location = os.path.abspath(current_file_directory, '../../../../') 
+
+        if not os.path.isfile(self.__last_update_file_location):
+            with open(self.__last_update_file_location, 'w'):
+                logger.log('>>> Created an empty last_updated.log')
+            
+        if not os.path.isfile(self.__version_logs_location):
+            with open(self.__version_logs_location, 'w'):
+                logger.log('>>> Created an empty versions.json')
+
+        with open(self.__last_update_file_location) as last_update_date:
+            last_update_date =  last_update_date.read()
+        
+        if self.__configuration.updates_intensity == 'normal':
+            if not (last_update_date == '' or last_update_date != datetime.now().strftime('%b %d %Y')):
+                logger.log('>>> Update date is not reached yet.')
+                return False
+
+        return True
+            
 
     def __load_update_logs(self) -> None:
         '''
         Loads the update logs file into a list.
         '''
 
-        with open(self.version_logs_location, 'r') as update_logs_file:
+        with open(self.__version_logs_location, 'r') as update_logs_file:
             self.update_logs = json.loads(update_logs_file.read() or '[]')
 
     def __load_plugins_config(self) -> None:
-        with open(self.plugins_directory_location + '/config.json') as plugins_config:
+        with open(self.__plugins_directory_location + '/config.json') as plugins_config:
             self.plugins_config = json.loads(plugins_config.read() or '[]')
 
     def __get_available_updates(self) -> str:
@@ -124,10 +156,10 @@ class Updater():
         response = requests.get(self.update_url, params=urllib.parse.urlencode(parameters))
 
         if response.status_code == 422:
-            Logger().log('>>> Wrong parameters. Aborting update!')
+            self.__logger.log('>>> Wrong parameters. Aborting update!')
             return None
         elif response.status_code == 502:
-            Logger().log('>>> Internal server error. Aborting update!')
+            self.__logger.log('>>> Internal server error. Aborting update!')
             return None
 
         return response.json()
@@ -157,7 +189,7 @@ class Updater():
                     for file in plugin_files:
                         shutil.copy(
                             file, 
-                            self.plugins_directory_location
+                            self.__plugins_directory_location
                             )
                     break
                 else:
@@ -165,7 +197,7 @@ class Updater():
                         for file in files:
                             shutil.copy(
                                 root + '/' + file, 
-                                root.replace(TEMP_DIR_NAME + 'heimdall-framework', self.framework_location) + '/' + file
+                                root.replace(TEMP_DIR_NAME + 'heimdall-framework', self.__framework_location) + '/' + file
                                 )
             
             shutil.rmtree(TEMP_DIR_NAME)
@@ -173,7 +205,7 @@ class Updater():
 
         except Exception as exception:
             shutil.rmtree(TEMP_DIR_NAME)
-            Logger().log('>>> Processing update failed. Excpetion: ' + str(exception))
+            self.__logger.log('>>> Processing update failed. Excpetion: ' + str(exception))
             return False
 
     def __update_plugins_config(self, plugin_name: str) -> None:
@@ -226,7 +258,7 @@ class Updater():
             )
 
         if response.status_code == 422:
-            Logger().log('Wrong parameters. Aborting update!')
+            self.__logger.log('Wrong parameters. Aborting update!')
 
         return response.json()['url']
     

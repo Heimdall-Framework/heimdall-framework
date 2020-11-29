@@ -12,16 +12,30 @@ from modules.file_operations_provider import FileOperationsProvider
 from modules.configuration_deserializer import ConfigurationDeserializer
 
 class Main():
+    def __init__(self):
+        pass
+
     def main(self) -> None:
         parser = argparse.ArgumentParser(description='Load CLI flags for the framework.')
-        parser.add_argument('--config',type=str, help='Path to your custom configuration file. If no passed, will load the default one.')
-        parser.add_argument('--interface', type=str, help='Indicates whether the GUI will be initialized or not.')
+        parser.add_argument(
+            '--config',
+            type=str,
+            help='Path to your custom configuration file. If no passed, will load the default one.'
+            )
+        parser.add_argument(
+            '--interface', 
+            type=str,
+            help='Indicates whether the GUI will be initialized or not.',
+            )
 
         cli_arguments = parser.parse_args()
 
-        if cli_arguments.interface == '':
+        if cli_arguments.interface == None:
             Logger().log('Interface must be specified.')
             return
+
+        if cli_arguments.config != None:
+            pass
 
         Logger().log('Loading configuration')
         configuration_deserializer = ConfigurationDeserializer('../configuration.json')
@@ -40,35 +54,6 @@ class Main():
             usb_detector = USBHotplugDetector(configuration)
             usb_detector.start()
     
-    def __check_for_update(self, configuration) -> None:
-        '''
-        Check if any new updates are available.
-        '''
-        
-        self.core_framework_location = os.path.abspath(os.path.join(os.path.dirname( __file__), '../../../')) 
-        self.last_update_file_location = self.core_framework_location + '/source/core/python/update_logs/last_update_date.log'
-        self.versions_file_location = self.core_framework_location + '/source/core/python/update_logs/versions.json'
-
-        if not os.path.isfile(self.last_update_file_location):
-            with open(self.last_update_file_location, 'w'):
-                Logger().log('>>> Created empty last_updated.log')
-            
-        if not os.path.isfile(self.versions_file_location):
-            with open(self.versions_file_location, 'w'):
-                Logger().log('>>> Created empty versions.json')
-
-        with open(self.last_update_file_location) as last_update_date:
-            last_update_date =  last_update_date.read()
-        
-        if configuration.updates_intensity == 'normal':
-            if not (last_update_date == '' or last_update_date != datetime.now().strftime('%b %d %Y')):
-                Logger().log('>>> Update date is not reached yet.')
-                return
-
-        Logger().log('>>> Updating.')
-        if self.__update():
-            Logger().log('>>> Update was successful.')
-            
     
     def __update(self) -> None:
         '''
@@ -90,7 +75,5 @@ class Main():
     
             updater.restart_parent()
 
-def main():             
+if __name__=='__main__':       
     Main().main()
-
-main()
