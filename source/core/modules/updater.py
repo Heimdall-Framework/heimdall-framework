@@ -77,7 +77,7 @@ class Updater():
                         update['version'],
                         update['type']
                     )
-                    
+
                     if update['type'] == 'plugin':
                         self.__process_update(download_link, True)
                     else:
@@ -153,7 +153,10 @@ class Updater():
             'device_serial_number' : self.device_serial_number
         }
 
-        response = requests.get(self.update_url, params=urllib.parse.urlencode(parameters))
+        response = requests.get(
+            self.update_url, 
+            params=urllib.parse.urlencode(parameters)
+            )
 
         if response.status_code == 422:
             self.__logger.log('>>> Wrong parameters. Aborting update!')
@@ -245,11 +248,13 @@ class Updater():
         :param update_type: the type of the update
         '''
 
+        version = '{}-{}'.format(update_name, update_version)
+
         parameters = {
             'action' : 'update',
             'device_serial_number' : self.device_serial_number,
             'update_type' : update_type,
-            'version' : update_name + '-' + update_version
+            'version' : version
         }
 
         response = requests.get(
