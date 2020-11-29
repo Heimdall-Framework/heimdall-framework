@@ -17,13 +17,12 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     url='https://github.com/Heimdall-Framework/heimdall-framework',
     package_dir={
-        'heimdall_framework': 'source/core/',
-        'heimdall_framework_modules': '/source/core/modules/'
+        'heimdall_framework': 'source/core'
     },
     packages=setuptools.find_packages(where='source.core'),
     entry_points={
         'console_scripts':[
-            'heimdall_framework = sourcemain:run',
+            'heimdall_framework = main:run',
         ],
     },
     classifiers=[

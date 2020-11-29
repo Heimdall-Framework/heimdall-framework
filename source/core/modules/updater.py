@@ -16,11 +16,13 @@ class Updater():
     def __init__(self,configuration: FrameworkConfiguration, logger: Logger, framework_location: str, update_url: str):
         self.__configuration = configuration
         self.__logger = logger
+        
         self.__framework_location = framework_location
-        self.__framework_parent_directory = framework_location + '/../'
-        self.__version_logs_location = framework_location + '/source/core/python/update_logs/versions.json'
-        self.__plugins_directory_location = framework_location + '/source/core/python/plugins/'
-        self.__last_update_file_location = framework_location + '/source/core/python/update_logs/last_update_date.log'
+        self.__framework_parent_directory = os.path.abspath(os.path.join(framework_location, '/../'))
+        self.__version_logs_directory = os.path.abspath(os.path.join(framework_location, '/source/core/python/update_logs'))
+        self.__version_logs_location = os.path.abspath(os.path.join(framework_location, '/source/core/python/update_logs/versions.json'))
+        self.__plugins_directory_location = os.path.abspath(os.path.join(framework_location, '/source/core/python/plugins/'))
+        self.__last_update_file_location = os.path.abspath(os.path.join(framework_location, '/source/core/python/update_logs/last_update_date.log'))
 
 
         self.update_url = update_url
@@ -111,6 +113,10 @@ class Updater():
 
         current_file_directory = os.path.dirname(os.path.abspath(__file__))
         self.core_framework_location = os.path.abspath(os.path.join(current_file_directory, '../../../../'))
+
+        if not os.path.isdir(self.__version_logs_directory):
+            os.mkdir(self.__version_logs_directory)
+            self.__logger.log('>>> Created an empty version logs directory')
 
         if not os.path.isfile(self.__last_update_file_location):
             with open(self.__last_update_file_location, 'w'):
