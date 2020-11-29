@@ -50,7 +50,7 @@ class FileOperationsProvider():
             file_string_object = mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ)
             return file_string_object.find(string) != -1
 
-    def create_img_file(self, extension):
+    def create_img_file(self, logger, extension):
         """
         Packs the contents of the mount directory into a disk image file
 
@@ -62,7 +62,7 @@ class FileOperationsProvider():
         
         output, error = process.communicate()
         if error != None:
-            Logger().log(error)
+            logger.log(error)
             return False
         
         return True

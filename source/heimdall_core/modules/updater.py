@@ -24,7 +24,6 @@ class Updater():
         self.__plugins_directory_location = os.path.abspath(os.path.join(framework_location, '/source/core/python/plugins/'))
         self.__last_update_file_location = os.path.abspath(os.path.join(framework_location, '/source/core/python/update_logs/last_update_date.log'))
 
-
         self.update_url = update_url
 
     def update(self, logger) -> None:

@@ -6,6 +6,7 @@ with open('README.md') as readme:
 
 def get_leatest_version():
     return ''
+print(setuptools.find_packages(where='source/'))
 
 setuptools.setup(
     name='heimdall_framework',
@@ -17,9 +18,9 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     url='https://github.com/Heimdall-Framework/heimdall-framework',
     package_dir={
-        'heimdall_framework': 'source/core'
+        'heimdall_core': 'source/heimdall_core',
     },
-    packages=setuptools.find_packages(where='source.core'),
+    packages=setuptools.find_packages(where='source/heimdall_core'),
     entry_points={
         'console_scripts':[
             'heimdall_framework = main:run',

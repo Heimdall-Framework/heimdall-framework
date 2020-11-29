@@ -8,7 +8,7 @@ import importlib
 import usb1 as usb
 from .logger import Logger
 from .data_provider import DataProvider
-from modules import gui_elements as gui
+from heimdall_core.modules import gui_elements as gui
 from .file_operations_provider import FileOperationsProvider
 from .device_operations_provider import DeviceOperationsProvider
 from .system_operations_provider import SystemOperationsProvider
@@ -103,7 +103,7 @@ class Evaluator():
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
 
         _, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
-        DataProvider().generate_random_data_file()
+        DataProvider().generate_random_data_file(self.__logger)
 
         shutil.copyfile('dump.me', self.__device_mountpoint  + 'dump.me')
         shutil.move(self.__device_mountpoint  + 'dump.me', 'received_dump.me')
