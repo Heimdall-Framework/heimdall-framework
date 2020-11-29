@@ -14,11 +14,7 @@
        "load_all":true,
        "plugins":[
           {
-             "name":"123",
-             "is_enabled":true
-          },
-          {
-             "name":"123",
+             "name":"demo_test",
              "is_enabled":true
           }
        ]

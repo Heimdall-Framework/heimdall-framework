@@ -16,6 +16,9 @@ class Main():
         pass
 
     def main(self) -> None:
+        configuration_deserializer = None
+        configuration = None
+        
         parser = argparse.ArgumentParser(description='Load CLI flags for the framework.')
         parser.add_argument(
             '--config',
@@ -31,18 +34,29 @@ class Main():
         cli_arguments = parser.parse_args()
 
         if cli_arguments.interface == None:
-            Logger().log('Interface must be specified.')
+            print('Interface must be specified.')
             return
 
+        print('Loading configuration')
         if cli_arguments.config != None:
-            pass
+            configuration_deserializer = ConfigurationDeserializer(cli_arguments.config)
+            configuration = configuration_deserializer.deserialize()
 
-        Logger().log('Loading configuration')
         configuration_deserializer = ConfigurationDeserializer('../configuration.json')
         configuration = configuration_deserializer.deserialize()
 
-        Logger().log('Checking for updates...')
-        self.__check_for_update(configuration)
+        logger = Logger(configuration.logs_directory)
+
+        current_file_location = os.path.dirname(os.path.abspath(__file__))
+        framework_location = os.path.abspath(current_file_location, '../../')
+
+        logger.log('Initiating updater')
+        updater = Updater(
+            configuration, 
+            logger, 
+            framework_location,
+            ''
+            )
 
         if sys.argv[1].lower() == 'gui':
             if sys.argv[2].lower() == '--normal':
