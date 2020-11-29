@@ -4,12 +4,12 @@ import sys
 import shutil
 import argparse
 from datetime import datetime
-import heimdall_core.modules.gui_elements as gui_elements
-from heimdall_core.modules.logger import Logger
-from heimdall_core.modules.updater import Updater
-from heimdall_core.modules.usb_detector import USBHotplugDetector
-from heimdall_core.modules.file_operations_provider import FileOperationsProvider
-from heimdall_core.modules.configuration_deserializer import ConfigurationDeserializer
+from .modules import gui_elements
+from .modules.logger import Logger
+from .modules.updater import Updater
+from .modules.usb_detector import USBHotplugDetector
+from .modules.file_operations_provider import FileOperationsProvider
+from .modules.configuration_deserializer import ConfigurationDeserializer
 
 class Main():
     def __init__(self):

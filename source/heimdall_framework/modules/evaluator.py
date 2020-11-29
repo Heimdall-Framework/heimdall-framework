@@ -154,8 +154,8 @@ class Evaluator():
             return True
         else:
             self.__logger.log('> Packing live boot files into image file.')
-            FileOperationsProvider().create_img_file('img')
-            FileOperationsProvider().create_img_file('iso')
+            FileOperationsProvider().create_img_file(self.__logger, 'img')
+            FileOperationsProvider().create_img_file(self.__logger, 'iso')
 
             self.__logger.log('> Generating image file checksum.')
 

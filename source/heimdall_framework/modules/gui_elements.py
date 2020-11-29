@@ -1,8 +1,8 @@
 import sys
-from pymsgbox import alert, confirm
 from threading import Thread
-from .usb_detector import USBHotplugDetector
+from pymsgbox import alert, confirm
 from PyQt5 import QtCore, QtGui, QtWidgets
+from .usb_detector import USBHotplugDetector
 
 SMALL_FONT = 10
 MEDIUM_FONT = 12
