@@ -109,8 +109,8 @@ class Updater():
         Check if any new updates are available.
         '''
 
-        current_file_directory = os.path.join(os.path.dirname(__file__))
-        self.core_framework_location = os.path.abspath(current_file_directory, '../../../../') 
+        current_file_directory = os.path.dirname(os.path.abspath(__file__))
+        self.core_framework_location = os.path.abspath(os.path.join(current_file_directory, '../../../../'))
 
         if not os.path.isfile(self.__last_update_file_location):
             with open(self.__last_update_file_location, 'w'):

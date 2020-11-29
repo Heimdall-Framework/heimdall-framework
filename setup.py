@@ -4,22 +4,26 @@ import setuptools
 with open('README.md') as readme:
     long_description = readme.read()
 
+def get_leatest_version():
+    return ''
+
 setuptools.setup(
-    name='heimdall-framework',
+    name='heimdall_framework',
     version='0.0.1',
     author='Ivan Zlatanov',
-    author_email='me@iv.an',
+    author_email='i_zlatanpv@protonmail.com',
     description='Heimdall Framework is a Python USB threat evaluation framework for Linux that is designed to detect malicious behavior in USB mass storage devices',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/Heimdall-Framework/heimdall-framework',
-    packages=setuptools.find_packages(where='source.core.python'),
     package_dir={
-        '': 'source/core/python/'
+        'heimdall_framework': 'source/core/',
+        'heimdall_framework_modules': '/source/core/modules/'
     },
+    packages=setuptools.find_packages(where='source.core'),
     entry_points={
         'console_scripts':[
-            'heimdall-framework = main:main',
+            'heimdall_framework = sourcemain:run',
         ],
     },
     classifiers=[
@@ -27,5 +31,5 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6'   
+    python_requires='>=3.6'
 )

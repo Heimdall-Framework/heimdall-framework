@@ -28,8 +28,15 @@ class Main():
         parser.add_argument(
             '--interface', 
             type=str,
+            nargs='?',
             help='Indicates whether the GUI will be initialized or not.',
             )
+        parser.add_argument(
+            '--screen',
+            nargs='?',
+            type=str,
+            help='The GUI mode. Should be "normal", "fullscreen" or left empty.',
+        )
 
         cli_arguments = parser.parse_args()
 
@@ -48,7 +55,7 @@ class Main():
         logger = Logger(configuration.logs_directory)
 
         current_file_location = os.path.dirname(os.path.abspath(__file__))
-        framework_location = os.path.abspath(current_file_location, '../../')
+        framework_location = os.path.abspath(os.path.join(current_file_location, '../../'))
 
         logger.log('Initiating updater')
         updater = Updater(
@@ -58,36 +65,19 @@ class Main():
             ''
             )
 
-        if sys.argv[1].lower() == 'gui':
-            if sys.argv[2].lower() == '--normal':
-                gui_elements.show_gui(configuration, False)
-            else:
-                gui_elements.show_gui(configuration, True)
-
-        elif sys.argv[1].lower() == 'nogui':
-            usb_detector = USBHotplugDetector(configuration)
-            usb_detector.start()
-    
-    
-    def __update(self) -> None:
-        '''
-        Update the framework on the device.
-        '''
+        logger.log('Checking for updates.')
+        if updater.can_update(logger):
+            updater.update(logger)
         
-        updater = Updater(
-                self.core_framework_location,
-                'https://vio1hjlpx9.execute-api.eu-central-1.amazonaws.com/dev/update'
-            )
-
-        update_result = updater.update()
-            
-        if not update_result:
-            return False
+        logger.log('Initiating USB hotplug detector.')
+        if cli_arguments.interface == None or cli_arguments.interface == 'nogui':
+            usb_detector = USBHotplugDetector(configuration, logger)
+            usb_detector.start()
         else:
-            with open(self.last_update_file_location, 'w') as last_update_date:
-                last_update_date.write(str(datetime.now().strftime('%b %d %Y')))
-    
-            updater.restart_parent()
+            if cli_arguments.screen == None or cli_arguments.screen == 'normal':
+                gui_elements.show_gui(configuration, logger, False)
+            else:
+                gui_elements.show_gui(configuration, logger, True)
 
-if __name__=='__main__':       
+def run(): 
     Main().main()

@@ -1,10 +1,8 @@
 import string
 import random
-from .logger import Logger
 
 class DataProvider():
-    
-    def generate_random_data_file(self):
+    def generate_random_data_file(self, logger):
         """
         Generates a file, containing pseudorandom data
         """
@@ -16,7 +14,7 @@ class DataProvider():
             
             return True
         except:
-            Logger().log('> File creation exception.')
+            logger.log('> File creation exception.')
             return False
 
     def __generate_pseudorandom_string(self, length=32):

@@ -11,11 +11,11 @@ LARGE_FONT = 14
 usb_detector = None
 
 class HeimdallMainWindow(object):
-    def __init__(self, configuration):
+    def __init__(self, configuration, logger):
         global usb_detector
 
         self.is_started = False
-        usb_detector = USBHotplugDetector(configuration)
+        usb_detector = USBHotplugDetector(configuration, logger)
 
     def setupUi(self, USBEvaluatorGui):
         USBEvaluatorGui.setObjectName("USBEvaluatorGui")
@@ -177,11 +177,11 @@ class GuiThreadWorker(QtCore.QRunnable):
     def run(self):
         usb_detector.start()
 
-def show_gui(configuration, fullscreen=True):
+def show_gui(configuration, logger, fullscreen=True):
     app = QtWidgets.QApplication(sys.argv)
     heimdall_app = QtWidgets.QMainWindow()
 
-    ui = HeimdallMainWindow(configuration)
+    ui = HeimdallMainWindow(configuration, logger)
     ui.setupUi(heimdall_app)
 
     if fullscreen:
