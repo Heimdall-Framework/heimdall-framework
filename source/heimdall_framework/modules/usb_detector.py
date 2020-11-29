@@ -2,9 +2,8 @@ import usb1 as usb
 from .nuker import Nuker
 from .logger import Logger
 from .evaluator import Evaluator
-from heimdall_core.modules import gui_elements as gui_elements
+from .gui_elements import show_msg_box, show_confirm_box
 from .device_operations_provider import DeviceOperationsProvider
-
 
 class USBHotplugDetector():
     def __init__(self, configuration, logger):
@@ -54,7 +53,7 @@ class USBHotplugDetector():
                         self.__logger.log(">>> Device not present or user is not allowed to use the device.")
                     else:
                         if device.getPortNumber() in self.__nuking_ports:
-                            if gui_elements.show_confirm_box('Nuking Alert', 'You will not be able to recover the data from the nuked device. \nDo you want to proceed?'):
+                            if show_confirm_box('Nuking Alert', 'You will not be able to recover the data from the nuked device. \nDo you want to proceed?'):
                                 self.__nuke_device(device)
                         elif device.getPortNumber() in self.__testing_ports:
                             evaluation_result, evaluated_device = self.__evaluate_device(
@@ -66,12 +65,12 @@ class USBHotplugDetector():
                             # indicates that the tested device is NOT safe for use
                             if not evaluation_result:
                                 self.__logger.log(">>>! DEVICE IS NOT SAFE !<<<")
-                                gui_elements.show_msg_box('Dangerous device detected','The tested device is NOT safe for use.') 
+                                show_msg_box('Dangerous device detected','The tested device is NOT safe for use.') 
                            
                             # indicates that the tested device is safe for use
                             else:                                
                                 self.__logger.log(">>> Device is SAFE for use")
-                                gui_elements.show_msg_box('Passed','All tests were passed. The tested device is safe for use.')
+                                show_msg_box('Passed','All tests were passed. The tested device is safe for use.')
                             
                             self.__cache_tested_device(evaluated_device)
                         handle.close()

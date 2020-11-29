@@ -8,7 +8,7 @@ import importlib
 import usb1 as usb
 from .logger import Logger
 from .data_provider import DataProvider
-from heimdall_core.modules import gui_elements as gui
+import gui_elements as gui
 from .file_operations_provider import FileOperationsProvider
 from .device_operations_provider import DeviceOperationsProvider
 from .system_operations_provider import SystemOperationsProvider
