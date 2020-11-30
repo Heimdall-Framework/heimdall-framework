@@ -7,8 +7,8 @@ import datetime
 import importlib
 import usb1 as usb
 from .logger import Logger
+from .gui_provider import GuiProvider
 from .data_provider import DataProvider
-import gui_elements as gui
 from .file_operations_provider import FileOperationsProvider
 from .device_operations_provider import DeviceOperationsProvider
 from .system_operations_provider import SystemOperationsProvider
@@ -67,7 +67,7 @@ class Evaluator():
 
         for _ in range(TESTS_RANGE):
             if not self.__execute_hardware_plugin(5):
-                gui.show_msg_box('Guideline', 'Unplug the USB device, click Okay and then plug it in tha same port.')
+                GuiProvider().show_msg_box('Guideline', 'Unplug the USB device, click Okay and then plug it in tha same port.')
 
             self.__device = None
             self.__device_handle = None

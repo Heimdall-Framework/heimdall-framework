@@ -1,8 +1,9 @@
 import usb1 as usb
+from .logger import Logger
 from .nuker import Nuker
 from .logger import Logger
 from .evaluator import Evaluator
-from .gui_elements import show_msg_box, show_confirm_box
+from .gui_provider import GuiProvider
 from .device_operations_provider import DeviceOperationsProvider
 
 class USBHotplugDetector():
@@ -53,7 +54,7 @@ class USBHotplugDetector():
                         self.__logger.log(">>> Device not present or user is not allowed to use the device.")
                     else:
                         if device.getPortNumber() in self.__nuking_ports:
-                            if show_confirm_box('Nuking Alert', 'You will not be able to recover the data from the nuked device. \nDo you want to proceed?'):
+                            if GuiProvider().show_confirm_box('Nuking Alert', 'You will not be able to recover the data from the nuked device. \nDo you want to proceed?'):
                                 self.__nuke_device(device)
                         elif device.getPortNumber() in self.__testing_ports:
                             evaluation_result, evaluated_device = self.__evaluate_device(
@@ -65,20 +66,21 @@ class USBHotplugDetector():
                             # indicates that the tested device is NOT safe for use
                             if not evaluation_result:
                                 self.__logger.log(">>>! DEVICE IS NOT SAFE !<<<")
-                                show_msg_box('Dangerous device detected','The tested device is NOT safe for use.') 
+                                GuiProvider().show_msg_box('Dangerous device detected','The tested device is NOT safe for use.') 
                            
                             # indicates that the tested device is safe for use
                             else:                                
                                 self.__logger.log(">>> Device is SAFE for use")
-                                show_msg_box('Passed','All tests were passed. The tested device is safe for use.')
+                                GuiProvider().show_msg_box('Passed','All tests were passed. The tested device is safe for use.')
                             
                             self.__cache_tested_device(evaluated_device)
                         handle.close()
 
                 self.__logger.log(">>> Hotplug detector was terminated.")
                 
-        except usb.USBError:
+        except usb.USBError as err:
             self.__logger.log('>>> An exception has occurred')
+            self.__logger.log('>>> More information: ' + str(err))
         
     def __evaluate_device(self, device, handle, context):
         # creates Evaluator object with given USBDeviceHandlem, USBDevice and device's USBContext

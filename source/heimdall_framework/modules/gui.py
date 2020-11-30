@@ -1,6 +1,5 @@
 import sys
 from threading import Thread
-from pymsgbox import alert, confirm
 from PyQt5 import QtCore, QtGui, QtWidgets
 from .usb_detector import USBHotplugDetector
 
@@ -190,16 +189,3 @@ def show_gui(configuration, logger, fullscreen=True):
         heimdall_app.show()
 
     sys.exit(app.exec_())
-
-
-def show_msg_box(box_title, box_content, buttons = 'Okay'):
-    alert(box_content, box_title, buttons)
-
-def show_confirm_box(box_title, box_content, displayed_buttons = ['Yes', 'No']):
-    result = confirm(text=box_content, title=box_title, buttons=displayed_buttons)
-
-    if result == displayed_buttons[0]:
-        return True
-    else:
-        return False
-        

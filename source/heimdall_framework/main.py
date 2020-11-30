@@ -4,7 +4,7 @@ import sys
 import shutil
 import argparse
 from datetime import datetime
-from .modules import gui_elements
+from .modules import gui
 from .modules.logger import Logger
 from .modules.updater import Updater
 from .modules.usb_detector import USBHotplugDetector
@@ -57,7 +57,7 @@ class Main():
         current_file_location = os.path.dirname(os.path.abspath(__file__))
         framework_location = os.path.abspath(os.path.join(current_file_location, '../../'))
 
-        logger.log('Initiating updater')
+        logger.log('>>> Initiating updater')
         updater = Updater(
             configuration, 
             logger, 
@@ -65,19 +65,19 @@ class Main():
             ''
             )
 
-        logger.log('Checking for updates.')
+        logger.log('>>> Checking for updates.')
         if updater.can_update(logger):
             updater.update(logger)
         
-        logger.log('Initiating USB hotplug detector.')
+        logger.log('>>> Initiating USB hotplug detector.')
         if cli_arguments.interface == None or cli_arguments.interface == 'nogui':
             usb_detector = USBHotplugDetector(configuration, logger)
             usb_detector.start()
         else:
             if cli_arguments.screen == None or cli_arguments.screen == 'normal':
-                gui_elements.show_gui(configuration, logger, False)
+                gui.show_gui(configuration, logger, False)
             else:
-                gui_elements.show_gui(configuration, logger, True)
+                gui.show_gui(configuration, logger, True)
 
 def run(): 
     Main().main()
