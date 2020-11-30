@@ -46,17 +46,20 @@ class Main:
             print("Interface must be specified.")
             return
 
+        current_file_location = os.path.dirname(os.path.abspath(__file__))
+
         print("Loading configuration")
         if cli_arguments.config != None:
             configuration_deserializer = ConfigurationDeserializer(cli_arguments.config)
             configuration = configuration_deserializer.deserialize()
 
-        configuration_deserializer = ConfigurationDeserializer("../configuration.json")
+        configuration_deserializer = ConfigurationDeserializer(current_file_location + '/configuration.json')
         configuration = configuration_deserializer.deserialize()
+
+        print(configuration)
 
         logger = Logger(configuration.logs_directory)
 
-        current_file_location = os.path.dirname(os.path.abspath(__file__))
         framework_location = os.path.abspath(
             os.path.join(current_file_location, "../../")
         )
