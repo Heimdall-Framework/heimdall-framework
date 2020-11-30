@@ -6,7 +6,7 @@ from .evaluator import Evaluator
 from .gui_provider import GuiProvider
 from .device_operations_provider import DeviceOperationsProvider
 
-class USBHotplugDetector():
+class USBHotplugDetector:
     def __init__(self, configuration, logger):
         self.__configuration = configuration
         self.__logger = logger
@@ -22,75 +22,82 @@ class USBHotplugDetector():
 
     def stop(self):
         self.__is_started = False
-        print('>>> Hotplug detector was stopped.')
+        print(">>> Hotplug detector was stopped.")
 
     def __begin_detecting(self):
         self.__logger.log(">>> Hotplug detector was started.")
-        
+
         try:
             with usb.USBContext() as context:
                 while self.__is_started:
                     # finds a new device that can be tested
                     device = DeviceOperationsProvider().find_new_device(
-                        self.__testing_ports, 
-                        self.__nuking_ports, context
-                        )
+                        self.__testing_ports, self.__nuking_ports, context
+                    )
 
                     # checks if the found device has already been tested
-                    if device is None or device == self.__tested_device or device == self.__nuked_device:
+                    if (
+                        device is None
+                        or device == self.__tested_device
+                        or device == self.__nuked_device
+                    ):
                         continue
 
                     # creates USBDeviceHandle object for given VID and PID
                     handle = context.openByVendorIDAndProductID(
-                        device.getVendorID(),
-                        device.getProductID(),
-                        skip_on_error=True
+                        device.getVendorID(), device.getProductID(), skip_on_error=True
                     )
-                    
+
                     DeviceOperationsProvider().handle_kernel_driver(handle, False)
-                    
+
                     # checks if the device is still present ot if the user is allowed to access it
                     if handle is None:
-                        self.__logger.log(">>> Device not present or user is not allowed to use the device.")
+                        self.__logger.log(
+                            ">>> Device not present or user is not allowed to use the device."
+                        )
                     else:
                         if device.getPortNumber() in self.__nuking_ports:
-                            if GuiProvider().show_confirm_box('Nuking Alert', 'You will not be able to recover the data from the nuked device. \nDo you want to proceed?'):
+                            if GuiProvider().show_confirm_box(
+                                "Nuking Alert",
+                                "You will not be able to recover the data from the nuked device. \nDo you want to proceed?",
+                            ):
                                 self.__nuke_device(device)
                         elif device.getPortNumber() in self.__testing_ports:
-                            evaluation_result, evaluated_device = self.__evaluate_device(
-                                device,
-                                handle,
-                                context
-                            )
+                            (
+                                evaluation_result,
+                                evaluated_device,
+                            ) = self.__evaluate_device(device, handle, context)
 
                             # indicates that the tested device is NOT safe for use
                             if not evaluation_result:
                                 self.__logger.log(">>>! DEVICE IS NOT SAFE !<<<")
-                                GuiProvider().show_msg_box('Dangerous device detected','The tested device is NOT safe for use.') 
-                           
+                                GuiProvider().show_msg_box(
+                                    "Dangerous device detected",
+                                    "The tested device is NOT safe for use.",
+                                )
+
                             # indicates that the tested device is safe for use
-                            else:                                
+                            else:
                                 self.__logger.log(">>> Device is SAFE for use")
-                                GuiProvider().show_msg_box('Passed','All tests were passed. The tested device is safe for use.')
-                            
+                                GuiProvider().show_msg_box(
+                                    "Passed",
+                                    "All tests were passed. The tested device is safe for use.",
+                                )
+
                             self.__cache_tested_device(evaluated_device)
                         handle.close()
 
                 self.__logger.log(">>> Hotplug detector was terminated.")
-                
+
         except usb.USBError as err:
-            self.__logger.log('>>> An exception has occurred')
-            self.__logger.log('>>> More information: ' + str(err))
-        
+            self.__logger.log(">>> An exception has occurred")
+            self.__logger.log(">>> More information: " + str(err))
+
     def __evaluate_device(self, device, handle, context):
         # creates Evaluator object with given USBDeviceHandlem, USBDevice and device's USBContext
         evaluator = Evaluator(
-            self.__configuration,
-            self.__logger,
-            handle,
-            device.getPortNumber(),
-            context
-            )
+            self.__configuration, self.__logger, handle, device.getPortNumber(), context
+        )
 
         result, returned_device = evaluator.evaluate_device()
 
@@ -98,17 +105,19 @@ class USBHotplugDetector():
         return result, returned_device
 
     def __nuke_device(self, device):
-        device_partition = DeviceOperationsProvider().get_device_udev_property(device, 'DEVNAME')
+        device_partition = DeviceOperationsProvider().get_device_udev_property(
+            device, "DEVNAME"
+        )
         nuker = Nuker(device_partition)
-                            
-        self.__logger.log('>> Nuking device on port: {}'.format(device.getPortNumber()))
-        
-        self.__logger.log('>> Hang tight, it will take some time.')
+
+        self.__logger.log(">> Nuking device on port: {}".format(device.getPortNumber()))
+
+        self.__logger.log(">> Hang tight, it will take some time.")
         nuker.nuke()
-        
-        self.__logger.log('>>> Nuking finished.')
-                            
-        # cacheing fake device in order to allow testing for the same device immediately after nuking 
+
+        self.__logger.log(">>> Nuking finished.")
+
+        # cacheing fake device in order to allow testing for the same device immediately after nuking
         self.__cache_nuked_device(device)
         self.__cache_tested_device(None)
 
