@@ -25,7 +25,7 @@ setuptools.setup(
     entry_points={
         'console_scripts':[
             'heimdall_framework = heimdall_framework.main:run',
-        ],
+        ]
     },
     classifiers=[
         "Programming Language :: Python :: 3",
