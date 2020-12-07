@@ -18,11 +18,11 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     url='https://github.com/Heimdall-Framework/heimdall-framework',
     package_dir={
-        'heimdall_framework': 'source/heimdall_framework',
-        'heimdall_framework.modules': 'source/heimdall_framework/modules'
+        'heimdall_framework': 'heimdall_framework',
+        'heimdall_framework.modules': 'heimdall_framework/modules'
     },
-    packages=setuptools.find_packages(where='source/'),
-    entry_points={
+    packages=setuptools.find_packages(),
+    entry_points={  
         'console_scripts':[
             'heimdall_framework = heimdall_framework.main:run',
         ]
