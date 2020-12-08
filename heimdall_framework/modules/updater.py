@@ -110,9 +110,6 @@ class Updater():
         Check if any new updates are available.
         '''
 
-        current_file_directory = os.path.dirname(os.path.abspath(__file__))
-        self.core_framework_location = os.path.abspath(os.path.join(current_file_directory, '../../../../'))
-
         if not os.path.isdir(self.__version_logs_directory):
             os.mkdir(self.__version_logs_directory)
             self.__logger.log('>>> Created an empty version logs directory')
