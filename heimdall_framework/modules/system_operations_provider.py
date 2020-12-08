@@ -9,11 +9,10 @@ import ctypes.util
 from subprocess import check_output
 from collections import namedtuple
 from .logger import Logger
+from .framework_configuration import FrameworkConfiguration
+
 
 class SystemOperationsProvider():
-    def __init__(self, configuration):
-        self.__configuration = configuration
-    
     def rebuild_package(self, setup_file_location: str) -> bool:
         """
         Reinstalls the framework after update.
@@ -29,7 +28,7 @@ class SystemOperationsProvider():
             return False
         return True
 
-    def mount_device(self, device_system_name: str, current_part=0):
+    def mount_device(self, configuration, logger, device_system_name: str, current_part=0):
         """
         Mount the device on a predetermined mountpoint with noexec and rw permission parameters
         
@@ -37,24 +36,24 @@ class SystemOperationsProvider():
         :param current_partition: The device partition that is being currently mounted
         """
 
-        mounting_command = 'mount {}{} {} -o noexec'.format(device_system_name, current_part, self.device_mountpoint)
+        mounting_command = 'mount {}{} {} -o noexec'.format(device_system_name, current_part, configuration.mounting_point)
         process = subprocess.Popen(mounting_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output, error = process.communicate()
 
         if 'bad' in str(output) or 'not exist' in str(output) and current_part == 0:
             for i in range(1, 10):
-                if self.mount_device(device_system_name, current_part=i):
+                if self.mount_device(configuration, logger, device_system_name, current_part=i):
                     return True, device_system_name+str(i)
             return False, None
     
         if error != None:
-            Logger().log(error)
+            logger.log(error)
             return False, None
     
         device_system_name = device_system_name + str(current_part)
         return True, device_system_name
 
-    def unmount_device(self, mounted_device_partition: str) -> bool:
+    def unmount_device(self, logger, mounted_device_partition: str) -> bool:
         """
         Unmounts a device's partition
 
@@ -70,10 +69,10 @@ class SystemOperationsProvider():
 
         _, error = process.communicate()
         
-        Logger().log('Device was unmounted.', silent=True)
+        logger.log('Device was unmounted.', silent=True)
 
         if error != None:
-            Logger().log(error)
+            logger.log(error)
             return False
         
         return True
@@ -93,7 +92,7 @@ class SystemOperationsProvider():
             ctypes.byref(timespec)
             )
     
-    def get_file_checksum(self, file_path):
+    def get_file_checksum(self, logger, file_path):
         """
         Retrives a file's checksum
 
@@ -106,7 +105,7 @@ class SystemOperationsProvider():
         output, error = process.communicate()
         
         if error != None:
-            Logger().log(error)
+            logger.log(error)
             return None
         return output
 
