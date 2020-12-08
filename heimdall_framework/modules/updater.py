@@ -18,11 +18,11 @@ class Updater():
         self.__logger = logger
         
         self.__framework_location = framework_location
-        self.__framework_parent_directory = os.path.abspath(os.path.join(framework_location, '/../'))
-        self.__version_logs_directory = os.path.abspath(os.path.join(framework_location, '/source/core/python/update_logs'))
-        self.__version_logs_location = os.path.abspath(os.path.join(framework_location, '/source/core/python/update_logs/versions.json'))
-        self.__plugins_directory_location = os.path.abspath(os.path.join(framework_location, '/source/core/python/plugins/'))
-        self.__last_update_file_location = os.path.abspath(os.path.join(framework_location, '/source/core/python/update_logs/last_update_date.log'))
+        self.__framework_parent_directory = os.path.abspath(os.path.join(framework_location, '/../../'))
+        self.__version_logs_directory = os.path.abspath(os.path.join(framework_location, 'heimdall_framework/update_logs'))
+        self.__version_logs_location = os.path.abspath(os.path.join(framework_location, '/heimdall_framework/update_logs/versions.json'))
+        self.__plugins_directory_location = os.path.abspath(os.path.join(framework_location, '/heimdall_framework/plugins/'))
+        self.__last_update_file_location = os.path.abspath(os.path.join(framework_location, '/heimdall_framework/update_logs/last_update_date.log'))
 
         self.update_url = update_url
 

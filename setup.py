@@ -1,3 +1,4 @@
+import requests
 import setuptools
 
 
@@ -5,12 +6,11 @@ with open('README.md') as readme:
     long_description = readme.read()
 
 def get_leatest_version():
-    return ''
-print(setuptools.find_packages(where='source/'))
+    return requests.get("https://tx58wj5h27.execute-api.eu-central-1.amazonaws.com/dev/get_latest_version").json()['version']
 
 setuptools.setup(
     name='heimdall_framework',
-    version='0.0.1',
+    version=get_leatest_version(),
     author='Ivan Zlatanov',
     author_email='i_zlatanpv@protonmail.com',
     description='Heimdall Framework is a Python USB threat evaluation framework for Linux that is designed to detect malicious behavior in USB mass storage devices',

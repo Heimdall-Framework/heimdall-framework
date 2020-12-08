@@ -11,8 +11,8 @@ from collections import namedtuple
 from .logger import Logger
 
 class SystemOperationsProvider():
-    def __init__(self):
-        self.device_mountpoint = os.environ['DEVS_MOUNTPOINT']
+    def __init__(self, configuration):
+        self.__configuration = configuration
     
     def rebuild_package(self, setup_file_location: str) -> bool:
         """
@@ -70,7 +70,7 @@ class SystemOperationsProvider():
 
         _, error = process.communicate()
         
-        Logger().log('Device was unmounted.',silent=True)
+        Logger().log('Device was unmounted.', silent=True)
 
         if error != None:
             Logger().log(error)
