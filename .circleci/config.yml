@@ -18,7 +18,7 @@ jobs:
           command: sudo apt install git
       - run:
           name: Clone Heimdall Framework Releaser Script
-          command: cd .. && git clone <RELEASER URL> && cd ..
+          command: cd .. && git clone https://github.com/heimdall-framework/releaser.git
       - run:
           name: Release
           command: sudo -E python3 releaser/releaser.py
