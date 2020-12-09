@@ -102,7 +102,7 @@ class Evaluator():
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
 
-        _, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
+        _, mounted_device_partition = SystemOperationsProvider().mount_device(self.__configuration, self.__logger, device_system_name)
         DataProvider().generate_random_data_file(self.__logger)
 
         shutil.copyfile('dump.me', self.__device_mountpoint  + 'dump.me')
@@ -112,11 +112,11 @@ class Evaluator():
             os.remove('dump.me')
             os.remove('received_dump.me')
 
-            SystemOperationsProvider().unmount_device(mounted_device_partition)
+            SystemOperationsProvider().unmount_device(self.__logger, mounted_device_partition)
             DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
             return True
         
-        SystemOperationsProvider().unmount_device(mounted_device_partition)        
+        SystemOperationsProvider().unmount_device(self.__logger, mounted_device_partition)        
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
     
         os.remove('dump.me')
@@ -131,10 +131,10 @@ class Evaluator():
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
-        _, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
+        _, mounted_device_partition = SystemOperationsProvider().mount_device(self.__configuration, self.__logger, device_system_name)
 
         scan_result = DeviceOperationsProvider().virus_scan_device(self.__device_mountpoint)
-        SystemOperationsProvider().unmount_device(mounted_device_partition)
+        SystemOperationsProvider().unmount_device(self.__logger, mounted_device_partition)
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
 
         return scan_result
@@ -143,13 +143,13 @@ class Evaluator():
         DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
 
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
-        _, mounted_device_partition = SystemOperationsProvider().mount_device(device_system_name)
+        _, mounted_device_partition = SystemOperationsProvider().mount_device(self.__configuration, self.__logger, device_system_name)
         
         indicator_file_path = FileOperationsProvider().find_file(self.__device_mountpoint, 'tails.cfg')
 
         if indicator_file_path is None:
             self.__logger.log('> Indicator file does not exist in the filesystem. Test is being flaged as successful.')
-            SystemOperationsProvider().unmount_device(mounted_device_partition)        
+            SystemOperationsProvider().unmount_device(self.__logger, mounted_device_partition)        
 
             return True
         else:
@@ -159,21 +159,21 @@ class Evaluator():
 
             self.__logger.log('> Generating image file checksum.')
 
-            local_image_checksum = str(SystemOperationsProvider().get_file_checksum('/tmp/temp_image.img'))
+            local_image_checksum = str(SystemOperationsProvider().get_file_checksum(self.__logger, '/tmp/temp_image.img'))
 
             # compares the checksums from the Tails website to the local one
             if SystemOperationsProvider().offline_verify_checksum(local_image_checksum):
                 os.remove('/tmp/temp_image.img')
                 os.remove('/tmp/temp_image.iso')
 
-                SystemOperationsProvider().unmount_device(mounted_device_partition)        
+                SystemOperationsProvider().unmount_device(self.__logger, mounted_device_partition)        
                 return True
             else:
                 os.remove('/tmp/temp_image.img')
                 os.remove('/tmp/temp_image.iso')
                 self.__logger.log('> The Tails image is outdated or has been altered. Please update your Tails liveboot to the newest version and test again.')
                 
-                SystemOperationsProvider().unmount_device(mounted_device_partition)                        
+                SystemOperationsProvider().unmount_device(self.__logger, mounted_device_partition)                        
                 return False
 
     def __set_device(self) -> None:
