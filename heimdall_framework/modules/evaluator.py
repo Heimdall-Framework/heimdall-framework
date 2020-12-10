@@ -196,6 +196,9 @@ class Evaluator():
                 self.__logger.log('Hardware controller was found.')
                 self.__plugin_manager.execute_plugin_function(plugin, 'toggle', (delay,))
  
+
+    def __run_testing_plugins(self) -> bool:
+        pass
     # runs external plugins (tests)
     # def __run_external_tests(self) -> bool:
     #     plugin_arguments_tuple = (self.__device, self.__device_handle)

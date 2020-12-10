@@ -7,9 +7,6 @@ from .logger import Logger
 
 
 class FileOperationsProvider():
-    def __init__(self, configuration):
-        self.__device_mountpoint = configuration.mounting_point
-
     def compare_files(self, first_file_path, second_file_path):
         """
         Compare two files
@@ -20,7 +17,7 @@ class FileOperationsProvider():
         
         return filecmp.cmp(first_file_path, second_file_path)
 
-    def find_file(self, directory, file):
+    def find_file(self, configuration, directory, file):
         """
         Recursively search for a specific file.
 
@@ -30,7 +27,7 @@ class FileOperationsProvider():
 
         for dir_path, directories, files in os.walk(directory, followlinks=True):
             for sub_dir in directories:
-                self.find_file(self.__device_mountpoint + sub_dir, file)
+                self.find_file(configuration, configuration.mounting_point + sub_dir, file)
 
             for file_name in files:
                 if file_name.lower == str(file).lower:
