@@ -145,7 +145,7 @@ class Evaluator():
         device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
         _, mounted_device_partition = SystemOperationsProvider().mount_device(self.__configuration, self.__logger, device_system_name)
         
-        indicator_file_path = FileOperationsProvider().find_file(self.__device_mountpoint, 'tails.cfg')
+        indicator_file_path = FileOperationsProvider().find_file(self.__configuration, self.__device_mountpoint, 'tails.cfg')
 
         if indicator_file_path is None:
             self.__logger.log('> Indicator file does not exist in the filesystem. Test is being flaged as successful.')

@@ -77,21 +77,6 @@ class SystemOperationsProvider():
         
         return True
 
-    # changes system clock time to a given one
-    def change_system_time(self, required_time):
-        OS_CLOCK_REALTIME_ID = 0
-
-        librt = ctypes.CDLL(ctypes.util.find_library('rt'))
-        
-        timespec = timespec_struct()
-        timespec.tv_sec = int(time.mktime(datetime.datetime(*required_time[:6].timetuple())))
-        timespec.tv_nsec = required_time[6] * 1000000
-
-        librt.clock_settime(
-            OS_CLOCK_REALTIME_ID, 
-            ctypes.byref(timespec)
-            )
-    
     def get_file_checksum(self, logger, file_path):
         """
         Retrives a file's checksum
