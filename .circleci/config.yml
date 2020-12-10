@@ -14,7 +14,7 @@ jobs:
           name: Install AWS CLI
           command: sudo pip install awscli
       - run:
-          Name: Install Git
+          name: Install Git
           command: sudo apt install git
       - run:
           name: Clone Heimdall Framework Releaser Script
