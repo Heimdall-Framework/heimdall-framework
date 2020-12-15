@@ -28,6 +28,7 @@ class Evaluator():
         self.__port_number = port_number
         self.__context = context
 
+        self.__internals_plugins_directory = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'plugins'))
         self.__plugins_directory = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '../', 'plugins'))
         
         self.__load_plugins()
