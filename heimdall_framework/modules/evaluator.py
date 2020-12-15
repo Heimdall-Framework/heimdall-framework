@@ -43,9 +43,6 @@ class Evaluator():
         tests = [
             self.__validate_device_type,
             self.__validate_vendor_information,
-            self.__virus_scan,
-            #self.__test_io,
-            self.__intird_backdoor_test
             #self.__run_external_tests
         ]
 
