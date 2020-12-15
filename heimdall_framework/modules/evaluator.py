@@ -96,58 +96,6 @@ class Evaluator():
 
             return True
 
-    def __virus_scan(self) -> bool:
-        """
-        Scan tested device for viruses.
-        """
-        DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
-
-        device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
-        _, mounted_device_partition = SystemOperationsProvider().mount_device(self.__configuration, self.__logger, device_system_name)
-
-        scan_result = DeviceOperationsProvider().virus_scan_device(self.__device_mountpoint)
-        SystemOperationsProvider().unmount_device(self.__logger, mounted_device_partition)
-        DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
-
-        return scan_result
-
-    def __intird_backdoor_test(self) -> bool:
-        DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
-
-        device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
-        _, mounted_device_partition = SystemOperationsProvider().mount_device(self.__configuration, self.__logger, device_system_name)
-        
-        indicator_file_path = FileOperationsProvider().find_file(self.__configuration, self.__device_mountpoint, 'tails.cfg')
-
-        if indicator_file_path is None:
-            self.__logger.log('> Indicator file does not exist in the filesystem. Test is being flaged as successful.')
-            SystemOperationsProvider().unmount_device(self.__logger, mounted_device_partition)        
-
-            return True
-        else:
-            self.__logger.log('> Packing live boot files into image file.')
-            FileOperationsProvider().create_img_file(self.__logger, 'img')
-            FileOperationsProvider().create_img_file(self.__logger, 'iso')
-
-            self.__logger.log('> Generating image file checksum.')
-
-            local_image_checksum = str(SystemOperationsProvider().get_file_checksum(self.__logger, '/tmp/temp_image.img'))
-
-            # compares the checksums from the Tails website to the local one
-            if SystemOperationsProvider().offline_verify_checksum(local_image_checksum):
-                os.remove('/tmp/temp_image.img')
-                os.remove('/tmp/temp_image.iso')
-
-                SystemOperationsProvider().unmount_device(self.__logger, mounted_device_partition)        
-                return True
-            else:
-                os.remove('/tmp/temp_image.img')
-                os.remove('/tmp/temp_image.iso')
-                self.__logger.log('> The Tails image is outdated or has been altered. Please update your Tails liveboot to the newest version and test again.')
-                
-                SystemOperationsProvider().unmount_device(self.__logger, mounted_device_partition)                        
-                return False
-
     def __set_device(self) -> None:
         while self.__device is None:
             self.__device = DeviceOperationsProvider().find_by_port_number(self.__port_number, self.__context)
