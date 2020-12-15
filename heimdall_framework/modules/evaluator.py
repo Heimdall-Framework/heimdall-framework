@@ -44,7 +44,7 @@ class Evaluator():
             self.__validate_device_type,
             self.__validate_vendor_information,
             self.__virus_scan,
-            self.__test_io,
+            #self.__test_io,
             self.__intird_backdoor_test
             #self.__run_external_tests
         ]
@@ -95,34 +95,6 @@ class Evaluator():
                 return False
 
             return True
-
-
-    def __test_io (self) -> bool:
-        DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, True)
-
-        device_system_name = DeviceOperationsProvider().get_device_udev_property(self.__device, 'DEVNAME')
-
-        _, mounted_device_partition = SystemOperationsProvider().mount_device(self.__configuration, self.__logger, device_system_name)
-        DataProvider().generate_random_data_file(self.__logger)
-
-        shutil.copyfile('dump.me', self.__device_mountpoint  + 'dump.me')
-        shutil.move(self.__device_mountpoint  + 'dump.me', 'received_dump.me')
-        
-        if FileOperationsProvider().compare_files('dump.me', 'received_dump.me'):
-            os.remove('dump.me')
-            os.remove('received_dump.me')
-
-            SystemOperationsProvider().unmount_device(self.__logger, mounted_device_partition)
-            DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
-            return True
-        
-        SystemOperationsProvider().unmount_device(self.__logger, mounted_device_partition)        
-        DeviceOperationsProvider().handle_kernel_driver(self.__device_handle, False)
-    
-        os.remove('dump.me')
-        os.remove('received_dump.me')
-        
-        return False
 
     def __virus_scan(self) -> bool:
         """
