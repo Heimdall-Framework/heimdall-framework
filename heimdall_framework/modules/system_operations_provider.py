@@ -106,10 +106,3 @@ class SystemOperationsProvider():
                 return True
             else:
                 return False
-
-# timespec structure
-class timespec_struct(ctypes.Structure):
-    _fields_ = [
-        ('tv_sec', ctypes.c_long),
-        ('tv_nsec', ctypes.c_long)
-    ]
