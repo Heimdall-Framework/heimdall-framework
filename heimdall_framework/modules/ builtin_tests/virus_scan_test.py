@@ -1,8 +1,12 @@
 import os
 import shutil
 from heimdall_framework.modules.data_provider import DataProvider
-from heimdall_framework.modules.device_operations_provider import DeviceOperationsProvider
-from heimdall_framework.modules.system_operations_provider import SystemOperationsProvider
+from heimdall_framework.modules.device_operations_provider import (
+    DeviceOperationsProvider,
+)
+from heimdall_framework.modules.system_operations_provider import (
+    SystemOperationsProvider,
+)
 from heimdall_framework.modules.file_operations_provider import FileOperationsProvider
 
 
@@ -22,7 +26,7 @@ def run(logger, configuration, device, device_handle):
     scan_result = DeviceOperationsProvider().virus_scan_device(
         configuration.mountpoint_path
     )
-    
+
     SystemOperationsProvider().unmount_device(logger, mounted_device_partition)
     DeviceOperationsProvider().handle_kernel_driver(device_handle, False)
 
