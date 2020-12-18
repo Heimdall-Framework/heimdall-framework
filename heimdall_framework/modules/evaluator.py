@@ -31,7 +31,6 @@ class Evaluator():
         self.__internals_plugins_directory = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'plugins'))
         self.__plugins_directory = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '../', 'plugins'))
         
-        self.__load_plugins()
         self.__logger.log('>>> Evaluator was initialized.')
 
     def evaluate_device(self) -> (bool, usb.USBDevice):
@@ -170,16 +169,3 @@ class Evaluator():
             if not test_result:
                 return False
         return True
-        
-    def __load_plugins(self):
-        plugin_manager = PluginManager(
-            self.__plugins_directory,
-            self.__plugins_config,
-            will_verify_ownership=True
-        )
-
-        discovered_pluggins = plugin_manager.discover_plugins()
-        imported_plugins = plugin_manager.import_plugins(discovered_pluggins)
-
-        self.__plugin_manager = plugin_manager
-        self.__imported_plugins = imported_plugins
