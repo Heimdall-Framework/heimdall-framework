@@ -142,10 +142,34 @@ class Evaluator():
 
             if not test_result:
                 return False
+        return True
 
+    def __run_external_tests(self) -> bool:
+        plugin_manager = PluginManager(
+            self.__configuration.plugins_folder_location,
+            self.__plugins_config
+        )
 
-    def __run_testing_plugins(self) -> bool:
-        pass
+        discovered_plugins = plugin_manager.discover_plugins()
+        imported_plugins = plugin_manager.import_plugins(discovered_plugins)
+
+        builtin_tests_arguments = (
+            self.__logger,
+            self.__configuration,
+            self.__device,
+            self.__device_handle
+        )
+
+        for plugin in imported_plugins:
+            test_result = plugin_manager.execute_plugin_function(
+                plugin,
+                'run',
+                builtin_tests_arguments
+            )
+
+            if not test_result:
+                return False
+        return True
     # runs external plugins (tests)
     # def __run_external_tests(self) -> bool:
     #     plugin_arguments_tuple = (self.__device, self.__device_handle)
