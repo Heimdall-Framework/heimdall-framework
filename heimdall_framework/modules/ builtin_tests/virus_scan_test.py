@@ -22,6 +22,7 @@ def run(logger, configuration, device, device_handle):
     scan_result = DeviceOperationsProvider().virus_scan_device(
         configuration.mountpoint_path
     )
+    
     SystemOperationsProvider().unmount_device(logger, mounted_device_partition)
     DeviceOperationsProvider().handle_kernel_driver(device_handle, False)
 

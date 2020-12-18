@@ -2,10 +2,10 @@ import os
 import sys
 import json
 import shutil
-import plugypy
 import datetime 
 import importlib
 import usb1 as usb
+from plugypy import *
 from .logger import Logger
 from .gui_provider import GuiProvider
 from .data_provider import DataProvider
@@ -43,9 +43,8 @@ class Evaluator():
         
         tests = [
             self.__validate_device_type,
-            self.__validate_vendor_information,
-            #self.__run_external_tests
-        ]
+            self.__validate_vendor_information
+            ]
 
         for test in tests:
             if not test():
@@ -115,6 +114,36 @@ class Evaluator():
                 self.__plugin_manager.execute_plugin_function(plugin, 'toggle', (delay,))
  
 
+    def __run_builtin(self) -> bool:
+        configuration_deserializer = ConfigurationDeserializer('builtin_tests/builtin_config.json')
+        builtins_configuration = configuration_deserializer.deserialize_config()
+
+        plugin_manager = PluginManager(
+            'builtin_tests',
+            builtins_configuration
+            )
+
+        discovered_plugins = plugin_manager.discover_plugins()
+        imported_plugins = plugin_manager.import_plugins(discovered_plugins)
+
+        builtin_tests_arguments = (
+            self.__logger,
+            self.__configuration,
+            self.__device,
+            self.__device_handle
+        )
+
+        for plugin in imported_plugins:
+            test_result = plugin_manager.execute_plugin_function(
+                plugin,
+                'run',
+                builtin_tests_arguments
+            )
+
+            if not test_result:
+                return False
+
+
     def __run_testing_plugins(self) -> bool:
         pass
     # runs external plugins (tests)
@@ -138,7 +167,7 @@ class Evaluator():
     #     return True
 
     def __load_plugins(self):
-        plugin_manager = plugypy.PluginManager(
+        plugin_manager = PluginManager(
             self.__plugins_directory,
             self.__plugins_config,
             will_verify_ownership=True

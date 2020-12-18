@@ -1,0 +1,9 @@
+{
+    "load_all": true,
+    "plugins":[
+       {
+          "name": "demo_test",
+          "is_enabled": true
+       }
+    ]
+ }
