@@ -1,6 +1,7 @@
 import time
 import RPi.GPIO as GPIO
 
+
 class GPIOOperationsProvider():
     def __init__(self):
         self.__relay_controller_pin = 7

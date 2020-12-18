@@ -97,7 +97,7 @@ class Evaluator():
             self.__device = DeviceOperationsProvider().find_by_port_number(self.__port_number, self.__context)
 
 
-    # set the device handle object of the currently connected device
+    # Set the device handle object of the currently connected device.
     def __set_device_handle(self) -> None:
         while self.__device_handle is None:
             self.__device_handle = self.__context.openByVendorIDAndProductID(
@@ -105,11 +105,12 @@ class Evaluator():
                 self.__device.getProductID()
             )
 
-    # executes hardware relay controll plugin
-    # TODO: FIX THE DAMN HARDARE PLUGIN FUNCTIONALITY
     def __execute_hardware_plugin(self, delay) -> bool:
-        if SystemOperationsProvider().is_running_on_pi():
-            pass
+        if SystemOperationsProvider(4).is_running_on_pi():
+            # Only import the hardware plugin if the device is RPI-based and has GPIO pins
+            from .gpio_operations_provider import GPIOOperationsProvider
+
+            GPIOOperationsProvider().trigger_relay_restart(1)
  
 
     def __run_builtin(self) -> bool:
