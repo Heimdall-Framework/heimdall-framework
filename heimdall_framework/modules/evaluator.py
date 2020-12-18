@@ -170,26 +170,7 @@ class Evaluator():
             if not test_result:
                 return False
         return True
-    # runs external plugins (tests)
-    # def __run_external_tests(self) -> bool:
-    #     plugin_arguments_tuple = (self.__device, self.__device_handle)
-
-    #     plugin_manager = plugypy.PluginManager(
-    #         self.__plugins_directory, 
-    #         self.__plugins_config, 
-    #         will_verify_ownership=True
-    #         )
         
-    #     plugins_list = plugin_manager.import_plugins()
-
-    #     for plugin in plugins_list:
-    #         result = plugin_manager.execute_plugin(plugin, plugin_arguments_tuple)
-
-    #         if result == False:
-    #             print('Custom test: {} was not passed.'.format(plugin['name']))
-    #             return False
-    #     return True
-
     def __load_plugins(self):
         plugin_manager = PluginManager(
             self.__plugins_directory,
