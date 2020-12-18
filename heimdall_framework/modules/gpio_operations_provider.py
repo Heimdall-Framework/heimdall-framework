@@ -7,7 +7,7 @@ class GPIOOperationsProvider():
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.__relay_controller_pin, GPIO.OUT)
 
-    def trigger_relay(self, delay):
+    def trigger_relay_restart(self, delay):
         GPIO.output(self.__relay_controller_pin, GPIO.HIGH)
         time.sleep(delay)
         GPIO.output(self.__relay_controller_pin, GPIO.LOW)
