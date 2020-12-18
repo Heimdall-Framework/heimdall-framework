@@ -1,9 +1,17 @@
 {
-    "load_all": true,
+    "load_all":true,
     "plugins":[
        {
-          "name": "demo_test",
-          "is_enabled": true
+          "name":"io_test",
+          "is_enabled":true
+       },
+       {
+          "name":"malicious_linux_distribution_test",
+          "is_enabled":true
+       },
+       {
+          "name":"virus_scan_test",
+          "is_enabled":true
        }
     ]
  }

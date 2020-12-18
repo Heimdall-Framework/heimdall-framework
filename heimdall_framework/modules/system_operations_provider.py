@@ -106,3 +106,6 @@ class SystemOperationsProvider():
                 return True
             else:
                 return False
+
+    def is_running_on_pi(self):
+        return os.uname()[4].startsWith('arm')
