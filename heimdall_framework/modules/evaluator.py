@@ -106,6 +106,7 @@ class Evaluator():
             )
 
     # executes hardware relay controll plugin
+    # TODO: FIX THE DAMN HARDARE PLUGIN FUNCTIONALITY
     def __execute_hardware_plugin(self, delay) -> bool:
         for plugin in self.__imported_plugins:
             if plugin.name == 'hardware_controller':
