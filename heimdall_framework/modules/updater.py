@@ -187,7 +187,7 @@ class Updater():
             archive.extractall(TEMP_DIR_NAME)
             archive.close()
 
-            for root, dirs, files in os.walk(TEMP_DIR_NAME):
+            for root, _, files in os.walk(TEMP_DIR_NAME):
                 if is_plugin:
                     plugin_files = self.__get_python_plugin_files(files)
 
