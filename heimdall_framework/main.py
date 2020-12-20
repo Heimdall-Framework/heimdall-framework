@@ -11,6 +11,7 @@ from .modules.usb_detector import USBHotplugDetector
 from .modules.file_operations_provider import FileOperationsProvider
 from .modules.configuration_deserializer import ConfigurationDeserializer
 
+
 class Main:
     def __init__(self):
         pass
@@ -50,10 +51,12 @@ class Main:
 
         print("Loading configuration")
         if cli_arguments.config != None:
-            configuration_deserializer = ConfigurationDeserializer(cli_arguments.config)
+            configuration_deserializer = ConfigurationDeserializer(
+                cli_arguments.config)
             configuration = configuration_deserializer.deserialize()
 
-        configuration_deserializer = ConfigurationDeserializer(current_file_location + '/configuration.json')
+        configuration_deserializer = ConfigurationDeserializer(
+            current_file_location + '/configuration.json')
         configuration = configuration_deserializer.deserialize()
 
         print(configuration)
@@ -69,7 +72,7 @@ class Main:
 
         logger.log(">>> Checking for updates.")
         if updater.can_update(logger):
-            updater.update(logger)
+            updater.update()
 
         logger.log(">>> Initiating USB hotplug detector.")
         if cli_arguments.interface == None or cli_arguments.interface == "nogui":
@@ -80,6 +83,7 @@ class Main:
                 gui.show_gui(configuration, logger, False)
             else:
                 gui.show_gui(configuration, logger, True)
+
 
 def run():
     Main().main()

@@ -5,8 +5,10 @@ import setuptools
 with open('README.md') as readme:
     long_description = readme.read()
 
+
 def get_leatest_version():
     return requests.get("https://tx58wj5h27.execute-api.eu-central-1.amazonaws.com/dev/get_latest_version").json()['version']
+
 
 setuptools.setup(
     name='heimdall_framework',
@@ -18,12 +20,11 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     url='https://github.com/Heimdall-Framework/heimdall-framework',
     package_dir={
-        'heimdall_framework': 'heimdall_framework',
-        'heimdall_framework.modules': 'heimdall_framework/modules'
+        'heimdall_framework': 'heimdall_framework'
     },
     packages=setuptools.find_packages(),
-    entry_points={  
-        'console_scripts':[
+    entry_points={
+        'console_scripts': [
             'heimdall_framework = heimdall_framework.main:run',
         ]
     },
