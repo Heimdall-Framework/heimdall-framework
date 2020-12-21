@@ -59,8 +59,6 @@ class Main:
             current_file_location + '/configuration.json')
         configuration = configuration_deserializer.deserialize()
 
-        print(configuration)
-
         logger = Logger(configuration.logs_directory)
 
         framework_location = os.path.abspath(
