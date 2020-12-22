@@ -62,6 +62,8 @@ class Updater():
                         '>>> The update repository is currently empty. Update is being skipped.')
                     return False
 
+                self.__cache_external_plugins()
+
                 for local_update_log in self.update_logs:
                     if update['name'] == local_update_log['name']:
                         is_new = False
@@ -307,11 +309,25 @@ class Updater():
 
         self.__logger.log('>>> Caching user plugins.')
 
-        self.__logger.log('>>> Moving external plugins to a cache location.')
-
         try:
+            self.__logger.log('>>> Moving external plugins to a cache location.')
+            
             os.mkdir(external_plugins_cache_location)
             shutil.move('../plugins', external_plugins_cache_location)
+
+            return True
+        except:
+            return False
+
+    def __restore_external_plugins(self, external_plugins_cache_location = '') -> bool:
+        if external_plugins_cache_location == '':
+            external_plugins_cache_location = '/tmp/external_plugins_cache'
+
+        try:
+            self.__logger.log('>>> Moving cached external plugins to core directory.')
+            
+            shutil.move(external_plugins_cache_location, '../plugins')
+            shutil.rmtree(external_plugins_cache_location)
 
             return True
         except:
