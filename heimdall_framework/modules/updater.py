@@ -62,7 +62,6 @@ class Updater():
                         '>>> The update repository is currently empty. Update is being skipped.')
                     return False
 
-
                 for local_update_log in self.update_logs:
                     if update['name'] == local_update_log['name']:
                         is_new = False
@@ -214,7 +213,7 @@ class Updater():
                         # TODO: Fix the paths and imports during update
                         shutil.rmtree(self.__framework_location)
                         os.mkdir(self.__framework_location)
-                        
+
                         for file in files:
                             shutil.copy(
                                 root + '/' + file,
@@ -304,7 +303,7 @@ class Updater():
 
         return serial
 
-    def __cache_external_plugins(self, external_plugins_cache_location = '') -> bool:
+    def __cache_external_plugins(self, external_plugins_cache_location='') -> bool:
         '''
         Cache the external tests (plugins) that the user has written.
         '''
@@ -315,8 +314,9 @@ class Updater():
         self.__logger.log('>>> Caching user plugins.')
 
         try:
-            self.__logger.log('>>> Moving external plugins to a cache location.')
-            
+            self.__logger.log(
+                '>>> Moving external plugins to a cache location.')
+
             os.mkdir(external_plugins_cache_location)
             shutil.move('../plugins', external_plugins_cache_location)
 
@@ -324,13 +324,14 @@ class Updater():
         except:
             return False
 
-    def __restore_external_plugins(self, external_plugins_cache_location = '') -> bool:
+    def __restore_external_plugins(self, external_plugins_cache_location='') -> bool:
         if external_plugins_cache_location == '':
             external_plugins_cache_location = '/tmp/external_plugins_cache'
 
         try:
-            self.__logger.log('>>> Moving cached external plugins to core directory.')
-            
+            self.__logger.log(
+                '>>> Moving cached external plugins to core directory.')
+
             shutil.move(external_plugins_cache_location, '../plugins')
             shutil.rmtree(external_plugins_cache_location)
 
