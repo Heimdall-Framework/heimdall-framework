@@ -62,7 +62,6 @@ class Updater():
                         '>>> The update repository is currently empty. Update is being skipped.')
                     return False
 
-                self.__cache_external_plugins()
 
                 for local_update_log in self.update_logs:
                     if update['name'] == local_update_log['name']:
@@ -78,6 +77,7 @@ class Updater():
                             if update['type'] == 'plugin':
                                 self.__process_update(download_link, True)
                             else:
+                                self.__cache_external_plugins()
                                 self.__process_update(download_link, False)
                                 self.__restore_external_plugins()
                         local_update_log['version'] = update['version']
@@ -211,6 +211,7 @@ class Updater():
                     break
                 else:
                     if 'heimdall-framework' in root:
+                        # TODO: Fix the paths and imports during update
                         for file in files:
                             shutil.copy(
                                 root + '/' + file,
