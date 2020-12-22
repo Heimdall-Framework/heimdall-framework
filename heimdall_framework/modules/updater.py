@@ -212,6 +212,9 @@ class Updater():
                 else:
                     if 'heimdall-framework' in root:
                         # TODO: Fix the paths and imports during update
+                        shutil.rmtree(self.__framework_location)
+                        os.mkdir(self.__framework_location)
+                        
                         for file in files:
                             shutil.copy(
                                 root + '/' + file,
