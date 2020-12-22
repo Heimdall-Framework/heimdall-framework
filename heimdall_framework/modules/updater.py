@@ -276,7 +276,7 @@ class Updater():
         )
 
         if response.status_code == 422:
-            self.__logger.log('Wrong parameters. Aborting update!')
+            self.__logger.log('>>> Wrong parameters. Aborting update!')
 
         return response.json()['url']
 
@@ -296,6 +296,26 @@ class Updater():
             serial = "FAIL"
 
         return serial
+
+    def __cache_external_plugins(self, external_plugins_cache_location = '') -> bool:
+        '''
+        Cache the external tests (plugins) that the user has written.
+        '''
+
+        if external_plugins_cache_location == '':
+            external_plugins_cache_location = '/tmp/external_plugins_cache'
+
+        self.__logger.log('>>> Caching user plugins.')
+
+        self.__logger.log('>>> Moving external plugins to a cache location.')
+
+        try:
+            os.mkdir(external_plugins_cache_location)
+            shutil.move('../plugins', external_plugins_cache_location)
+
+            return True
+        except:
+            return False
 
     def restart_parent(self) -> None:
         '''
