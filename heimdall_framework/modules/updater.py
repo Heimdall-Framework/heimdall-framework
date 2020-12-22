@@ -79,6 +79,7 @@ class Updater():
                                 self.__process_update(download_link, True)
                             else:
                                 self.__process_update(download_link, False)
+                                self.__restore_external_plugins()
                         local_update_log['version'] = update['version']
                         break
 
