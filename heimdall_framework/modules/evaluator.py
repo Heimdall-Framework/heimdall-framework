@@ -15,7 +15,6 @@ from .system_operations_provider import SystemOperationsProvider
 
 TESTS_RANGE = 4
 
-
 class Evaluator:
     def __init__(self, configuration, logger, device_handle, port_number, context):
         self.__configuration = configuration
