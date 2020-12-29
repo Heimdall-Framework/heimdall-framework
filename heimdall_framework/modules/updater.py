@@ -19,20 +19,18 @@ class Updater():
         self.__logger = logger
 
         self.__framework_location = framework_location
-        self.__framework_parent_directory = os.path.abspath(
-            os.path.join(framework_location, '/../../'))
         self.__version_logs_directory = os.path.abspath(
             os.path.join(framework_location, 'heimdall_framework/update_logs'))
         self.__version_logs_location = os.path.abspath(os.path.join(
-            framework_location, '/heimdall_framework/update_logs/versions.json'))
+            framework_location, 'heimdall_framework/update_logs/', 'versions.json'))
         self.__plugins_directory_location = os.path.abspath(
-            os.path.join(framework_location, '/heimdall_framework/plugins/'))
-        self.__last_update_file_location = os.path.abspath(os.path.join(
-            framework_location, '/heimdall_framework/update_logs/last_update_date.log'))
+            os.path.join(framework_location, 'heimdall_framework/plugins/'))
+        self.__last_update_file_location = os.path.abspath(
+            os.path.join(framework_location, 'heimdall_framework/update_logs/', 'last_update_date.log'))
+        
+        self.__update_url = update_url
 
-        self.update_url = update_url
-
-    def update(self) -> None:
+    def update(self) -> bool:
         '''
         Update the running version of the framework or it's plugins if newer ones exist.
         Return True or False, depending on the outcome of the operation.
@@ -116,7 +114,7 @@ class Updater():
                 '>>> Updating procedure failed. Excpetion: ' + str(exception))
             return False
 
-    def can_update(self, logger):
+    def can_update(self):
         '''
         Check if any new updates are available.
         '''
@@ -126,19 +124,19 @@ class Updater():
             self.__logger.log('>>> Created an empty version logs directory')
 
         if not os.path.isfile(self.__last_update_file_location):
-            with open(self.__last_update_file_location, 'w'):
-                logger.log('>>> Created an empty last_updated.log')
+            with open(self.__last_update_file_location, 'w+'):
+                self.__logger.log('>>> Created an empty last_updated.log')
 
         if not os.path.isfile(self.__version_logs_location):
-            with open(self.__version_logs_location, 'w'):
-                logger.log('>>> Created an empty versions.json')
+            with open(self.__version_logs_location, 'w+'):
+                self.__logger.log('>>> Created an empty versions.json')
 
         with open(self.__last_update_file_location) as last_update_date:
             last_update_date = last_update_date.read()
 
         if self.__configuration.updates_intensity == 'normal':
             if not (last_update_date == '' or last_update_date != datetime.now().strftime('%b %d %Y')):
-                logger.log('>>> Update date is not reached yet.')
+                self.__logger.log('>>> Update date is not reached yet.')
                 return False
 
         return True
@@ -166,7 +164,7 @@ class Updater():
         }
 
         response = requests.get(
-            self.update_url,
+            self.__update_url,
             params=urllib.parse.urlencode(parameters)
         )
 
@@ -277,7 +275,7 @@ class Updater():
         }
 
         response = requests.get(
-            self.update_url,
+            self.__update_url,
             params=urllib.parse.urlencode(parameters)
         )
 
