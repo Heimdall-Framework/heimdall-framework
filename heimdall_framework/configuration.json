@@ -12,7 +12,7 @@
       3
    ],
    "plugins_config":{
-      "load_all": true,
+      "will_load_all": true,
       "plugins":[
          {
             "name": "demo_test",

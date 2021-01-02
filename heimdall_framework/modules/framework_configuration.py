@@ -1,5 +1,6 @@
 from typing import List
-from plugypy import Configuration as PluginsConfiguration 
+from plugypy import Configuration as PluginsConfiguration
+
 
 class FrameworkConfiguration(object):
     logs_directory: str
@@ -16,6 +17,3 @@ class FrameworkConfiguration(object):
         self.testing_ports = testing_ports
         self.nuking_ports = nuking_ports
         self.plugins_config = plugins_config
-
-    def set_plugins_configuration(self, plugins):
-        pass
