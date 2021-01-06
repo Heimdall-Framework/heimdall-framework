@@ -69,7 +69,7 @@ class Main:
         updater = Updater(configuration, logger, framework_location, "")
 
         logger.log(">>> Checking for updates.")
-        if updater.can_update(logger):
+        if updater.can_update():
             updater.update()
 
         logger.log(">>> Initiating USB hotplug detector.")
