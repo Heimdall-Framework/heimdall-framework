@@ -27,7 +27,7 @@ class Updater():
             os.path.join(framework_location, 'heimdall_framework/plugins/'))
         self.__last_update_file_location = os.path.abspath(
             os.path.join(framework_location, 'heimdall_framework/update_logs/', 'last_update_date.log'))
-        
+
         self.__update_url = update_url
 
     def update(self) -> bool:
@@ -341,4 +341,5 @@ class Updater():
         '''
         Restart the parent process with the same arguments with which it was started.
         '''
+
         os.execl(sys.executable, *([sys.executable]+sys.argv))
