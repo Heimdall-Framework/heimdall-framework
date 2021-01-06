@@ -14,7 +14,7 @@ setuptools.setup(
     name='heimdall_framework',
     version=get_leatest_version(),
     author='Ivan Zlatanov',
-    author_email='i_zlatanpv@protonmail.com',
+    author_email='i_zlatanov@protonmail.com',
     description='Heimdall Framework is a Python USB threat evaluation framework for Linux that is designed to detect malicious behavior in USB mass storage devices',
     long_description=long_description,
     long_description_content_type='text/markdown',
