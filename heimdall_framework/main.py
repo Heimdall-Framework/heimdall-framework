@@ -66,7 +66,12 @@ class Main:
         )
 
         logger.log(">>> Initiating updater")
-        updater = Updater(configuration, logger, framework_location, "")
+        updater = Updater(
+            configuration,
+            logger,
+            framework_location,
+            "https://vio1hjlpx9.execute-api.eu-central-1.amazonaws.com/dev/update"
+        )
 
         logger.log(">>> Checking for updates.")
         if updater.can_update():
