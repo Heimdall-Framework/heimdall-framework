@@ -196,6 +196,7 @@ class Updater():
             archive.extractall(TEMP_DIR_NAME)
             archive.close()
 
+            self.__logger.log('>>> Update archive was downloaded.')
             for root, _, files in os.walk(TEMP_DIR_NAME):
                 if is_plugin:
                     plugin_files = self.__get_python_plugin_files(files)
@@ -218,7 +219,6 @@ class Updater():
                                 root.replace(
                                     TEMP_DIR_NAME + 'heimdall-framework', self.__framework_location) + '/' + file
                             )
-
             shutil.rmtree(TEMP_DIR_NAME)
             return True
 
