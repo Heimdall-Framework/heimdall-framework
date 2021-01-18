@@ -10,14 +10,13 @@ class ConfigurationDeserializer():
         self._config_file_location = config_file_location
 
     def deserialize(self):
-        configuration_json = None
         configuration = None
 
         try:
             configuration_file_contents = self.__read_configuration_file()
             configuration_json = json.loads(configuration_file_contents)
 
-            configuration = FrameworkConfiguration(**loaded_json)
+            configuration = self.__decode_configuration(configuration_json)
 
         except ValueError as value_error:
             print('>>> Invalid configuration file format.')
@@ -55,7 +54,10 @@ class ConfigurationDeserializer():
     def __read_configuration_file(self):
         try:
             with open(self._config_file_location, 'r') as configuration_file:
-                configuration_json = configuration_file.read()
+                configuration_file_contents = configuration_file.read()
+                return configuration_file_contents
+
         except FileNotFoundError as file_not_found_error:
             print('>>> Configuration file was not found on it\'s default location.')
             print('>>> {}'.format(file_not_found_error))
+            return ''
