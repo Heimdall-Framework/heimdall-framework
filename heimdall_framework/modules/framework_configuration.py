@@ -34,7 +34,7 @@ class FrameworkConfiguration(object):
             self.testing_ports)
         framework_string += '\tNuking Ports: {}\n'.format(
             self.nuking_ports)
-        framework_string += '\tPlugins Configuration: {}\n'.format(
+        framework_string += '\t{}'.format(
             str(self.plugins_config))
 
         return framework_string
