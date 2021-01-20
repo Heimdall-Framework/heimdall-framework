@@ -137,14 +137,17 @@ class HeimdallMainWindow(object):
 
     def retranslateUi(self, USBEvaluatorGui):
         _translate = QtCore.QCoreApplication.translate
-        USBEvaluatorGui.setWindowTitle(_translate("USBEvaluatorGui", "USBEvaluatorGui"))
+        USBEvaluatorGui.setWindowTitle(_translate(
+            "USBEvaluatorGui", "USBEvaluatorGui"))
 
         self.toggle_evaluator_btn.clicked.connect(self.__toggle_evaluator)
 
         self.about_label_btn.setText(_translate("USBEvaluatorGui", "About"))
-        self.evaluator_label_btn.setText(_translate("USBEvaluatorGui", "Evaluator"))
+        self.evaluator_label_btn.setText(
+            _translate("USBEvaluatorGui", "Evaluator"))
         self.logs_label.setText(_translate("USBEvaluatorGui", "Logs:"))
-        self.toggle_evaluator_btn.setText(_translate("USBEvaluatorGui", "Start"))
+        self.toggle_evaluator_btn.setText(
+            _translate("USBEvaluatorGui", "Start"))
 
     def normal_write_text(self, text):
         cursor = self.logs_text_box.textCursor()
@@ -153,6 +156,12 @@ class HeimdallMainWindow(object):
 
         self.logs_text_box.setTextCursor(cursor)
         self.logs_text_box.ensureCursorVisible()
+
+    def __show_info_page(self):
+        self.stackedWidget.setCurrentIndex(2)
+
+    def __show_evaluator_page(self):
+        self.stackedWidget.setCurrentIndex(1)
 
     def __toggle_evaluator(self):
         if self.is_started:
