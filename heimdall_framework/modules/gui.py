@@ -1,6 +1,6 @@
 import sys
 from threading import Thread
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets, QFrame
 from .usb_detector import USBHotplugDetector
 
 SMALL_FONT = 10
@@ -26,6 +26,7 @@ class HeimdallMainWindow(object):
             "background: #2c3e50;\n"
             "".format(MEDIUM_FONT)
         )
+        self.setFrameStyle(QFrame.NoFrame)
 
         self.threadpool = QtCore.QThreadPool()
         sys.stdout = WritingStream(outputted_text=self.normal_write_text)
