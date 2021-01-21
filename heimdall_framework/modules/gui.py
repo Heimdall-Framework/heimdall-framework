@@ -1,6 +1,6 @@
 import sys
 from threading import Thread
-from PyQt5 import QtCore, QtGui, QtWidgets, QFrame
+from PyQt5 import QtCore, QtGui, QtWidgets
 from .usb_detector import USBHotplugDetector
 
 SMALL_FONT = 10
@@ -26,7 +26,6 @@ class HeimdallMainWindow(object):
             "background: #2c3e50;\n"
             "".format(MEDIUM_FONT)
         )
-        self.setFrameStyle(QFrame.NoFrame)
 
         self.threadpool = QtCore.QThreadPool()
         sys.stdout = WritingStream(outputted_text=self.normal_write_text)
@@ -149,8 +148,8 @@ class HeimdallMainWindow(object):
             _translate("USBEvaluatorGui", "Start"))
 
         self.toggle_evaluator_btn.clicked.connect(self.__toggle_evaluator)
-        self.about_btn_widget.mousePressEvent = self.__show_info_page()
-        self.evaluator_btn_widget.mousePressEvent = self.__show_evaluator_page()
+        self.about_btn_widget.mousePressEvent = self.__show_info_page
+        self.evaluator_btn_widget.mousePressEvent = self.__show_evaluator_page
 
     def normal_write_text(self, text):
         cursor = self.logs_text_box.textCursor()
@@ -161,10 +160,10 @@ class HeimdallMainWindow(object):
         self.logs_text_box.ensureCursorVisible()
 
     def __show_info_page(self, event):
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(1)
 
     def __show_evaluator_page(self, event):
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
 
     def __toggle_evaluator(self):
         if self.is_started:
