@@ -3,17 +3,17 @@
    "mounting_point": "/home/mounting_point",
    "updates_intensity": "normal",
    "will_execute_builtin_tests": true,
-   "testing_ports":[
+   "testing_ports": [
       0,
       1
    ],
-   "nuking_ports":[
+   "nuking_ports": [
       2,
       3
    ],
-   "plugins_config":{
+   "plugins_config": {
       "will_load_all": true,
-      "plugins":[
+      "plugins": [
          {
             "name": "demo_test",
             "is_enabled": true
