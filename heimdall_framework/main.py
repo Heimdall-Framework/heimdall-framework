@@ -75,8 +75,8 @@ class Main:
 
         logger.log(">>> Checking for updates.")
 
-        # if updater.can_update():
-        #   updater.update()
+        if updater.can_update():
+            updater.update()
 
         logger.log(">>> Initiating USB hotplug detector.")
         if cli_arguments.interface == None or cli_arguments.interface == "nogui":
