@@ -1,7 +1,7 @@
 # Heimdall Framework
 
 Heimdall Framework is a Python USB threat evaluation framework for Linux that is designed to detect malicious behavior in USB mass storage devices.
-The framework is aimed at Raspberry Pi 3 and 4 platforms but can also run on most linux systems with some configuration.
+The framework is aimed at Raspberry Pi 3 and 4 platforms but can also run on most Linux systems with some configuration.
 
 ## Installation:
 
