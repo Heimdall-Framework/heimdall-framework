@@ -13,10 +13,9 @@ from .file_operations_provider import FileOperationsProvider
 from .device_operations_provider import DeviceOperationsProvider
 from .system_operations_provider import SystemOperationsProvider
 
-TESTS_RANGE = 4
 
 class Evaluator:
-    def __init__(self, configuration, logger, device_handle, port_number, context):
+    def __init__(self, configuration, logger, device_handle, port_number, context, test_range=10):
         self.__configuration = configuration
         self.__plugins_config = configuration.plugins_config
         self.__logger = logger
@@ -34,6 +33,8 @@ class Evaluator:
             os.path.join(os.path.dirname(__file__), "../", "plugins")
         )
 
+        self.__test_range = test_range
+
         self.__logger.log(">>> Evaluator was initialized.")
 
     def evaluate_device(self) -> (bool, usb.USBDevice):
@@ -43,7 +44,8 @@ class Evaluator:
 
         self.__logger.log(">> Device testing initiated.")
 
-        tests = [self.__validate_device_type, self.__validate_vendor_information]
+        tests = [self.__validate_device_type,
+                 self.__validate_vendor_information]
 
         for test in tests:
             if not test():
@@ -61,7 +63,7 @@ class Evaluator:
         device_product_id = self.__device.getProductID()
         device_bcd_number = self.__device.getbcdDevice()
 
-        for _ in range(TESTS_RANGE):
+        for _ in range(self.__test_range):
             if not self.__execute_hardware_plugin(5):
                 GuiProvider().show_msg_box(
                     "Guideline",
