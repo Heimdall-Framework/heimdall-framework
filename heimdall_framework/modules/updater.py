@@ -225,12 +225,10 @@ class Updater():
                         # TODO: Fix the paths and imports during update
                         shutil.rmtree(self.__framework_location)
 
-                        has_deleted_parent_directory = True
-
                         shutil.copytree(
                             root,
                             root.replace(
-                                TEMP_DIR_NAME + 'repo', self.__framework_location)
+                                os.path.join(TEMP_DIR_NAME, 'repo'), self.__framework_location)
                         )
 
                         break
