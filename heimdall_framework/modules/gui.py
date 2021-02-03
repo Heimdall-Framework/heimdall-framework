@@ -1,3 +1,4 @@
+import os
 import sys
 from threading import Thread
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -59,7 +60,8 @@ class HeimdallMainWindow(object):
         self.shield_image_label = QtWidgets.QLabel(self.evaluator_btn_widget)
         self.shield_image_label.setGeometry(QtCore.QRect(30, 10, 80, 70))
         self.shield_image_label.setPixmap(
-            QtGui.QPixmap("../../resources/shield.png"))
+            QtGui.QPixmap(os.path.join(os.path.dirname(
+                os.path.abspath(__file__)), "../resources/shield.png")))
         self.shield_image_label.setScaledContents(True)
         self.shield_image_label.setObjectName("shield_image_label")
 
@@ -188,7 +190,7 @@ class WritingStream(QtCore.QObject):
 
 
 class GuiThreadWorker(QtCore.QRunnable):
-    @QtCore.pyqtSlot()
+    @ QtCore.pyqtSlot()
     def run(self):
         usb_detector.start()
 
