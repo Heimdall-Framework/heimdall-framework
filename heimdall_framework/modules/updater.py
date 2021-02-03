@@ -9,6 +9,8 @@ from datetime import datetime
 from .logger import Logger
 from .framework_configuration import FrameworkConfiguration
 from .system_operations_provider import SystemOperationsProvider
+from plugypy.configuration_deserializer import ConfigurationDeserializer
+from plugypy.plugin import Plugin
 
 TEMP_DIR_NAME = '/tmp/temp_update_data/'
 
@@ -35,6 +37,8 @@ class Updater():
         Update the running version of the framework or it's plugins if newer ones exist.
         Return True or False, depending on the outcome of the operation.
         '''
+
+        self.__logger.log('>>> Beginning update procedure.')
 
         try:
             is_new = True
@@ -72,11 +76,16 @@ class Updater():
                             )
 
                             if update['type'] == 'plugin':
+                                self.__logger('>>> Processing plugin update.')
                                 self.__process_update(download_link, True)
                             else:
+                                self.__logger(
+                                    '>>> Processing core framework update.')
+
                                 self.__cache_external_plugins()
                                 self.__process_update(download_link, False)
                                 self.__restore_external_plugins()
+
                         local_update_log['version'] = update['version']
                         break
 
@@ -150,8 +159,11 @@ class Updater():
             self.update_logs = json.loads(update_logs_file.read() or '[]')
 
     def __load_plugins_config(self) -> None:
-        with open(self.__plugins_directory_location + '/config.json') as plugins_config:
-            self.plugins_config = json.loads(plugins_config.read() or '[]')
+        builtin_plugins_config_deserializer = ConfigurationDeserializer(
+            self.__plugins_directory_location + '/builtin_config.json')
+        plugins_config = builtin_plugins_config_deserializer.deserialize_config()
+
+        self.plugins_config = plugins_config
 
     def __get_available_updates(self) -> str:
         '''
@@ -208,6 +220,9 @@ class Updater():
                         )
                     break
                 else:
+                    if 'repo' in root:
+                        for file in files:
+                            print(file)
                     if 'heimdall-framework' in root:
                         # TODO: Fix the paths and imports during update
                         shutil.rmtree(self.__framework_location)
@@ -235,10 +250,13 @@ class Updater():
         :param plugin_name: the name of the plugin
         '''
 
-        self.plugins_config.append({
-            'name': plugin_name,
-            'main_function': 'main',
-            'enabled': True
+        plugin = Plugin(
+            plugin_name,
+            True
+        )
+
+        self.plugins_config.plugins.append({
+            plugin
         })
 
     def __get_python_plugin_files(self, files: str) -> list:
