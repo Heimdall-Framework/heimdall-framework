@@ -48,7 +48,7 @@ class HeimdallMainWindow(object):
         self.question_image_label.setObjectName("question_image_label")
 
         self.about_label_btn = QtWidgets.QLabel(self.about_btn_widget)
-        self.about_label_btn.setGeometry(QtCore.QRect(50, 80, 51, 20))
+        self.about_label_btn.setGeometry(QtCore.QRect(45, 80, 51, 20))
         self.about_label_btn.setObjectName("about_label_btn")
 
         self.evaluator_btn_widget = QtWidgets.QWidget(self.sidebar)
@@ -58,13 +58,13 @@ class HeimdallMainWindow(object):
 
         self.shield_image_label = QtWidgets.QLabel(self.evaluator_btn_widget)
         self.shield_image_label.setGeometry(QtCore.QRect(30, 10, 80, 70))
-        self.shield_image_label.setText("")
-        self.shield_image_label.setPixmap(QtGui.QPixmap("shield.png"))
+        self.shield_image_label.setPixmap(
+            QtGui.QPixmap("../../resources/shield.png"))
         self.shield_image_label.setScaledContents(True)
         self.shield_image_label.setObjectName("shield_image_label")
 
         self.evaluator_label_btn = QtWidgets.QLabel(self.evaluator_btn_widget)
-        self.evaluator_label_btn.setGeometry(QtCore.QRect(40, 80, 70, 20))
+        self.evaluator_label_btn.setGeometry(QtCore.QRect(30, 80, 70, 20))
         self.evaluator_label_btn.setObjectName("evaluator_label_btn")
 
         self.stackedWidget = QtWidgets.QStackedWidget(USBEvaluatorGui)
