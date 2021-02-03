@@ -26,7 +26,7 @@ class Updater():
         self.__version_logs_location = os.path.abspath(os.path.join(
             framework_location, 'heimdall_framework/update_logs/', 'versions.json'))
         self.__plugins_directory_location = os.path.abspath(
-            os.path.join(framework_location, 'heimdall_framework/plugins/'))
+            os.path.join(framework_location, 'heimdall_framework/modules/builtin_tests/'))
         self.__last_update_file_location = os.path.abspath(
             os.path.join(framework_location, 'heimdall_framework/update_logs/', 'last_update_date.log'))
 
@@ -161,6 +161,7 @@ class Updater():
     def __load_plugins_config(self) -> None:
         builtin_plugins_config_deserializer = ConfigurationDeserializer(
             self.__plugins_directory_location + '/builtin_config.json')
+
         plugins_config = builtin_plugins_config_deserializer.deserialize_config()
 
         self.plugins_config = plugins_config
@@ -221,19 +222,18 @@ class Updater():
                     break
                 else:
                     if 'repo' in root:
-                        for file in files:
-                            print(file)
-                    if 'heimdall-framework' in root:
                         # TODO: Fix the paths and imports during update
                         shutil.rmtree(self.__framework_location)
-                        os.mkdir(self.__framework_location)
 
-                        for file in files:
-                            shutil.copy(
-                                root + '/' + file,
-                                root.replace(
-                                    TEMP_DIR_NAME + 'heimdall-framework', self.__framework_location) + '/' + file
-                            )
+                        has_deleted_parent_directory = True
+
+                        shutil.copytree(
+                            root,
+                            root.replace(
+                                TEMP_DIR_NAME + 'repo', self.__framework_location)
+                        )
+
+                        break
             shutil.rmtree(TEMP_DIR_NAME)
             return True
 
