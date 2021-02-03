@@ -66,7 +66,7 @@ class HeimdallMainWindow(object):
         self.shield_image_label.setObjectName("shield_image_label")
 
         self.evaluator_label_btn = QtWidgets.QLabel(self.evaluator_btn_widget)
-        self.evaluator_label_btn.setGeometry(QtCore.QRect(30, 80, 70, 20))
+        self.evaluator_label_btn.setGeometry(QtCore.QRect(35, 80, 70, 20))
         self.evaluator_label_btn.setObjectName("evaluator_label_btn")
 
         self.stackedWidget = QtWidgets.QStackedWidget(USBEvaluatorGui)
