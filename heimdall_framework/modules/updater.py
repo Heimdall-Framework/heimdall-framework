@@ -25,8 +25,11 @@ class Updater():
             os.path.join(framework_location, 'heimdall_framework/update_logs'))
         self.__version_logs_location = os.path.abspath(os.path.join(
             framework_location, 'heimdall_framework/update_logs/', 'versions.json'))
-        self.__plugins_directory_location = os.path.abspath(
+        self.__builtin_plugins_directory_location = os.path.abspath(
             os.path.join(framework_location, 'heimdall_framework/modules/builtin_tests/'))
+        self.__user_plugins_directory_location = os.path.abspath(
+            os.path.join(framework_location, 'heimdall_framework/modules/plugins/'))
+
         self.__last_update_file_location = os.path.abspath(
             os.path.join(framework_location, 'heimdall_framework/update_logs/', 'last_update_date.log'))
 
@@ -160,7 +163,7 @@ class Updater():
 
     def __load_plugins_config(self) -> None:
         builtin_plugins_config_deserializer = ConfigurationDeserializer(
-            self.__plugins_directory_location + '/builtin_config.json')
+            self.__builtin_plugins_directory_location + '/builtin_config.json')
 
         plugins_config = builtin_plugins_config_deserializer.deserialize_config()
 
@@ -217,7 +220,7 @@ class Updater():
                     for file in plugin_files:
                         shutil.copy(
                             file,
-                            self.__plugins_directory_location
+                            self.__builtin_plugins_directory_location
                         )
                     break
                 else:
@@ -332,7 +335,8 @@ class Updater():
                 '>>> Moving external plugins to a cache location.')
 
             os.mkdir(external_plugins_cache_location)
-            shutil.move('../plugins', external_plugins_cache_location)
+            shutil.move(self.__user_plugins_directory_location,
+                        external_plugins_cache_location)
 
             return True
         except:
@@ -346,7 +350,8 @@ class Updater():
             self.__logger.log(
                 '>>> Moving cached external plugins to core directory.')
 
-            shutil.move(external_plugins_cache_location, '../plugins')
+            shutil.move(external_plugins_cache_location,
+                        self.__user_plugins_directory_location)
             shutil.rmtree(external_plugins_cache_location)
 
             return True
