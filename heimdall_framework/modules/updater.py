@@ -225,7 +225,6 @@ class Updater():
                     break
                 else:
                     if 'repo' in root:
-                        # TODO: Fix the paths and imports during update
                         shutil.rmtree(self.__framework_location)
 
                         shutil.copytree(
