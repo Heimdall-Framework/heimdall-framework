@@ -3,11 +3,12 @@ from heimdall_framework.modules.device_operations_provider import DeviceOperatio
 from heimdall_framework.modules.system_operations_provider import SystemOperationsProvider
 from heimdall_framework.modules.file_operations_provider import FileOperationsProvider
 
+
 def run(logger, configuration, device, device_handle):
     DeviceOperationsProvider().handle_kernel_driver(device_handle, True)
 
     device_system_name = DeviceOperationsProvider().get_device_udev_property(
-        device, "DEVNAME"
+        device, device_handle,  "DEVNAME"
     )
     _, mounted_device_partition = SystemOperationsProvider().mount_device(
         configuration, logger, device_system_name

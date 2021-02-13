@@ -4,7 +4,7 @@
    "updates_intensity": "normal",
    "will_execute_builtin_tests": true,
    "testing_ports": [
-      0,
+      -1,
       1
    ],
    "nuking_ports": [

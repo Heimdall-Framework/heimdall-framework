@@ -6,13 +6,13 @@ from .evaluator import Evaluator
 from .gui_provider import GuiProvider
 from .device_operations_provider import DeviceOperationsProvider
 
+
 class USBHotplugDetector:
     def __init__(self, configuration, logger):
         self.__configuration = configuration
         self.__logger = logger
         self.__testing_ports = configuration.testing_ports
         self.__nuking_ports = configuration.nuking_ports
-        self.__cached_device = None
         self.__nuked_device = None
         self.__tested_device = None
 
@@ -63,7 +63,7 @@ class USBHotplugDetector:
                                 "Nuking Alert",
                                 "You will not be able to recover the data from the nuked device. \nDo you want to proceed?",
                             ):
-                                self._nuke_device(device)
+                                self._nuke_device(device, handle)
                         elif device.getPortNumber() in self.__testing_ports:
                             (
                                 evaluation_result,
@@ -72,7 +72,8 @@ class USBHotplugDetector:
 
                             # indicates that the tested device is NOT safe for use
                             if not evaluation_result:
-                                self.__logger.log(">>>! DEVICE IS NOT SAFE !<<<")
+                                self.__logger.log(
+                                    ">>>! DEVICE IS NOT SAFE !<<<")
                                 GuiProvider().show_msg_box(
                                     "Dangerous device detected",
                                     "The tested device is NOT safe for use.",
@@ -98,9 +99,9 @@ class USBHotplugDetector:
     def _evaluate_device(self, device, handle, context):
         # creates Evaluator object with given USBDeviceHandlem, USBDevice and device's USBContext
         evaluator = Evaluator(
-            self.__configuration, 
-            self.__logger, handle, 
-            device.getPortNumber(), 
+            self.__configuration,
+            self.__logger, handle,
+            device.getPortNumber(),
             context
         )
 
@@ -109,13 +110,14 @@ class USBHotplugDetector:
         evaluator = None
         return result, returned_device
 
-    def _nuke_device(self, device):
+    def _nuke_device(self, device, device_handle):
         device_partition = DeviceOperationsProvider().get_device_udev_property(
-            device, "DEVNAME"
+            device, device_handle, "DEVNAME"
         )
         nuker = Nuker(device_partition)
 
-        self.__logger.log(">> Nuking device on port: {}".format(device.getPortNumber()))
+        self.__logger.log(
+            ">> Nuking device on port: {}".format(device.getPortNumber()))
 
         self.__logger.log(">> Hang tight, it will take some time.")
         nuker.nuke()

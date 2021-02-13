@@ -10,7 +10,7 @@ __all__ = [
     'gui',
     'logger',
     'nuker',
-    'system_operations_provider'
+    'system_operations_provider',
     'updater',
     'usb_detector'
 ]

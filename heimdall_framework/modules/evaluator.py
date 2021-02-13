@@ -5,7 +5,7 @@ import shutil
 import datetime
 import importlib
 import usb1 as usb
-from plugypy import *
+from plugypy import ConfigurationDeserializer, Plugin, PluginManager
 from .logger import Logger
 from .gui_provider import GuiProvider
 from .data_provider import DataProvider
@@ -27,7 +27,7 @@ class Evaluator:
         self.__context = context
 
         self.__internals_plugins_directory = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "plugins")
+            os.path.join(os.path.dirname(__file__), "builtin_tests")
         )
         self.__plugins_directory = os.path.abspath(
             os.path.join(os.path.dirname(__file__), "../", "plugins")
@@ -51,6 +51,9 @@ class Evaluator:
             if not test():
                 self.__logger.log(">>> Test: {} FAILED.".format(test.__name__))
                 return False, None
+
+        if not self.__run_builtin():
+            return False, self.__device
 
         return True, self.__device
 
@@ -102,6 +105,8 @@ class Evaluator:
                 device_interface_class != 8
                 or device_configuration.getNumInterfaces() > 1
             ):
+                self.__logger.log('>>> Device type detected: {}'.format(
+                    device_interface_class))
                 return False
 
             return True
@@ -120,7 +125,7 @@ class Evaluator:
             )
 
     def __execute_hardware_plugin(self, delay) -> bool:
-        if SystemOperationsProvider(4).is_running_on_pi():
+        if SystemOperationsProvider().is_running_on_pi():
             # Only import the hardware plugin if the device is RPI-based and has GPIO pins
             from .gpio_operations_provider import GPIOOperationsProvider
 
@@ -128,11 +133,12 @@ class Evaluator:
 
     def __run_builtin(self) -> bool:
         configuration_deserializer = ConfigurationDeserializer(
-            "builtin_tests/builtin_config.json"
+            self.__internals_plugins_directory + "/builtin_config.json"
         )
         builtins_configuration = configuration_deserializer.deserialize_config()
 
-        plugin_manager = PluginManager("builtin_tests", builtins_configuration)
+        plugin_manager = PluginManager(
+            self.__internals_plugins_directory, builtins_configuration)
 
         discovered_plugins = plugin_manager.discover_plugins()
         imported_plugins = plugin_manager.import_plugins(discovered_plugins)
@@ -145,6 +151,7 @@ class Evaluator:
         )
 
         for plugin in imported_plugins:
+            self.__logger.log('> Executing builtin {}'.format(plugin['name']))
             test_result = plugin_manager.execute_plugin_function(
                 plugin, "run", builtin_tests_arguments
             )

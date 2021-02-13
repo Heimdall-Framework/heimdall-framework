@@ -10,6 +10,7 @@ from collections import namedtuple
 from .logger import Logger
 from .framework_configuration import FrameworkConfiguration
 
+
 try:
     import pwd
 except:
@@ -43,10 +44,11 @@ class SystemOperationsProvider():
 
         mounting_command = 'mount {}{} {} -o noexec'.format(
             device_system_name, current_part, configuration.mounting_point)
+
         process = subprocess.Popen(mounting_command.split(
         ), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        output, error = process.communicate()
 
+        output, error = process.communicate()
         if 'bad' in str(output) or 'not exist' in str(output) and current_part == 0:
             for i in range(1, 10):
                 if self.mount_device(configuration, logger, device_system_name, current_part=i):
@@ -116,4 +118,4 @@ class SystemOperationsProvider():
                 return False
 
     def is_running_on_pi(self):
-        return os.uname()[4].startsWith('arm')
+        return os.uname()[4].startswith('arm')
