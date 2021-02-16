@@ -26,29 +26,6 @@ def run(logger, configuration, device, device_handle):
 
         return True
     else:
-        logger.log("> Packing live boot files into image file.")
-        FileOperationsProvider().create_img_file(logger, "img")
-        FileOperationsProvider().create_img_file(logger, "iso")
+        logger.log("> Test not implemented. Skipping.")
 
-        logger.log("> Generating image file checksum.")
-
-        local_image_checksum = str(
-            SystemOperationsProvider().get_file_checksum(logger, "/tmp/temp_image.img")
-        )
-
-        # compares the checksums from the Tails website to the local one
-        if SystemOperationsProvider().offline_verify_checksum(local_image_checksum):
-            os.remove("/tmp/temp_image.img")
-            os.remove("/tmp/temp_image.iso")
-
-            SystemOperationsProvider().unmount_device(logger, mounted_device_partition)
-            return True
-        else:
-            os.remove("/tmp/temp_image.img")
-            os.remove("/tmp/temp_image.iso")
-            logger.log(
-                "> The Tails image is outdated or has been altered. Please update your Tails liveboot to the newest version and test again."
-            )
-
-            SystemOperationsProvider().unmount_device(logger, mounted_device_partition)
-            return False
+        return True
