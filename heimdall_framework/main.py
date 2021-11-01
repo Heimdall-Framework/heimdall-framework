@@ -6,7 +6,6 @@ import argparse
 from datetime import datetime
 from .modules import gui
 from .modules.logger import Logger
-from .modules.updater import Updater
 from .modules.usb_detector import USBHotplugDetector
 from .modules.file_operations_provider import FileOperationsProvider
 from .modules.configuration_deserializer import ConfigurationDeserializer
@@ -60,10 +59,6 @@ class Main:
         configuration = configuration_deserializer.deserialize()
 
         logger = Logger(configuration.logs_directory)
-
-        framework_location = os.path.abspath(
-            os.path.join(current_file_location, "../../")
-        )
 
         logger.log(">>> Initiating USB hotplug detector.")
         if cli_arguments.interface == None or cli_arguments.interface == "nogui":

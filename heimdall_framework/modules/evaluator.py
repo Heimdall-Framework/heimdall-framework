@@ -17,7 +17,6 @@ class Evaluator:
         self.__plugins_config = configuration.plugins_config
         self.__logger = logger
 
-        self.__device_mountpoint = configuration.mounting_point
         self.__device = device_handle.getDevice()
         self.__device_handle = device_handle
         self.__port_number = port_number
@@ -25,9 +24,6 @@ class Evaluator:
 
         self.__internals_plugins_directory = os.path.abspath(
             os.path.join(os.path.dirname(__file__), "builtin_tests")
-        )
-        self.__plugins_directory = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "../", "plugins")
         )
 
         self.__test_range = test_range
@@ -41,8 +37,10 @@ class Evaluator:
 
         self.__logger.log(">> Device testing initiated.")
 
-        tests = [self.__validate_device_type,
-                 self.__validate_vendor_information]
+        tests = [
+            self.__validate_device_type,
+            self.__validate_vendor_information
+        ]
 
         for test in tests:
             if not test():
@@ -56,7 +54,7 @@ class Evaluator:
 
     def __validate_vendor_information(self) -> bool:
         """
-        Validate the vendor information of the tested device.
+        Validate the vendor information of the tested device during multiple hotplug operation.
         """
 
         device_vendor_id = self.__device.getVendorID()
@@ -97,7 +95,6 @@ class Evaluator:
                 device_configuration.__getitem__(0).__iter__()
             ).getClass()
 
-            self.__device_interface_class = device_interface_class
             if (
                 device_interface_class != 8
                 or device_configuration.getNumInterfaces() > 1
@@ -148,7 +145,8 @@ class Evaluator:
         )
 
         for plugin in imported_plugins:
-            self.__logger.log('> Executing builtin {}'.format(plugin['name']))
+            self.__logger.log(
+                '> Executing builtin {}'.format(plugin['name']))
             test_result = plugin_manager.execute_plugin_function(
                 plugin, "run", builtin_tests_arguments
             )

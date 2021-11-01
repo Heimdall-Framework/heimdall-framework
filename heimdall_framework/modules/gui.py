@@ -36,22 +36,6 @@ class HeimdallMainWindow(object):
         self.sidebar.setStyleSheet("background: #253442;")
         self.sidebar.setObjectName("sidebar")
 
-        self.about_btn_widget = QtWidgets.QWidget(self.sidebar)
-        self.about_btn_widget.setGeometry(QtCore.QRect(0, 113, 130, 111))
-        self.about_btn_widget.setStyleSheet("background: #212c38;")
-        self.about_btn_widget.setObjectName("about_btn_widget")
-
-        self.question_image_label = QtWidgets.QLabel(self.about_btn_widget)
-        self.question_image_label.setGeometry(QtCore.QRect(30, 10, 80, 70))
-        self.question_image_label.setText("")
-        self.question_image_label.setPixmap(QtGui.QPixmap("question.png"))
-        self.question_image_label.setScaledContents(True)
-        self.question_image_label.setObjectName("question_image_label")
-
-        self.about_label_btn = QtWidgets.QLabel(self.about_btn_widget)
-        self.about_label_btn.setGeometry(QtCore.QRect(45, 80, 51, 20))
-        self.about_label_btn.setObjectName("about_label_btn")
-
         self.evaluator_btn_widget = QtWidgets.QWidget(self.sidebar)
         self.evaluator_btn_widget.setGeometry(QtCore.QRect(0, 0, 130, 111))
         self.evaluator_btn_widget.setStyleSheet("background: #212c38;")
@@ -66,7 +50,7 @@ class HeimdallMainWindow(object):
         self.shield_image_label.setObjectName("shield_image_label")
 
         self.evaluator_label_btn = QtWidgets.QLabel(self.evaluator_btn_widget)
-        self.evaluator_label_btn.setGeometry(QtCore.QRect(35, 80, 70, 20))
+        self.evaluator_label_btn.setGeometry(QtCore.QRect(25, 80, 85, 20))
         self.evaluator_label_btn.setObjectName("evaluator_label_btn")
 
         self.stackedWidget = QtWidgets.QStackedWidget(USBEvaluatorGui)
@@ -115,7 +99,7 @@ class HeimdallMainWindow(object):
             "    border-style: outset;\n"
             "    background: #34495e;\n"
             "    color: white;\n"
-            "    padding: 5px;\n"
+            "    padding: 3px;\n"
             "    }\n"
             "\n"
             "QPushButton:pressed {\n"
@@ -127,11 +111,6 @@ class HeimdallMainWindow(object):
 
         self.stackedWidget.addWidget(self.evaluator_page)
 
-        self.about_page = QtWidgets.QWidget()
-        self.about_page.setObjectName("about_page")
-
-        self.stackedWidget.addWidget(self.about_page)
-
         self.retranslateUi(USBEvaluatorGui)
         self.stackedWidget.setCurrentIndex(0)
 
@@ -142,7 +121,6 @@ class HeimdallMainWindow(object):
         USBEvaluatorGui.setWindowTitle(_translate(
             "USBEvaluatorGui", "USBEvaluatorGui"))
 
-        self.about_label_btn.setText(_translate("USBEvaluatorGui", "About"))
         self.evaluator_label_btn.setText(
             _translate("USBEvaluatorGui", "Evaluator"))
         self.logs_label.setText(_translate("USBEvaluatorGui", "Logs:"))
@@ -150,7 +128,6 @@ class HeimdallMainWindow(object):
             _translate("USBEvaluatorGui", "Start"))
 
         self.toggle_evaluator_btn.clicked.connect(self.__toggle_evaluator)
-        self.about_btn_widget.mousePressEvent = self.__show_info_page
         self.evaluator_btn_widget.mousePressEvent = self.__show_evaluator_page
 
     def normal_write_text(self, text):
@@ -168,9 +145,13 @@ class HeimdallMainWindow(object):
         self.stackedWidget.setCurrentIndex(0)
 
     def __toggle_evaluator(self):
+        _translate = QtCore.QCoreApplication.translate
         if self.is_started:
             print(">>> Stopping evaluator.")
             usb_detector.stop()
+
+            self.toggle_evaluator_btn.setText(
+                _translate("USBEvaluatorGui", "Start"))
 
             self.is_started = False
         else:
@@ -178,6 +159,9 @@ class HeimdallMainWindow(object):
 
             worker = GuiThreadWorker()
             self.threadpool.start(worker)
+
+            self.toggle_evaluator_btn.setText(
+                _translate("USBEvaluatorGui", "Stop"))
 
             self.is_started = True
 
