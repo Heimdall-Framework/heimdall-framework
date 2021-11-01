@@ -1,9 +1,6 @@
 import os
-import sys
-import json
-import shutil
-import datetime
-import importlib
+from typing import Iterable
+import typing
 import usb1 as usb
 from plugypy import ConfigurationDeserializer, Plugin, PluginManager
 from .logger import Logger
@@ -37,7 +34,7 @@ class Evaluator:
 
         self.__logger.log(">>> Evaluator was initialized.")
 
-    def evaluate_device(self) -> (bool, usb.USBDevice):
+    def evaluate_device(self) -> typing.Tuple[bool, usb.USBDevice]:
         """
         Evaluate device.
         """

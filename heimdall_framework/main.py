@@ -65,19 +65,6 @@ class Main:
             os.path.join(current_file_location, "../../")
         )
 
-        logger.log(">>> Initiating updater")
-        updater = Updater(
-            configuration,
-            logger,
-            framework_location,
-            "https://vio1hjlpx9.execute-api.eu-central-1.amazonaws.com/dev/update"
-        )
-
-        logger.log(">>> Checking for updates.")
-
-        # if updater.can_update():
-        # updater.update()
-
         logger.log(">>> Initiating USB hotplug detector.")
         if cli_arguments.interface == None or cli_arguments.interface == "nogui":
             usb_detector = USBHotplugDetector(configuration, logger)
