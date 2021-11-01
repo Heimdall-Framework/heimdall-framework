@@ -1,9 +1,9 @@
 {
-   "will_load_all": false,
+   "will_load_all": true,
    "plugins": [
       {
          "name": "io_test",
-         "is_enabled": false
+         "is_enabled": true
       },
       {
          "name": "malicious_linux_distribution_test",
