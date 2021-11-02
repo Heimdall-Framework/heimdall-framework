@@ -26,13 +26,19 @@ def run(logger, configuration, device, device_handle):
 def process_files(logger, configuration, file_types):
     for file_type in file_types:
         dump_file_name = 'dump.{}'.format(file_type)
+        dump_file_location = os.path.join(
+            os.path.dirname(__file__), dump_file_name)
 
-        DataProvider().generate_random_data_file(logger, file_type)
+        DataProvider().generate_random_data_file(logger, dump_file_location)
 
         shutil.copyfile(
-            dump_file_name, configuration.mounting_point + dump_file_name)
-        shutil.move(configuration.mounting_point +
-                    dump_file_name, 'received_dump.{}'.format(file_type))
+            dump_file_location,
+            os.path.join(configuration.mounting_point, dump_file_name)
+        )
+        shutil.move(
+            os.path.join(configuration.mounting_point, dump_file_name),
+            'received_dump.{}'.format(file_type)
+        )
 
         if not FileOperationsProvider().compare_files('dump.me', 'received_dump.{}'.format(file_type)):
             os.remove(dump_file_name)

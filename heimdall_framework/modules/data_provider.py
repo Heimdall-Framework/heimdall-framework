@@ -3,14 +3,14 @@ import random
 
 
 class DataProvider():
-    def generate_random_data_file(self, logger, file_extension):
+    def generate_random_data_file(self, logger, file):
         """
         Generates a file, containing pseudorandom data
         """
 
         try:
             file_content = self.__generate_pseudorandom_string(128)
-            file = open('dump.{}'.format(file_extension), 'w')
+            file = open(file, 'w')
             file.write(file_content)
 
             return True
