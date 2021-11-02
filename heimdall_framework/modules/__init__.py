@@ -11,6 +11,5 @@ __all__ = [
     'logger',
     'nuker',
     'system_operations_provider',
-    'updater',
     'usb_detector'
 ]
